@@ -42,21 +42,3 @@ extension CountryEndPoint: HttpRouter {
         AppUtility.SportBaseURL
     }
 }
-
-protocol CountryAPIExecution {}
-
-extension CountryAPIExecution {
-    func sendRequest<T: Decodable>(for api: CountryEndPoint<T>) async throws -> T {
-        return try await withCheckedThrowingContinuation { continuation in
-            let request = APIRequest(router: api)
-            request.callAPI { result in
-                switch result {
-                case .Successs(let data):
-                    continuation.resume(returning: data)
-                case .Failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-}

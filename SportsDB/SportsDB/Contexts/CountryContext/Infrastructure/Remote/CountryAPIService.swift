@@ -8,7 +8,7 @@
 import Foundation
 
 // CountryContext/Infrastructure/Remote/CountryAPIService.swift
-final class CountryAPIService: CountryRepository, CountryAPIExecution {
+final class CountryAPIService: CountryRepository, APIExecution {
     
     func getAllCountries() async throws -> [Country] {
         // Gọi API thông qua HttpRouter layer

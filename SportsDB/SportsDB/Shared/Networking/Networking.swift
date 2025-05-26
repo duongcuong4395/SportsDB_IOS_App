@@ -74,3 +74,22 @@ class APIRequest<Router: HttpRouter> {
         }
     }
 }
+
+
+protocol APIExecution {}
+
+extension APIExecution {
+    func sendRequest<T: Decodable, R: HttpRouter>(for endpoint: R) async throws -> T where R.responseDataType == T {
+        return try await withCheckedThrowingContinuation { continuation in
+            let request = APIRequest(router: endpoint)
+            request.callAPI { result in
+                switch result {
+                case .Successs(let data):
+                    continuation.resume(returning: data)
+                case .Failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+}

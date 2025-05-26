@@ -9,6 +9,5 @@ import Foundation
 
 // LeagueContext/Application/Interfaces/LeagueRepository.swift
 protocol LeagueRepository {
-    func getLeagues(country: String) async throws -> [League]
     func getLeagues(country: String, sport: String) async throws -> [League]
 }

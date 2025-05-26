@@ -14,25 +14,18 @@ final class LeagueListViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    private let getByCountry: GetLeaguesByCountryUseCase
     private let getByCountryAndSport: GetLeaguesByCountryAndSportUseCase
 
-    init(getByCountry: GetLeaguesByCountryUseCase,
-         getByCountryAndSport: GetLeaguesByCountryAndSportUseCase) {
-        self.getByCountry = getByCountry
+    init(getByCountryAndSport: GetLeaguesByCountryAndSportUseCase) {
         self.getByCountryAndSport = getByCountryAndSport
     }
 
-    func fetchLeagues(country: String, sport: String? = nil) async {
+    func fetchLeagues(country: String, sport: String) async {
         isLoading = true
         defer { isLoading = false }
 
         do {
-            if let sport = sport {
-                leagues = try await getByCountryAndSport.execute(country: country, sport: sport)
-            } else {
-                leagues = try await getByCountry.execute(country: country)
-            }
+            leagues = try await getByCountryAndSport.execute(country: country, sport: sport)
         } catch {
             errorMessage = error.localizedDescription
         }
