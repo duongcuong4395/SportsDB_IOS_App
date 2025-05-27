@@ -10,4 +10,6 @@ import Foundation
 // LeagueContext/Application/Interfaces/LeagueRepository.swift
 protocol LeagueRepository {
     func getLeagues(country: String, sport: String) async throws -> [League]
+    func lookupLeague(by League_ID: String) async throws -> [League]
+    func lookupLeagueTable(league_ID: String, season: String) async throws -> [LeagueTable]
 }

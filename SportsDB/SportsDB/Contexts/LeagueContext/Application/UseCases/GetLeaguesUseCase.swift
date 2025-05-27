@@ -1,14 +1,14 @@
 //
-//  GetLeaguesByCountryAndSportUseCase.swift
+//  GetLeaguesUseCase.swift
 //  SportsDB
 //
-//  Created by Macbook on 26/5/25.
+//  Created by Macbook on 27/5/25.
 //
+
 
 import Foundation
 
-// Get all leagues by country + sport
-struct GetLeaguesByCountryAndSportUseCase {
+struct GetLeaguesUseCase {
     let repository: LeagueRepository
 
     func execute(country: String, sport: String) async throws -> [League] {
