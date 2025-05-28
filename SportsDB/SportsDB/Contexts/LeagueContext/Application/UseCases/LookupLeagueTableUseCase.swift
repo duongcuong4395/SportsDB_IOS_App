@@ -8,9 +8,9 @@
 import Foundation
 
 struct LookupLeagueTableUseCase {
-    let leagueRepository: LeagueRepository
+    let repository: LeagueRepository
     
     func execute(league_ID: String, season: String) async throws -> [LeagueTable] {
-        return try await leagueRepository.lookupLeagueTable(league_ID: league_ID, season: season)
+        return try await repository.lookupLeagueTable(league_ID: league_ID, season: season)
     }
 }

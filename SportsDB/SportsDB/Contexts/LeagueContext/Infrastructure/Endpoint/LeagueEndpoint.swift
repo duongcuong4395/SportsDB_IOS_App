@@ -25,10 +25,10 @@ extension LeagueEndpoint: HttpRouter {
         switch self {
         case .GetLeagues(country: _, sport: _):
             return "api/v1/json/3/search_all_leagues.php"
-        case .LookupLeague(league_ID: let league_ID):
-            return "/api/v1/json/3/lookupleague.php"
+        case .LookupLeague(league_ID: _):
+            return "api/v1/json/3/lookupleague.php"
         case .LookupLeagueTable(league_ID: _, season: _):
-            return "/api/v1/json/3/lookuptable.php"
+            return "api/v1/json/3/lookuptable.php"
         }
     }
     

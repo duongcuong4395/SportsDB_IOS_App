@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct LeagueDTO: Codable, Identifiable, Hashable {
+// Identifiable, Hashable
+struct LeagueDTO: Codable {
     var id: String = "" //UUID = UUID()
     var idLeague: String? = ""
     var idSoccerXML: String? = ""

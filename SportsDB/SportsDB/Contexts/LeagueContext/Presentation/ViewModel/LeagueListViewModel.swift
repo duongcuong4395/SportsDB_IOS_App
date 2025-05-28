@@ -39,19 +39,21 @@ final class LeagueListViewModel: ObservableObject {
     }
     
     
-    func lookupLeague(league_ID: String) async {
+    func lookupLeague(leagueID: String) async {
         isLoading = true
+        defer { isLoading = false }
         do{
-            leagues = try await lookupLeagueUseCase.execute(with: league_ID)
+            leagues = try await lookupLeagueUseCase.execute(with: leagueID)
         } catch {
             errorMessage = error.localizedDescription
         }
     }
 
-    func lookupLeagueTable(league_ID: String, season: String) async {
+    func lookupLeagueTable(leagueID: String, season: String) async {
         isLoading = true
+        defer { isLoading = false }
         do {
-            leaguesTable = try await lookupLeagueTableUseCase.execute(league_ID: league_ID, season: season)
+            leaguesTable = try await lookupLeagueTableUseCase.execute(league_ID: leagueID, season: season)
         } catch {
             errorMessage = error.localizedDescription
         }

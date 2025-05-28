@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct LookupLeagueUseCase {
-    let leagueRepository: LeagueRepository
+    let repository: LeagueRepository
     
     func execute(with league_ID: String) async throws -> [League] {
-        return try await leagueRepository.lookupLeague(by: league_ID)
+        return try await repository.lookupLeague(by: league_ID)
     }
 }
