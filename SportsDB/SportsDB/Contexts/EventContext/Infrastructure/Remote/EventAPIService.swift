@@ -6,11 +6,7 @@
 //
 
 final class EventAPIService: EventRepository, APIExecution {
-    func lookupEventVenue(eventID: String) async throws -> [EventVenue] {
-        let response: LookupEventVenueAPIResponse = try await sendRequest(for: EventEndpoint<LookupEventVenueAPIResponse>.LookupEventVenue(eventID: eventID))
-        
-        return response.eventVenues.map { $0.toDomain() }
-    }
+    
     
     func lookupEventTVBroadcasts(eventID: String) async throws -> [EventTVBroadcast] {
         let response: LookupEventTVBroadcastsAPIResponse = try await sendRequest(for: EventEndpoint<LookupEventTVBroadcastsAPIResponse>.LookupEventTVBroadcasts(eventID: eventID))

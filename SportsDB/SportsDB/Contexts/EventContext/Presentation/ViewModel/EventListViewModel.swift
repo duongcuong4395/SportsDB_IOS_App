@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 
 class EventListViewModel: ObservableObject {
-    @Published var events: [Event] = []
+    @Published var eventsBySearch: [Event] = []
+    @Published var eventsByLookup: [Event] = []
     
     @Published var eventsResult: [EventResult] = []
     @Published var lineups: [EventLineup] = []
     @Published var timelines: [EventTimeline] = []
     @Published var statistics: [EventStatistics] = []
     @Published var tvBroadcasts: [EventTVBroadcast] = []
-    @Published var venues: [EventVenue] = []
     
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -36,18 +36,18 @@ class EventListViewModel: ObservableObject {
         isLoading = true
         defer { isLoading = false }
         do {
-            self.events = try await searchEventsUseCase.execute(eventName: eventName, season: season)
+            self.eventsBySearch = try await searchEventsUseCase.execute(eventName: eventName, season: season)
         } catch {
             self.errorMessage = error.localizedDescription
         }
     }
     
-    func LookupEvent(eventID: String) async {
+    func lookupEvent(eventID: String) async {
         isLoading = true
         defer { isLoading = false }
         
         do {
-            self.events = try await lookupEventUseCase.execute(eventID: eventID)
+            self.eventsByLookup = try await lookupEventUseCase.execute(eventID: eventID)
         } catch {
             errorMessage = error.localizedDescription
         }

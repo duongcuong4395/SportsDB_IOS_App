@@ -16,7 +16,7 @@ class EventDetailViewModel: ObservableObject {
     @Published var timelines: [EventTimeline] = []
     @Published var statistics: [EventStatistics] = []
     @Published var tvBroadcasts: [EventTVBroadcast] = []
-    @Published var venues: [EventVenue] = []
+    
     
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -26,22 +26,22 @@ class EventDetailViewModel: ObservableObject {
     private var lookupEventTimelineUseCase: LookupEventTimelineUseCase
     private var lookupEventStatisticsUseCase: LookupEventStatisticsUseCase
     private var lookupEventTVBroadcastsUseCase: LookupEventTVBroadcastsUseCase
-    private var lookupEventVenueUseCase: LookupEventVenueUseCase
+    
     
     init(
          lookupEventResultsUseCase: LookupEventResultsUseCase,
          lookupEventLineupUseCase: LookupEventLineupUseCase,
          lookupEventTimelineUseCase: LookupEventTimelineUseCase,
          lookupEventStatisticsUseCase: LookupEventStatisticsUseCase,
-         lookupEventTVBroadcastsUseCase: LookupEventTVBroadcastsUseCase,
-         lookupEventVenueUseCase: LookupEventVenueUseCase
+         lookupEventTVBroadcastsUseCase: LookupEventTVBroadcastsUseCase
+         
     ) {
         self.lookupEventResultsUseCase = lookupEventResultsUseCase
         self.lookupEventLineupUseCase = lookupEventLineupUseCase
         self.lookupEventTimelineUseCase = lookupEventTimelineUseCase
         self.lookupEventStatisticsUseCase = lookupEventStatisticsUseCase
         self.lookupEventTVBroadcastsUseCase = lookupEventTVBroadcastsUseCase
-        self.lookupEventVenueUseCase = lookupEventVenueUseCase
+        
     }
     
     func lookupEventResults(eventID: String) async {
@@ -100,14 +100,5 @@ class EventDetailViewModel: ObservableObject {
         }
     }
     
-    func lookupEventVenue(eventID: String) async {
-        isLoading = true
-        defer { isLoading = false }
-        
-        do {
-            venues = try await lookupEventVenueUseCase.execute(eventID: eventID)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
+    
 }

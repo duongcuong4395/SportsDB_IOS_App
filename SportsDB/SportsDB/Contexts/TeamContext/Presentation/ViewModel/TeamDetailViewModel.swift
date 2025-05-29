@@ -1,0 +1,33 @@
+//
+//  TeamDetailViewModel.swift
+//  SportsDB
+//
+//  Created by Macbook on 29/5/25.
+//
+
+import SwiftUI
+
+class TeamDetailViewModel: ObservableObject {
+    @Published var equipments: [Equipment] = []
+    
+    @Published var isLoading: Bool = false
+    @Published var errorMessage: String = ""
+    
+    private var lookupEquipmentUseCase: LookupEquipmentUseCase
+    
+    init(lookupEquipmentUseCase: LookupEquipmentUseCase) {
+        self.lookupEquipmentUseCase = lookupEquipmentUseCase
+    }
+    
+    func lookupEquipment(teamID: String) async {
+        isLoading = true
+        
+        defer { isLoading = false }
+        
+        do {
+            equipments = try await lookupEquipmentUseCase.execute(teamID: teamID)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}

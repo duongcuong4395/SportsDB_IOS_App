@@ -22,7 +22,6 @@ enum EventEndpoint<T: Decodable> {
     
     case LookupEventTVBroadcasts(eventID: String)
     
-    case LookupEventVenue(eventID: String)
 }
 
 
@@ -49,8 +48,7 @@ extension EventEndpoint: HttpRouter {
             return "api/v1/json/3/lookupeventstats.php"
         case .LookupEventTVBroadcasts(eventID: _):
             return "api/v1/json/3/lookuptv.php"
-        case .LookupEventVenue(eventID: _):
-            return "api/v1/json/3/lookupvenue.php"
+        
         }
     }
     
@@ -82,8 +80,7 @@ extension EventEndpoint: HttpRouter {
             return ["id": eventID]
         case .LookupEventTVBroadcasts(eventID: let eventID):
             return ["id": eventID]
-        case .LookupEventVenue(eventID: let eventID):
-            return ["id": eventID]
+        
         }
     }
     

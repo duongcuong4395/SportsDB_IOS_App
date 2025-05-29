@@ -9,7 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     
+    @StateObject var sportListVM: SportListViewModel = SportListViewModel()
+    @StateObject var countryListVM: CountryListViewModel
     @StateObject var leagueListVM: LeagueListViewModel
+    
     
     init() {
         let repository = LeagueAPIService()
@@ -21,6 +24,10 @@ struct ContentView: View {
             getLeaguesUseCase: getLeaguesUseCase,
             lookupLeagueUseCase: lookupLeagueUseCase,
             lookupLeagueTableUseCase: lookupLeagueTableUseCase))
+        
+        let countryRepository = CountryAPIService()
+        let getAllCountriesUseCase = GetAllCountriesUseCase(repository: countryRepository)
+        self._countryListVM = StateObject(wrappedValue: CountryListViewModel(useCase: getAllCountriesUseCase))
     }
     
     var body: some View {

@@ -8,7 +8,6 @@
 // CountryContext/Presentation/ViewModel/CountryListViewModel.swift
 import Foundation
 
-@MainActor
 final class CountryListViewModel: ObservableObject {
     @Published var countries: [Country] = []
     @Published var isLoading = false

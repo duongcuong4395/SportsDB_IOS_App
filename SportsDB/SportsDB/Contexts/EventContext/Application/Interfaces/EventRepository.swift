@@ -22,5 +22,5 @@ protocol EventRepository {
     
     func lookupEventTVBroadcasts(eventID: String) async throws -> [EventTVBroadcast]
     
-    func lookupEventVenue(eventID: String) async throws -> [EventVenue]
+    
 }
