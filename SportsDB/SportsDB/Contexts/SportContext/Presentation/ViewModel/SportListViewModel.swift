@@ -6,6 +6,8 @@
 //
 import SwiftUI
 
-class SportListViewModel: ObservableObject {
+class SportViewModel: ObservableObject {
     @Published var listSport = SportType.AllCases()
+    
+    @Published var sportSelected: SportType = .Soccer
 }

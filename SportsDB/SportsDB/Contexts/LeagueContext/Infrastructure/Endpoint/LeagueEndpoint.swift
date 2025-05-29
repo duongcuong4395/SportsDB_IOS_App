@@ -9,8 +9,7 @@ import Foundation
 import Alamofire
 
 enum LeagueEndpoint<T: Decodable> {
-    // https://www.thesportsdb.com/api/v1/json/3/search_all_leagues.php?c=England
-    case GetLeagues(country: String, sport: String) // SportType
+    case GetLeagues(country: String, sport: String)
     
     case LookupLeague(league_ID: String)
     

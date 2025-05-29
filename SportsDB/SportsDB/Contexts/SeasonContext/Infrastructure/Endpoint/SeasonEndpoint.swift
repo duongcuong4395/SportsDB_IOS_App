@@ -22,7 +22,7 @@ extension SeasonEndpoint: HttpRouter {
     var path: String {
         switch self {
         case .GetListSeasons(leagueID: _):
-            return "api/v1/json/123/search_all_seasons.php"
+            return "api/v1/json/3/search_all_seasons.php"
         }
     }
     
