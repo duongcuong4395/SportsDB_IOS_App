@@ -22,6 +22,13 @@ enum EventEndpoint<T: Decodable> {
     
     case LookupEventTVBroadcasts(eventID: String)
     
+    case LookupListEvents(leagueID: String, round: String, season: String)
+    //https://www.thesportsdb.com/api/v1/json/3/eventsround.php?id=4569&r=1&s=2025
+    
+    case LookupEventsInSpecific(leagueID: String, season: String)
+    
+    //https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id=4328
+    case LookupEventsPastLeague(leagueID: String)
 }
 
 
@@ -48,7 +55,12 @@ extension EventEndpoint: HttpRouter {
             return "api/v1/json/3/lookupeventstats.php"
         case .LookupEventTVBroadcasts(eventID: _):
             return "api/v1/json/3/lookuptv.php"
-        
+        case .LookupListEvents(leagueID: _, round: _, season: _):
+            return "api/v1/json/3/eventsround.php"
+        case .LookupEventsInSpecific(leagueID: _, season: _):
+            return "api/v1/json/3/eventsseason.php"
+        case .LookupEventsPastLeague(leagueID: _):
+            return "api/v1/json/123/eventspastleague.php"
         }
     }
     
@@ -81,6 +93,12 @@ extension EventEndpoint: HttpRouter {
         case .LookupEventTVBroadcasts(eventID: let eventID):
             return ["id": eventID]
         
+        case .LookupListEvents(leagueID: let leagueID, round: let round, season: let season):
+            return ["id": leagueID, "r": round, "s": season]
+        case .LookupEventsInSpecific(leagueID: let leagueID, season: let season):
+            return ["id": leagueID, "s": season]
+        case .LookupEventsPastLeague(leagueID: let leagueID):
+            return ["id": leagueID]
         }
     }
     

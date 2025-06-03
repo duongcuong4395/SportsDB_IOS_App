@@ -11,11 +11,14 @@ import Alamofire
 class AppUtility {
     static let envDict = Bundle.main.infoDictionary?["LSEnvironment"] as! Dictionary<String, String>
     
-    static let SportScoreBaseURL = envDict["BaseURL_SportScore"]! as String
-    static let FootballBaseURL = envDict["BaseURL_Football"]! as String
-    static let MapsBaseURL = envDict["BaseURL_MapsData"]! as String
+    //static let SportScoreBaseURL = envDict["BaseURL_SportScore"]! as String
+    //static let FootballBaseURL = envDict["BaseURL_Football"]! as String
+    //static let MapsBaseURL = envDict["BaseURL_MapsData"]! as String
     
     static let SportBaseURL = envDict["BaseURL_Sport"]! as String
+    
+    static let KeySystem = envDict["Key_System"]! as String
+    static let KeyUser = envDict["Key_User"]! as String
     
     
     
@@ -26,6 +29,9 @@ class AppUtility {
     
     static let headersFootball: HTTPHeaders = ["x-rapidapi-host": "football-highlights-api.p.rapidapi.com"
                                       , "x-rapidapi-key": "648d829bdbmshf8961c0edaf9408p15a3fcjsn9ec521f88da8"]
+    
+    
+    static var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]
     
     static func formatDate(from input: String?, to outputFormat: String) -> String? {
         let inputFormatter = DateFormatter()

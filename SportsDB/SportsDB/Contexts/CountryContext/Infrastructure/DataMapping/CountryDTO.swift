@@ -22,8 +22,8 @@ struct CountryDTO: Codable {
     }
 
     func toDomain() -> Country? {
-        guard let url = URL(string: flagURL32) else { return nil }
-        return Country(name: nameEn, flagURL: url)
+        //guard let url = URL(string: flagURL32) else { return nil }
+        return Country(name: nameEn, flagURL: flagURL32)
     }
 }
 

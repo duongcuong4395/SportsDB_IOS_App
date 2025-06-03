@@ -14,7 +14,8 @@ struct PlayerDTO: Codable {
     var idTeam2, idTeamNational: String?
     var idAPIfootball, idPlayerManager, idWikidata, idTransferMkt: String?
     var idESPN, nationality, player, playerAlternate: String?
-    var team, team2, sport, soccerXMLTeamID: String?
+    var team, team2, soccerXMLTeamID: String?
+    var sport: SportType?
     var dateBorn: String?
     var dateDied: String?
     var number, dateSigned, signing, wage: String?
@@ -77,7 +78,7 @@ struct PlayerDTO: Codable {
                   idTeamNational: idTeamNational,
                   idAPIfootball: idAPIfootball, idPlayerManager: idPlayerManager, idWikidata: idWikidata, idTransferMkt: idTransferMkt,
                   idESPN: idESPN, nationality: nationality, player: player, playerAlternate: playerAlternate,
-                  team: team, team2: team2, sport: sport, soccerXMLTeamID: soccerXMLTeamID,
+               team: team, team2: team2, soccerXMLTeamID: soccerXMLTeamID, sport: sport,
                   dateBorn: dateBorn,
                   dateDied: dateDied,
                   number: number, dateSigned: dateSigned, signing: signing, wage: wage,

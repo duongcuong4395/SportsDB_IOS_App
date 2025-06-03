@@ -23,4 +23,9 @@ protocol EventRepository {
     func lookupEventTVBroadcasts(eventID: String) async throws -> [EventTVBroadcast]
     
     
+    func lookupListEvents(leagueID: String, round: String, season: String) async throws -> [Event]
+    
+    func lookupEventsInSpecific(leagueID: String, season: String) async throws -> [Event]
+    
+    func lookupEventsPastLeague(leagueID: String) async throws -> [Event]
 }

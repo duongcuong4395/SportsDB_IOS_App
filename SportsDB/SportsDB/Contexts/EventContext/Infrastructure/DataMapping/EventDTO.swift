@@ -9,27 +9,27 @@ import Foundation
 
 // MARK: - Event
 struct EventDTO: Codable {
-    var idEvent, idAPIfootball, eventName, eventAlternate: String
-    var filename, sportName, idLeague, leagueName: String
-    var leagueBadge: String
-    var season, descriptionEN, homeTeam, awayTeam: String
-    var homeScore, round, awayScore: String
+    var idEvent, idAPIfootball, eventName, eventAlternate: String?
+    var filename, sportName, idLeague, leagueName: String?
+    var leagueBadge: String?
+    var season, descriptionEN, homeTeam, awayTeam: String?
+    var homeScore, round, awayScore: String?
     var spectators: String?
-    var official, timestamp, dateEvent, dateEventLocal: String
-    var time, timeLocal, group, idHomeTeam: String
-    var homeTeamBadge: String
-    var idAwayTeam: String
-    var awayTeamBadge: String
+    var official, timestamp, dateEvent, dateEventLocal: String?
+    var time, timeLocal, group, idHomeTeam: String?
+    var homeTeamBadge: String?
+    var idAwayTeam: String?
+    var awayTeamBadge: String?
     var score, scoreVotes: String?
-    var result, idVenue, venue, country: String
-    var city: String
-    var poster, square: String
+    var result, idVenue, venue, country: String?
+    var city: String?
+    var poster, square: String?
     var fanart: String?
-    var thumb, banner: String
+    var thumb, banner: String?
     var map: String?
-    var tweet1, tweet2, tweet3: String
-    var video: String
-    var status, postponed, locked: String
+    var tweet1, tweet2, tweet3: String?
+    var video: String?
+    var status, postponed, locked: String?
     
     enum CodingKeys: String, CodingKey {
         case idEvent, idAPIfootball, eventName = "strEvent", eventAlternate = "strEventAlternate"

@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		FA0E52192DE4750F0070599B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FA0E52182DE4750F0070599B /* Alamofire */; };
 		FAB118692DE8692C00496521 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FAB118682DE8692C00496521 /* Kingfisher */; };
+		FAC8A8862DEEA6F300905B7C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = FAC8A8852DEEA6F300905B7C /* GoogleGenerativeAI */; };
+		FAC8A8892DEEA70D00905B7C /* GeminiAI in Frameworks */ = {isa = PBXBuildFile; productRef = FAC8A8882DEEA70D00905B7C /* GeminiAI */; };
+		FAD6222F2DEDF30F00019CB4 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = FAD6222E2DEDF30F00019CB4 /* SwiftSoup */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,8 +44,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAC8A8892DEEA70D00905B7C /* GeminiAI in Frameworks */,
 				FAB118692DE8692C00496521 /* Kingfisher in Frameworks */,
 				FA0E52192DE4750F0070599B /* Alamofire in Frameworks */,
+				FAD6222F2DEDF30F00019CB4 /* SwiftSoup in Frameworks */,
+				FAC8A8862DEEA6F300905B7C /* GoogleGenerativeAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +93,9 @@
 			packageProductDependencies = (
 				FA0E52182DE4750F0070599B /* Alamofire */,
 				FAB118682DE8692C00496521 /* Kingfisher */,
+				FAD6222E2DEDF30F00019CB4 /* SwiftSoup */,
+				FAC8A8852DEEA6F300905B7C /* GoogleGenerativeAI */,
+				FAC8A8882DEEA70D00905B7C /* GeminiAI */,
 			);
 			productName = SportsDB;
 			productReference = FA0E51CF2DE472970070599B /* SportsDB.app */;
@@ -119,6 +128,9 @@
 			packageReferences = (
 				FA0E52172DE4750F0070599B /* XCRemoteSwiftPackageReference "Alamofire" */,
 				FAB118672DE8692C00496521 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				FAD6222D2DEDF30F00019CB4 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				FAC8A8842DEEA6F300905B7C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+				FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FA0E51D02DE472970070599B /* Products */;
@@ -387,6 +399,30 @@
 				minimumVersion = 8.3.2;
 			};
 		};
+		FAC8A8842DEEA6F300905B7C /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google-gemini/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
+		FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/duongcuong4395/MyPackage.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		FAD6222D2DEDF30F00019CB4 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.8.7;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -399,6 +435,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FAB118672DE8692C00496521 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		FAC8A8852DEEA6F300905B7C /* GoogleGenerativeAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAC8A8842DEEA6F300905B7C /* XCRemoteSwiftPackageReference "generative-ai-swift" */;
+			productName = GoogleGenerativeAI;
+		};
+		FAC8A8882DEEA70D00905B7C /* GeminiAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */;
+			productName = GeminiAI;
+		};
+		FAD6222E2DEDF30F00019CB4 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAD6222D2DEDF30F00019CB4 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

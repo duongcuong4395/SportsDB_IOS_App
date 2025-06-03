@@ -8,8 +8,11 @@
 // CountryContext/Presentation/ViewModel/CountryListViewModel.swift
 import Foundation
 
+@MainActor
 final class CountryListViewModel: ObservableObject {
     @Published var countries: [Country] = []
+    @Published var countrySelected: Country?
+    
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -28,5 +31,9 @@ final class CountryListViewModel: ObservableObject {
         } catch {
             errorMessage = "Failed to load countries: \(error.localizedDescription)"
         }
+    }
+    
+    func setCountry(by country: Country) {
+        self.countrySelected = country
     }
 }

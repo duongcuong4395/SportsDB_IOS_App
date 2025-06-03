@@ -11,7 +11,9 @@ struct Player: Equatable {
     var idTeam2, idTeamNational: String?
     var idAPIfootball, idPlayerManager, idWikidata, idTransferMkt: String?
     var idESPN, nationality, player, playerAlternate: String?
-    var team, team2, sport, soccerXMLTeamID: String?
+    var team, team2, soccerXMLTeamID: String?
+    
+    var sport: SportType?
     var dateBorn: String?
     var dateDied: String?
     var number, dateSigned, signing, wage: String?
@@ -34,5 +36,31 @@ struct Player: Equatable {
     var fanart1, fanart2, fanart3, fanart4: String?
     var creativeCommons, locked: String?
     var relevance: String?
+    
+}
+
+
+struct PlayersAIResponse: Codable {
+    var name: String
+}
+
+import SwiftUI
+
+
+
+struct MorePlayersView: View {
+    var players: [PlayersAIResponse]
+    var team: Team
+    var body: some View {
+        TabView{
+            ForEach(self.players, id: \.name) { player in
+                PlayerDetailByAIView(playerName: player.name, teamName: team.teamName)
+                    
+            }
+        }
+        .tabViewStyle(PageTabViewStyle())
+        .frame(height: UIScreen.main.bounds.height / 2)
+    }
+
     
 }

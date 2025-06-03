@@ -14,7 +14,7 @@ struct LeagueDTO: Codable {
     var idSoccerXML: String? = ""
     var idAPIfootball: String? = ""
     
-    var sportType: String
+    var sportType: SportType?
     var leagueName: String?  = ""
     var leagueAlternate: String? = ""
     var division: String? = ""

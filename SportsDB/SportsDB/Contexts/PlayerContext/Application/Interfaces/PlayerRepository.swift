@@ -16,4 +16,6 @@ protocol PlayerRepository {
     func lookupMilestones(playerID: String) async throws -> [Milestone]
     
     func lookupContracts(playerID: String) async throws -> [Contract]
+    
+    func lookupAllPlayers(teamID: String) async throws -> [Player]
 }

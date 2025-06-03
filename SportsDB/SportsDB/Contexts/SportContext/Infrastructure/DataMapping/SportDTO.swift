@@ -146,7 +146,7 @@ extension SportType{
 }
 
 extension SportType {
-    var defaultFormat: CompetitionFormat {
+    var competitionFormat: CompetitionFormat {
         switch self {
         case .Soccer, .Basketball, .Baseball, .AmericanFootball, .IceHockey, .Rugby, .AustralianFootball, .FieldHockey, .Volleyball, .Netball, .Handball, .Lacrosse:
             return .teamVsTeam

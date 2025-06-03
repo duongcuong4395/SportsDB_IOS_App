@@ -7,29 +7,73 @@
 
 import SwiftUI
 
-struct ListEventView: View {
+struct ListEventView<OptionEventView: View>: View {
     var events: [Event]
+    @State private var showModels: [Bool] = []
+    
+    @State private var repeatAnimationOnApear = false
+    
+    var optionEventView: (Event) -> OptionEventView
+    
+    var homeTeamTapped: (Event) -> Void
+    var awayTeamTapped: (Event) -> Void
+    var eventTapped: (Event) -> Void
+    
     var body: some View {
-        List {
-            ForEach(events, id: \.idEvent) { event in
-                HStack {
-                    VStack {
-                        Text(event.eventName)
-                        Text(event.leagueName)
-                    }
-                    Spacer()
-                    VStack {
-                        HStack {
-                            Text(event.homeTeam)
-                            Text(event.homeScore)
-                        }
-                        HStack {
-                            Text(event.awayTeam)
-                            Text(event.awayScore)
+        VStack {
+            if events.count > 3 {
+                ScrollView(showsIndicators: false) {
+                    LazyVStack(spacing: 15) {
+                        ForEach(Array(events.enumerated()), id: \.element.idEvent) { index, event in
+                            EventItemView(
+                                isVisible: $showModels.indices.indices.contains(index) ?
+                                $showModels[index] : .constant(false),
+                                delay: Double(index) * 0.01,
+                                
+                                event: event,
+                                optionView: optionEventView,
+                                homeTeamTapped: homeTeamTapped,
+                                awayTeamTapped: awayTeamTapped,
+                                eventTapped: eventTapped)
+                            .rotateOnAppear()
+                            .onAppear{
+                                guard showModels[index] == false else { return }
+                                withAnimation {
+                                    showModels[index] = true
+                                }
+                            }
+                            .onDisappear{
+                                guard showModels[index] == true else { return }
+                                if repeatAnimationOnApear {
+                                    self.showModels[index] = false
+                                }
+                                
+                            }
                         }
                     }
                 }
+            } else {
+                LazyVStack(spacing: 15) {
+                    ForEach(Array(events.enumerated()), id: \.element.idEvent) { index, event in
+                        EventItemView(
+                            isVisible: $showModels.indices.indices.contains(index) ?
+                            $showModels[index] : .constant(false),
+                            delay: Double(index) * 0.01,
+                            
+                            event: event, optionView: optionEventView, homeTeamTapped: homeTeamTapped, awayTeamTapped: awayTeamTapped, eventTapped: eventTapped)
+                            .rotateOnAppear()
+                            
+                    }
+                }
             }
+        }
+        .onAppear{
+            withAnimation {
+                if showModels.count != events.count {
+                    self.showModels = Array(repeating: false, count: events.count)
+               }
+            }
+            
         }
     }
 }

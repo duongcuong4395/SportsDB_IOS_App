@@ -6,7 +6,7 @@
 //
 
 struct LookupEventStatisticsAPIResponse: Codable {
-    var eventStatistics: [EventStatisticsDTO]
+    var eventStatistics: [EventStatisticsDTO]?
     
     enum CodingKeys: String, CodingKey {
         case eventStatistics = "eventstats"

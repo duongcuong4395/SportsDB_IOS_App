@@ -6,6 +6,15 @@
 //
 
 class PlayerAPIService: APIExecution, PlayerRepository {
+    func lookupAllPlayers(teamID: String) async throws -> [Player] {
+        
+        let response: LookupAllPlayersAPIResponse = try await sendRequest(for: PlayerEndpoint<LookupAllPlayersAPIResponse>.LookupAllPlayers(teamID: teamID))
+        
+        guard let players = response.players else { return [] }
+        
+        return players.map { $0.toDomain() }
+    }
+    
     func lookupContracts(playerID: String) async throws -> [Contract] {
         let response: LookupContractsAPIResponse = try await sendRequest(for: PlayerEndpoint<LookupContractsAPIResponse>.LookupContracts(playerID: playerID))
         

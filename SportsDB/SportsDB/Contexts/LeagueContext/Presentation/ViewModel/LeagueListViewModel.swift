@@ -12,9 +12,13 @@ import Foundation
 final class LeagueListViewModel: ObservableObject {
     @Published var leagues: [League] = []
     @Published var leaguesTable: [LeagueTable] = []
+    
+    
     @Published var isLoading = false
     @Published var errorMessage: String?
 
+    @Published var showRanks = [Bool](repeating: false, count: 0)
+    
     private let getLeaguesUseCase: GetLeaguesUseCase
     private let lookupLeagueUseCase: LookupLeagueUseCase
     private let lookupLeagueTableUseCase: LookupLeagueTableUseCase
@@ -27,12 +31,31 @@ final class LeagueListViewModel: ObservableObject {
         self.lookupLeagueTableUseCase = lookupLeagueTableUseCase
     }
 
+    func resetShowRank() {
+        self.showRanks = [Bool](repeating: false, count: 0)
+    }
+    
+    func resetLeaguesTable() {
+        self.leaguesTable = []
+    }
+}
+
+// MARK: For Each Use Case
+@MainActor
+extension LeagueListViewModel {
     func fetchLeagues(country: String, sport: String) async {
         isLoading = true
         defer { isLoading = false }
-
+        print("=== fetchLeagues", country, sport)
         do {
-            leagues = try await getLeaguesUseCase.execute(country: country, sport: sport)
+            
+            let leagues1 = try await getLeaguesUseCase.execute(country: country, sport: "")
+            let leagues2 = try await getLeaguesUseCase.execute(country: country, sport: sport)
+            
+            var leaguesMerge = leagues1 + leagues2
+            leaguesMerge = Array(Set(leaguesMerge))
+            leaguesMerge = leaguesMerge.filter { $0.sportType?.rawValue == sport }
+            self.leagues = leaguesMerge.sorted { $0.leagueName ?? "" > $1.leagueName ?? "" }
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -54,10 +77,9 @@ final class LeagueListViewModel: ObservableObject {
         defer { isLoading = false }
         do {
             leaguesTable = try await lookupLeagueTableUseCase.execute(league_ID: leagueID, season: season)
+            self.showRanks = [Bool](repeating: false, count: leaguesTable.count)
         } catch {
             errorMessage = error.localizedDescription
         }
     }
-    
 }
-

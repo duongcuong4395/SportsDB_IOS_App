@@ -7,8 +7,10 @@
 
 import SwiftUI
 
+@MainActor
 class SeasonListViewModel: ObservableObject {
     @Published var seasons: [Season] = []
+    @Published var seasonSelected: Season?
     @Published var errorMessage: String = ""
     
     
@@ -19,9 +21,15 @@ class SeasonListViewModel: ObservableObject {
     }
     
     
+    func setSeason(by season: Season?) {
+        self.seasonSelected = nil
+        self.seasonSelected = season
+    }
+    
     func getListSeasons(leagueID: String) async {
         do {
-            seasons = try await getListSeasonsUseCase.execute(leagueID: leagueID)
+            let res = try await getListSeasonsUseCase.execute(leagueID: leagueID)
+            seasons = res.sorted{ $0.season > $1.season }
         } catch {
             errorMessage = error.localizedDescription
         }

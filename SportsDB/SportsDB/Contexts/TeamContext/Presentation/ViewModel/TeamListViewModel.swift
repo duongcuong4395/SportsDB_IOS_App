@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@MainActor
 class TeamListViewModel: ObservableObject {
     @Published var teams: [Team] = []
     @Published var teamsBySearch: [Team] = []
@@ -42,6 +43,14 @@ class TeamListViewModel: ObservableObject {
         } catch {
             erroMessage = error.localizedDescription
         }
+    }
+    
+    func getTeam(by text: String) -> Team? {
+        let team = teams.first { team in
+            team.idTeam == text || team.teamName == text
+        }
+        print("=== getTeam:", text, team?.teamName ?? "empty Team Name", team?.idTeam ?? "empty Team id")
+        return team
     }
 }
 

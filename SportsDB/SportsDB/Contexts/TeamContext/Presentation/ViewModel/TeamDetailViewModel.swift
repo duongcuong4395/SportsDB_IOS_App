@@ -8,6 +8,7 @@
 import SwiftUI
 
 class TeamDetailViewModel: ObservableObject {
+    @Published var teamSelected: Team?
     @Published var equipments: [Equipment] = []
     
     @Published var isLoading: Bool = false
@@ -17,6 +18,10 @@ class TeamDetailViewModel: ObservableObject {
     
     init(lookupEquipmentUseCase: LookupEquipmentUseCase) {
         self.lookupEquipmentUseCase = lookupEquipmentUseCase
+    }
+    
+    func setTeam(by team: Team?) {
+        self.teamSelected = team
     }
     
     func lookupEquipment(teamID: String) async {

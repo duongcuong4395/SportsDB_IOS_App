@@ -6,7 +6,7 @@
 //
 
 struct LookupEventTVBroadcastsAPIResponse: Codable {
-    var eventTVBroadcasts: [EventTVBroadcastDTO]
+    var eventTVBroadcasts: [EventTVBroadcastDTO]?
     
     enum CodingKeys: String, CodingKey {
         case eventTVBroadcasts = "tvevent"

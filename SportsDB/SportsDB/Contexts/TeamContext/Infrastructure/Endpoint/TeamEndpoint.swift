@@ -27,11 +27,11 @@ extension TeamEndpoint: HttpRouter {
         switch self {
         case .GetListTeams(leagueName: _, sportName: _, countryName: _):
             return "api/v1/json/3/search_all_teams.php"
-        case .SearchTeams(teamName: ):
+        case .SearchTeams(teamName: _):
             return "api/v1/json/3/searchteams.php"
-        case .LookupTeam(teamID: let teamID):
+        case .LookupTeam(teamID: _):
             return "api/v1/json/3/lookupteam.php"
-        case .LookupEquipment(teamID: let teamID):
+        case .LookupEquipment(teamID: _):
             return "api/v1/json/3/lookupequipment.php"
         }
     }
@@ -47,7 +47,7 @@ extension TeamEndpoint: HttpRouter {
     var parameters: Alamofire.Parameters? {
         switch self {
         case .GetListTeams(leagueName: let leagueName, sportName: let sportName, countryName: let countryName):
-            if leagueName.isEmpty {
+            if !leagueName.isEmpty {
                 return ["l": leagueName]
             } else {
                 return ["s": sportName, "c": countryName]

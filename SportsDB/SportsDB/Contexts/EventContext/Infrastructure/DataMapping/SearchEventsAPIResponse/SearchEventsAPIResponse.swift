@@ -9,7 +9,8 @@ import Foundation
 
 
 struct SearchEventsAPIResponse: Codable {
-    var events: [EventDTO]
+    var events: [EventDTO]?
+    
     enum CodingKeys: String, CodingKey {
         case events = "event"
     }

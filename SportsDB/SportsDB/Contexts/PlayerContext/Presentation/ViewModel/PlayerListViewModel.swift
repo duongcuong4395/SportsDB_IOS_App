@@ -7,14 +7,19 @@
 
 import SwiftUI
 
+@MainActor
 class PlayerListViewModel: ObservableObject {
     
     @Published var playersByLookUp: [Player] = []
+    @Published var playersByLookUpAllForaTeam: [Player] = []
     @Published var playersBySearch: [Player] = []
+    
     @Published var honoursByLookUp: [Honour] = []
     @Published var formerTeamsByLookUp: [FormerTeam] = []
     @Published var milestonesByLookUp: [Milestone] = []
     @Published var contractsByLookUp: [Contract] = []
+    
+    @Published var playersByAI: [PlayersAIResponse] = []
     
     @Published var isLoading: Bool = false
     @Published var errorMessage: String = ""
@@ -28,12 +33,15 @@ class PlayerListViewModel: ObservableObject {
     
     private var lookupContractsUseCase: LookupContractsUseCase
     
+    private var lookupAllPlayersUseCase: LookupAllPlayersUseCase
+    
     init(lookupPlayerUseCase: LookupPlayerUseCase,
          searchPlayersUseCase: SearchPlayersUseCase,
          lookupHonoursUseCase: LookupHonoursUseCase,
          lookupFormerTeamsUseCase: LookupFormerTeamsUseCase,
          lookupMilestonesUseCase: LookupMilestonesUseCase,
-         lookupContractsUseCase: LookupContractsUseCase
+         lookupContractsUseCase: LookupContractsUseCase,
+         lookupAllPlayersUseCase: LookupAllPlayersUseCase
     ) {
         
         self.lookupPlayerUseCase = lookupPlayerUseCase
@@ -42,6 +50,7 @@ class PlayerListViewModel: ObservableObject {
         self.lookupFormerTeamsUseCase = lookupFormerTeamsUseCase
         self.lookupMilestonesUseCase = lookupMilestonesUseCase
         self.lookupContractsUseCase = lookupContractsUseCase
+        self.lookupAllPlayersUseCase = lookupAllPlayersUseCase
     }
     
     func lookupPlayerUseCase(playerID: String) async {
@@ -63,6 +72,29 @@ class PlayerListViewModel: ObservableObject {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+    
+    func searchPlayers(by playerName: String) async -> [Player] {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            return try await searchPlayersUseCase.execute(playerName: playerName)
+        } catch {
+            errorMessage = error.localizedDescription
+            return []
+        }
+    }
+    
+    func lookupPlayer(by playerID: String) async -> [Player] {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            return try await lookupPlayerUseCase.execute(playerID: playerID)
+        } catch {
+            errorMessage = error.localizedDescription
+            return []
+        }
+        
     }
     
     func lookupHonours(playerID: String) async {
@@ -105,5 +137,16 @@ class PlayerListViewModel: ObservableObject {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+    
+    func lookupAllPlayers(teamID: String) async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            playersByLookUpAllForaTeam = try await lookupAllPlayersUseCase.execute(teamID: teamID)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
     }
 }

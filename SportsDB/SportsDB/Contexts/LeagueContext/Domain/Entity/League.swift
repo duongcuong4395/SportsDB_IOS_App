@@ -9,13 +9,13 @@ import Foundation
 
 // LeagueContext/Domain/Entity/League.swift
 
-struct League: Equatable {
+struct League: Equatable, Hashable {
     var id: String = "" //UUID = UUID()
     var idLeague: String? = ""
     var idSoccerXML: String? = ""
     var idAPIfootball: String? = ""
     
-    var sportType: String
+    var sportType: SportType? //String
     var leagueName: String?  = ""
     var leagueAlternate: String? = ""
     var division: String? = ""

@@ -8,7 +8,7 @@
 import Foundation
 
 struct LookupEventTimelineAPIResponse: Codable {
-    var timelines: [EventTimelineDTO]
+    var timelines: [EventTimelineDTO]?
     
     enum CodingKeys: String, CodingKey {
         case timelines = "timeline"

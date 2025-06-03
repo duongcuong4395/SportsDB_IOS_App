@@ -6,9 +6,9 @@
 //
 
 struct SearchEventsUseCase {
-    let eventRepository: EventRepository
+    let repository: EventRepository
     
     func execute(eventName: String, season: String)  async throws -> [Event] {
-        try await eventRepository.searchEvents(eventName: eventName, season: season)
+        try await repository.searchEvents(eventName: eventName, season: season)
     }
 }

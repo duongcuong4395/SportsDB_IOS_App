@@ -16,6 +16,8 @@ enum PlayerEndpoint<T: Decodable> {
     case LookupMilestones(playerID: String)
     
     case LookupContracts(playerID: String)
+    
+    case LookupAllPlayers(teamID: String)
 }
 
 import Foundation
@@ -42,6 +44,8 @@ extension PlayerEndpoint: HttpRouter {
             return "api/v1/json/3/lookupmilestones.php"
         case .LookupContracts(playerID: _):
             return "api/v1/json/3/lookupcontracts.php"
+        case .LookupAllPlayers(teamID: _):
+            return "api/v1/json/123/lookup_all_players.php"
         }
     }
     
@@ -67,6 +71,8 @@ extension PlayerEndpoint: HttpRouter {
             return ["id": playerID]
         case .LookupContracts(playerID: let playerID):
             return ["id": playerID]
+        case .LookupAllPlayers(teamID: let teamID):
+            return ["id": teamID]
         }
     }
     

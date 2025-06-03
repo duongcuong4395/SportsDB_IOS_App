@@ -8,7 +8,7 @@
 import Foundation
 
 struct LookupLineupAPIResponse: Codable {
-    var lineups: [EventLineupDTO]
+    var lineups: [EventLineupDTO]?
     
     enum CodingKeys: String, CodingKey {
         case lineups = "lineup"

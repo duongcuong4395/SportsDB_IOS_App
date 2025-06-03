@@ -9,7 +9,8 @@ import Foundation
 
 // MARK: - EventResultsAPIResponse
 struct LookupEventResultsAPIResponse: Codable {
-    var results: [EventResultDTO]
+    var results: [EventResultDTO]?
+    
     enum CodingKeys: String, CodingKey {
         case results = "results"
     }

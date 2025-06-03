@@ -6,7 +6,8 @@
 //
 
 struct LookupEventAPIResponse: Codable {
-    var events: [EventDTO]
+    var events: [EventDTO]?
+    
     enum CodingKeys: String, CodingKey {
         case events = "events"
     }
