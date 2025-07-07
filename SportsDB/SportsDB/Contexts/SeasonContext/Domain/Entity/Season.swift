@@ -11,6 +11,10 @@ import SwiftUI
 struct Season: Identifiable, Equatable {
     let id = UUID()
     var season: String
+    
+    mutating func setSeason(by season: Season) {
+        self.season = season.season
+    }
 }
 
 

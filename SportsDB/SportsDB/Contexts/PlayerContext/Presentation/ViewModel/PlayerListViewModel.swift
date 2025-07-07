@@ -53,6 +53,10 @@ class PlayerListViewModel: ObservableObject {
         self.lookupAllPlayersUseCase = lookupAllPlayersUseCase
     }
     
+    func resetPlayersByLookUpAllForaTeam() {
+        playersByLookUpAllForaTeam = []
+    }
+    
     func lookupPlayerUseCase(playerID: String) async {
         isLoading = true
         defer { isLoading = false }
@@ -140,13 +144,36 @@ class PlayerListViewModel: ObservableObject {
     }
     
     func lookupAllPlayers(teamID: String) async {
-        isLoading = true
-        defer { isLoading = false }
-        do {
-            playersByLookUpAllForaTeam = try await lookupAllPlayersUseCase.execute(teamID: teamID)
-        } catch {
-            errorMessage = error.localizedDescription
+        DispatchQueueManager.share.runOnMain {
+            self.isLoading = true
         }
         
+        defer {
+            DispatchQueueManager.share.runOnMain {
+                self.isLoading = false
+            }
+        }
+        do {
+            
+            let playersResponse = try await lookupAllPlayersUseCase.execute(teamID: teamID)
+            print("=== playersByLookUpAllForaTeam:", teamID, playersResponse.count)
+            DispatchQueueManager.share.runOnMain {
+                self.playersByLookUpAllForaTeam = playersResponse
+            }
+        } catch {
+            DispatchQueueManager.share.runOnMain {
+                self.errorMessage = error.localizedDescription
+            }
+            
+        }
+        
+    }
+    
+    func lookupAllPlayers(by teamID: String) async -> [Player] {
+        do {
+            return try await lookupAllPlayersUseCase.execute(teamID: teamID)
+        } catch {
+            return []
+        }
     }
 }

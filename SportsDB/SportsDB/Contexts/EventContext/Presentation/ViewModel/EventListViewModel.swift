@@ -12,9 +12,8 @@ import SwiftUI
 class EventListViewModel: ObservableObject {
     @Published var eventsBySearch: [Event] = []
     @Published var eventsByLookup: [Event] = []
-    @Published var eventsByLookupList: [Event] = []
+    
     @Published var eventsResult: [EventResult] = []
-    @Published var eventsInSpecific: [Event] = []
     @Published var eventsPastLeague: [Event] = []
     
     @Published var lineups: [EventLineup] = []
@@ -30,29 +29,19 @@ class EventListViewModel: ObservableObject {
     
     private var searchEventsUseCase: SearchEventsUseCase
     private var lookupEventUseCase: LookupEventUseCase
-    private var lookupListEventsUseCase: LookupListEventsUseCase
-    private var lookupEventsInSpecificUseCase: LookupEventsInSpecificUseCase
-    private var lookupEventsPastLeagueUseCase: LookupEventsPastLeagueUseCase
     
     init(searchEventsUseCase: SearchEventsUseCase,
-         lookupEventUseCase: LookupEventUseCase,
-         lookupListEventsUseCase: LookupListEventsUseCase,
-         lookupEventsInSpecificUseCase: LookupEventsInSpecificUseCase,
-         lookupEventsPastLeagueUseCase: LookupEventsPastLeagueUseCase
-         
+         lookupEventUseCase: LookupEventUseCase
     ) {
-        
         self.searchEventsUseCase = searchEventsUseCase
         self.lookupEventUseCase = lookupEventUseCase
-        self.lookupListEventsUseCase = lookupListEventsUseCase
-        self.lookupEventsInSpecificUseCase = lookupEventsInSpecificUseCase
-        self.lookupEventsPastLeagueUseCase = lookupEventsPastLeagueUseCase
     }
 }
 
 extension EventListViewModel {
-    func setCurrentRound(by round: Int) {
+    func setCurrentRound(by round: Int, competion: @escaping (Int) ->  Void) {
         self.currentRound = round
+        competion(self.currentRound)
     }
     
     func setNextCurrentRound() {
@@ -63,16 +52,8 @@ extension EventListViewModel {
         self.currentRound -= 1
     }
     
-    func resetEventsByLookupList() {
-        self.eventsByLookupList = []
-    }
-    
     func sesetEventsBySearch() {
         self.eventsBySearch = []
-    }
-    
-    func resetEventsInSpecific() {
-        self.eventsInSpecific = []
     }
 }
 
@@ -97,38 +78,28 @@ extension EventListViewModel {
             errorMessage = error.localizedDescription
         }
     }
-    
-    func lookupListEvents(leagueID: String, round: String, season: String) async {
-        isLoading = true
-        defer { isLoading = false }
-        print("")
-        do {
-            self.eventsByLookupList = try await lookupListEventsUseCase.execute(leagueID: leagueID, round: round, season: season)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-    
-    
-    func lookupEventsInSpecific(leagueID: String, season: String) async {
-        isLoading = true
-        defer { isLoading = false }
-        print("")
-        do {
-            self.eventsInSpecific = try await lookupEventsInSpecificUseCase.execute(leagueID: leagueID, season: season)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-    
-    func lookupEventsPastLeague(leagueID: String) async {
-        isLoading = true
-        defer { isLoading = false }
-        print("")
-        do {
-            self.eventsPastLeague = try await lookupEventsPastLeagueUseCase.execute(leagueID: leagueID)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
 }
+
+extension EventListViewModel {
+    
+    
+    func getEventExample() -> Event {
+        if let jsonEventDTOData = eventExampleJson.data(using: .utf8) {
+            do {
+                let decoder = JSONDecoder()
+                let eventDTO = try decoder.decode(EventDTO.self, from: jsonEventDTOData)
+                let domainModel = eventDTO.toDomain()
+                return domainModel
+            } catch {
+                print("❌ JSON decode failed: \(error)")
+            }
+        }
+        
+        return Event()
+    }
+    
+}
+
+
+
+

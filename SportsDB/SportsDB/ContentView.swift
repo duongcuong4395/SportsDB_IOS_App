@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/*
 struct ContentView: View {
     @StateObject private var sportRouter = SportRouter()
     
@@ -24,13 +25,13 @@ struct ContentView: View {
     @StateObject var eventListVM: EventListViewModel
     
     @StateObject var playerListVM: PlayerListViewModel
-    
+    @StateObject var trophyListVM: TrophyListViewModel = TrophyListViewModel()
     
     @StateObject var chatVM: ChatViewModel = ChatViewModel()
     
-    var badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (width: 60, height: 60)
     
-    @State var executeStatusForGetPlayes: ExecuteStatus = .Progress
+    
+    var badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (width: 60, height: 60)
     
     init() {
         // MARK: Country Management Context
@@ -74,12 +75,14 @@ struct ContentView: View {
         let lookupListEventsUseCase = LookupListEventsUseCase(repository: eventRepository)
         let lookupEventsInSpecificUseCase = LookupEventsInSpecificUseCase(repository: eventRepository)
         let lookupEventsPastLeagueUseCase = LookupEventsPastLeagueUseCase(repository: eventRepository)
+        let getEventsOfTeamByScheduleUseCase = GetEventsOfTeamByScheduleUseCase(repository: eventRepository)
         self._eventListVM = StateObject(wrappedValue: EventListViewModel(
             searchEventsUseCase: searchEventsUseCase,
             lookupEventUseCase: lookupEventUseCase,
             lookupListEventsUseCase: lookupListEventsUseCase,
             lookupEventsInSpecificUseCase: lookupEventsInSpecificUseCase,
-            lookupEventsPastLeagueUseCase: lookupEventsPastLeagueUseCase))
+            lookupEventsPastLeagueUseCase: lookupEventsPastLeagueUseCase,
+            getEventsOfTeamByScheduleUseCase: getEventsOfTeamByScheduleUseCase))
         
         
         let playerRepository = PlayerAPIService()
@@ -103,7 +106,10 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            GenericNavigationStack(router: sportRouter, rootContent: {
+            GenericNavigationStack(
+                router: sportRouter,
+                rootContent: {
+                    
                 ListCountryRouteView(tappedCountry: { country in
                     UIApplication.shared.endEditing()
                     countryListVM.setCountry(by: country)
@@ -125,13 +131,13 @@ struct ContentView: View {
         .environmentObject(teamListVM)
         .environmentObject(teamDetailVM)
         .environmentObject(playerListVM)
+        .environmentObject(trophyListVM)
+        .environmentObject(eventListVM)
         
         .environmentObject(chatVM)
         
         .onAppear(perform: {
-            //chatVM.initializeChat()
             chatVM.initChat()
-            
             Task {
                 await countryListVM.fetchCountries()
             }
@@ -140,8 +146,8 @@ struct ContentView: View {
     }
 }
 
-
-extension ContentView{
+// MARK: Sport Destination
+extension ContentView {
     @ViewBuilder
     private func sportDestination(_ route: SportRoute) -> some View {
         switch route {
@@ -166,6 +172,7 @@ extension ContentView{
                         await teamListVM.getListTeams(leagueName: league.leagueName ?? "", sportName: sportName, countryName: countryName)
                         await eventListVM.lookupEventsPastLeague(leagueID: league.idLeague ?? "")
                         await seasonListVM.getListSeasons(leagueID: league.idLeague ?? "")
+                        
                         sportRouter.navigateToLeagueDetail(by: league.idLeague ?? "")
                     }
                     
@@ -177,20 +184,32 @@ extension ContentView{
                     badgeImageSizePerTeam: badgeImageSizePerLeague,
                     teamTapped: { team in
                         
+                        withAnimation {
+                            teamDetailVM.teamSelected = nil
+                            trophyListVM.resetTrophies()
+                            playerListVM.resetPlayersByLookUpAllForaTeam()
+                        }
+                        
                         teamDetailVM.setTeam(by: team)
+                        selectTeam(by: team.teamName)
+                        
+                        guard let team = teamDetailVM.teamSelected else { return }
+                        
                         sportRouter.navigateToTeamDetail(by: team.idTeam ?? "")
                     }
                 ),
                 seasonForLeagueView: SeasonForLeagueView(
-                    seasons: seasonListVM.seasons,
-                    seasonSelected: seasonListVM.seasonSelected,
                     tappedSeason: { season in
                         withAnimation(.spring()) {
-                            eventListVM.resetEventsByLookupList()
+                            Task {
+                                await eventListVM.resetEventsByRoundAndSeason()
+                                await seasonListVM.setSeason(by: season)
+                            }
+                            
                             eventListVM.resetEventsInSpecific()
                             leagueListVM.resetLeaguesTable()
                             
-                            seasonListVM.setSeason(by: season)
+                            
                             eventListVM.setCurrentRound(by: 1)
                             
                             Task {
@@ -198,11 +217,16 @@ extension ContentView{
                                     leagueID: leagueID,
                                     season: seasonListVM.seasonSelected?.season ?? "")
                                 
+                                eventListVM.getEventsByRoundAndSeason(
+                                    leagueID: leagueID,
+                                    round: "\(eventListVM.currentRound)",
+                                    season: seasonListVM.seasonSelected?.season ?? "")
+                                /*
                                 await eventListVM.lookupListEvents(
                                     leagueID: leagueID,
                                     round: "\(eventListVM.currentRound)",
                                     season: seasonListVM.seasonSelected?.season ?? "")
-                                
+                                */
                                 await eventListVM.lookupEventsInSpecific(
                                     leagueID: leagueID,
                                     season: seasonListVM.seasonSelected?.season ?? "")
@@ -213,9 +237,16 @@ extension ContentView{
                 leagueTable: (
                     withConditions: seasonListVM.seasonSelected != nil && leagueListVM.leaguesTable.count > 0,
                     withView:  LeagueTableView(
-                        leagueTables: leagueListVM.leaguesTable,
                         tappedTeam: { leagueTable in
                             
+                            withAnimation {
+                                teamDetailVM.teamSelected = nil
+                                trophyListVM.resetTrophies()
+                                playerListVM.resetPlayersByLookUpAllForaTeam()
+                            }
+                            
+                            selectTeam(by: leagueTable.teamName ?? "")
+                            sportRouter.navigateToTeamDetail(by: leagueTable.idTeam ?? "")
                         })
                 ),
                 events: (
@@ -224,8 +255,7 @@ extension ContentView{
                         withView: ListEventView(
                             events: eventListVM.eventsPastLeague,
                             optionEventView: getEventOptionsView,
-                            homeTeamTapped: tapOnHomeTeam,
-                            awayTeamTapped: { event in },
+                            tapOnTeam: tapOnTeam,
                             eventTapped: { event in })
                     ),
                     forEachRound: (
@@ -236,30 +266,43 @@ extension ContentView{
                                 hasNextRound: eventListVM.hasNextRound,
                                 nextRoundTapped: {
                                     eventListVM.setNextCurrentRound()
+                                    eventListVM.getEventsByRoundAndSeason(
+                                        leagueID: leagueID,
+                                        round: "\(eventListVM.currentRound)",
+                                        season: seasonListVM.seasonSelected?.season ?? "")
                                     Task {
+                                        
+                                        /*
                                         await eventListVM.lookupListEvents(
                                             leagueID: leagueID,
                                             round: "\(eventListVM.currentRound)",
                                             season: seasonListVM.seasonSelected?.season ?? "")
+                                         */
                                     }
                                 },
                                 previousRoundTapped: {
                                     eventListVM.setPreviousCurrentRound()
+                                    eventListVM.getEventsByRoundAndSeason(
+                                        leagueID: leagueID,
+                                        round: "\(eventListVM.currentRound)",
+                                        season: seasonListVM.seasonSelected?.season ?? "")
                                     Task {
+                                        
+                                        /*
                                         await eventListVM.lookupListEvents(
                                             leagueID: leagueID,
                                             round: "\(eventListVM.currentRound)",
                                             season: seasonListVM.seasonSelected?.season ?? "")
+                                         */
                                     }
                                 })
                         ),
                         inList: (
-                            withTheRightConditions: eventListVM.eventsByLookupList.count > 0,
+                            withTheRightConditions: (eventListVM.eventsByRoundAndSeason.models ?? []).count > 0,
                             withView: ListEventView(
-                                events: eventListVM.eventsByLookupList,
+                                events: eventListVM.eventsByRoundAndSeason.models ?? [],
                                 optionEventView: getEventOptionsView,
-                                homeTeamTapped: tapOnHomeTeam,
-                                awayTeamTapped: { event in },
+                                tapOnTeam: tapOnTeam,
                                 eventTapped: { event in }))
                     ),
                     forSpecific: (
@@ -267,8 +310,7 @@ extension ContentView{
                         withView: ListEventView(
                             events: eventListVM.eventsInSpecific,
                             optionEventView: getEventOptionsView,
-                            homeTeamTapped: tapOnHomeTeam,
-                            awayTeamTapped: { event in },
+                            tapOnTeam: tapOnTeam,
                             eventTapped: { event in })
                     )
                 )
@@ -278,57 +320,99 @@ extension ContentView{
             if let team = teamDetailVM.teamSelected {
                 TeamDetailRouteView(
                     team: team,
+                    events: (
+                        condition: true,
+                        withView: EventsOfTeamByScheduleView(
+                            team: team,
+                            optionEventView: getEventOptionsView,
+                            tapOnTeam: { event, kindTeam in
+                                tapOnTeamForReplace(by: event, for: kindTeam)
+                                
+                                sportRouter.navigateToReplaceTeamDetail(by: teamID)
+                            },
+                            eventTapped: { event in })
+                    ),
+                    equipments: (
+                        condition: true,
+                        withView: EquipmentsListView(equipments: teamDetailVM.equipments)
+                    ),
                     players: (
-                        withMainView: PlayerListView(players: playerListVM.playersByLookUpAllForaTeam),
-                        withMorePlayersView: VStack {
-                            switch executeStatusForGetPlayes {
-                            case .Done:
-                                MorePlayersView(players: playerListVM.playersByAI, team: team)
-                            default:
-                                ProgressView()
+                        condition: true,
+                        withMainView: EmptyView()
+                        /*
+                            HStack {
+                                PlayerListView(players: playerListVM.playersByLookUpAllForaTeam, refreshPlayer: { player in
+                                    Task {
+                                        
+                                        
+                                        let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
+                                        if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
+                                            print("=== playerF", playerF.player ?? "", playerF.idPlayer ?? "")
+                                            
+                                            if let id = playerF.idPlayer {
+                                                let players = await playerListVM.lookupPlayer(by: id)
+                                                if players.count > 0 {
+                                                    guard let index = playerListVM.playersByLookUpAllForaTeam.firstIndex(where: { $0.player == player.player }) else { return }
+                                                    playerListVM.playersByLookUpAllForaTeam[index] = players[0]
+                                                    //self.player = players[0]
+                                                } else {
+                                                    //self.player = Player(player: playerName)
+                                                }
+                                            }
+                                        }
+                                    }
+                                })
+                                
+                                if executeStatusForGetPlayes == .Progress {
+                                    ProgressView()
+                                        .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                                }
                             }
-                        }
+                        */
+                    ),
+                    trophies: (
+                        condition: true,
+                        withView: TrophyListView(trophyGroup: trophyListVM.trophyGroups)
+                            .frame(height: UIScreen.main.bounds.height/2)
                     )
                 )
                 .onAppear{
-                getPlayers(by: team)
+                    //getPlayersAndTrophies(by: team)
                 }
             }
         }
     }
-    
-    
-    
-    func getPlayers(by team: Team) {
-        executeStatusForGetPlayes = .Progress
-        team.fetchPlayersAndTrophies(chatVM: chatVM) { trophyGroups, players in
-            
-            let playersNameFromLookup = playerListVM.playersByLookUpAllForaTeam.map { $0.player ?? "" }
-            let playersByAI = players.map{ $0.name }
-            print("=== playersNameFromLookup ", playersNameFromLookup)
-            print("=== playersByAI ", playersByAI)
-            
-            let cleanedPlayers = playersByAI.filter { otherName in
-                !playersNameFromLookup.contains { fullName in
-                    // loại bỏ nếu trùng chính xác, hoặc là 1 phần của full name (so sánh không phân biệt hoa thường)
-                    fullName.lowercased().contains(otherName.lowercased())
-                }
-            }
+}
 
-            print("=== cleanedPlayers", cleanedPlayers)
-            //self.players =  Array(players.prefix(25)) // [players[0]]
-            
-            
-            DispatchQueueManager.share.runOnMain {
-                playerListVM.playersByAI = cleanedPlayers.map { name in
-                    PlayersAIResponse(name: name)
-                }
-                executeStatusForGetPlayes = .Done
-            }
-            
+
+// MARK: Get getPlayersAndTrophies by Team
+extension ContentView {
+    func getPlayersAndTrophies(by team: Team) {
+        Task {
+            let(players, trophies) = try await team.fetchPlayersAndTrophies()
+            trophyListVM.setTrophyGroup(by: trophies)
+            getMorePlayer(players: players)
         }
     }
     
+    func getMorePlayer(players: [Player]) {
+        let cleanedPlayers = players.filter { otherName in
+            !playerListVM.playersByLookUpAllForaTeam.contains { fullName in
+                let fulName = (fullName.player ?? "").replacingOccurrences(of: "-", with: " ")
+                
+                return fulName.lowercased().contains(otherName.player?.lowercased() ?? "")
+            }
+        }
+        
+        DispatchQueueManager.share.runOnMain {
+            playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
+        }
+    }
+}
+
+
+// MARK: Options For Event Item View
+extension ContentView {
     @ViewBuilder
     func getEventOptionsView(event: Event) -> some View {
         EventOptionsView(event: event) { action, event in
@@ -351,39 +435,75 @@ extension ContentView{
         }
     }
     
-    func tapOnHomeTeam(by event: Event) {
+    func resetWhenTapTeam() {
+        withAnimation {
+            teamDetailVM.teamSelected = nil
+            trophyListVM.resetTrophies()
+            playerListVM.resetPlayersByLookUpAllForaTeam()
+            teamDetailVM.resetEquipment()
+        }
+    }
+    
+    func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
+        resetWhenTapTeam()
+        withAnimation {
+            
+            let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
+            let homeTeam = String(homeVSAwayTeam?[0] ?? "")
+            let awayTeam = String(homeVSAwayTeam?[1] ?? "")
+            let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
+            let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
+            
+            selectTeam(by: team)
+            sportRouter.navigateToTeamDetail(by: teamID)
+        }
+    }
+    
+    func tapOnTeamForReplace(by event: Event, for kindTeam: KindTeam) {
+        resetWhenTapTeam()
         withAnimation {
             
             print("=== tapOnHomeTeam.event", event.eventName ?? "", event.homeTeam ?? "", event.idHomeTeam ?? "")
             let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
             let homeTeam = String(homeVSAwayTeam?[0] ?? "")
             let awayTeam = String(homeVSAwayTeam?[1] ?? "")
+            let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
+            //let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
             
+            selectTeam(by: team)
+        }
+    }
+    
+    func selectTeam(by team: String) {
+        Task {
             
+            await teamListVM.searchTeams(teamName: team)
             
-            Task {
-                
-                await teamListVM.searchTeams(teamName: homeTeam)
-                let names = teamListVM.teamsBySearch.map { $0.teamName }
-                guard teamListVM.teamsBySearch.count > 0 else { return }
-                
-                teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
-                
-                guard let team = teamDetailVM.teamSelected else { return }
-                
-                await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
-                
-                sportRouter.navigateToTeamDetail(by: team.idTeam ?? "")
-            }
+            guard teamListVM.teamsBySearch.count > 0 else { return }
+            
+            teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+            
+            guard let team = teamDetailVM.teamSelected else { return }
+            
+            self.eventListVM.eventsOfTeamForNext.models = await eventListVM.getEventsOfTeamBySchedule(of: team.idTeam ?? "", by: .Next)
+            self.eventListVM.eventsOfTeamForPrevious.models = await eventListVM.getEventsOfTeamBySchedule(of: team.idTeam ?? "", by: .Previous)
+            
+            await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
+            
+            await teamDetailVM.lookupEquipment(teamID: team.idTeam ?? "")
+            
+            getPlayersAndTrophies(by: team)
             
         }
-        
     }
+    
 }
+*/
 
 
-enum ExecuteStatus {
-    case Done
-    case Progress
-    case Fail
-}
+
+
+
+
+
+// MARK: New 

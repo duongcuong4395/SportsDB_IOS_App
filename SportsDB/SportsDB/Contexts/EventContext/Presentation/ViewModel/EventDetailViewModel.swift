@@ -41,7 +41,6 @@ class EventDetailViewModel: ObservableObject {
         self.lookupEventTimelineUseCase = lookupEventTimelineUseCase
         self.lookupEventStatisticsUseCase = lookupEventStatisticsUseCase
         self.lookupEventTVBroadcastsUseCase = lookupEventTVBroadcastsUseCase
-        
     }
     
     func lookupEventResults(eventID: String) async {

@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct SeasonForLeagueView: View {
-    var seasons: [Season]
-    var seasonSelected: Season?
+    @EnvironmentObject var seasonListVM: SeasonListViewModel
+    
     var tappedSeason: (Season) -> Void
     
     var body: some View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(seasons, id: \.season) { season in
+                    ForEach(seasonListVM.seasons, id: \.season) { season in
                         
-                        let isSelected = season == seasonSelected
+                        let isSelected = season == seasonListVM.seasonSelected
                         
                         Text("\(season.season)")
                             .font(.callout.bold())

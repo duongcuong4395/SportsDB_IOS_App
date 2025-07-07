@@ -11,7 +11,8 @@ import SwiftUI
 struct SportsDBApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            //ContentView()
+            SportDBView()
         }
     }
 }

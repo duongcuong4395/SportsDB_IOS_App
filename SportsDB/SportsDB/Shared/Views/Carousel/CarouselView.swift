@@ -29,11 +29,18 @@ struct CarouselView<Content: View>: View {
                         .frame(width: cardWidth, height: cardHeight)
                         .scaleEffect(index == activeIndex ? 1.0 : 0.7) // Phóng to mục đang chọn
                         .animation(.easeInOut(duration: 0.5), value: activeIndex) // Hiệu ứng chuyển động
+                    
+                        //.scaleEffect(index == activeIndex && !isDragging ? 1.0 : 0.7)
+                        //.animation(isDragging ? nil : .easeInOut(duration: 0.3), value: activeIndex)
+                        
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 activeIndex = index
-                                updateOffset(for: geometry.size.width, at: index)
+                                
+                                //updateOffset(for: geometry.size.width, at: index)
+                                updateOffset(for: geometry.size.width, at: activeIndex)
                             }
+                            
                         }
                 }
             }
@@ -76,3 +83,5 @@ struct CarouselView<Content: View>: View {
         return newIndex
     }
 }
+
+

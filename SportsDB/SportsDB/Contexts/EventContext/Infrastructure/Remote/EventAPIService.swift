@@ -6,6 +6,24 @@
 //
 
 final class EventAPIService: EventRepository, APIExecution {
+    func getEvents(of team: String, by schedule: NextAndPrevious) async throws -> [Event] {
+        switch schedule {
+        case .Next:
+            let response: GetEventsOfTeamByNextAPIResponse = try await sendRequest(for: EventEndpoint<GetEventsOfTeamByNextAPIResponse>.GetEvents(of: team, by: schedule))
+            
+            guard let events = response.events else { return [] }
+            
+            return events.map { $0.toDomain() }
+        case .Previous:
+            let response: GetEventsOfTeamByPreviousAPIResponse = try await sendRequest(for: EventEndpoint<GetEventsOfTeamByPreviousAPIResponse>.GetEvents(of: team, by: schedule))
+            
+            guard let events = response.events else { return [] }
+            
+            return events.map { $0.toDomain() }
+        }
+        
+    }
+    
     func lookupEventsPastLeague(leagueID: String) async throws -> [Event] {
         let response: LookupEventsPastLeagueAPIResponse = try await sendRequest(for: EventEndpoint<LookupEventsPastLeagueAPIResponse>.LookupEventsPastLeague(leagueID: leagueID))
         

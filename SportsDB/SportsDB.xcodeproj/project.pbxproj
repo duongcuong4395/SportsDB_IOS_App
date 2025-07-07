@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FA0E52192DE4750F0070599B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FA0E52182DE4750F0070599B /* Alamofire */; };
+		FA60674A2DF432DF002FC07B /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = FA6067492DF432DF002FC07B /* Shimmer */; };
 		FAB118692DE8692C00496521 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FAB118682DE8692C00496521 /* Kingfisher */; };
 		FAC8A8862DEEA6F300905B7C /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = FAC8A8852DEEA6F300905B7C /* GoogleGenerativeAI */; };
 		FAC8A8892DEEA70D00905B7C /* GeminiAI in Frameworks */ = {isa = PBXBuildFile; productRef = FAC8A8882DEEA70D00905B7C /* GeminiAI */; };
@@ -44,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA60674A2DF432DF002FC07B /* Shimmer in Frameworks */,
 				FAC8A8892DEEA70D00905B7C /* GeminiAI in Frameworks */,
 				FAB118692DE8692C00496521 /* Kingfisher in Frameworks */,
 				FA0E52192DE4750F0070599B /* Alamofire in Frameworks */,
@@ -96,6 +98,7 @@
 				FAD6222E2DEDF30F00019CB4 /* SwiftSoup */,
 				FAC8A8852DEEA6F300905B7C /* GoogleGenerativeAI */,
 				FAC8A8882DEEA70D00905B7C /* GeminiAI */,
+				FA6067492DF432DF002FC07B /* Shimmer */,
 			);
 			productName = SportsDB;
 			productReference = FA0E51CF2DE472970070599B /* SportsDB.app */;
@@ -131,6 +134,7 @@
 				FAD6222D2DEDF30F00019CB4 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				FAC8A8842DEEA6F300905B7C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
 				FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */,
+				FA6067482DF432DF002FC07B /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = FA0E51D02DE472970070599B /* Products */;
@@ -391,6 +395,14 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		FA6067482DF432DF002FC07B /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
+			};
+		};
 		FAB118672DE8692C00496521 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -430,6 +442,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FA0E52172DE4750F0070599B /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		FA6067492DF432DF002FC07B /* Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FA6067482DF432DF002FC07B /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
+			productName = Shimmer;
 		};
 		FAB118682DE8692C00496521 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

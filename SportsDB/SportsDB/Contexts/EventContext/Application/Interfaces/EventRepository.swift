@@ -28,4 +28,6 @@ protocol EventRepository {
     func lookupEventsInSpecific(leagueID: String, season: String) async throws -> [Event]
     
     func lookupEventsPastLeague(leagueID: String) async throws -> [Event]
+    
+    func getEvents(of team: String, by schedule: NextAndPrevious) async throws -> [Event]
 }

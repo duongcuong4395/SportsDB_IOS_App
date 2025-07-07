@@ -30,3 +30,34 @@ func fetchHTML(from urlString: String, completion: @escaping (Result<String, Err
         completion(.success(html))
     }.resume()
 }
+
+func fetchHTML(from urlString: String) async throws -> String {
+    guard let url = URL(string: urlString) else {
+        throw URLError(.badURL)
+    }
+
+    var request = URLRequest(url: url)
+    request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
+
+    let (data, _) = try await URLSession.shared.data(for: request)
+
+    guard let html = String(data: data, encoding: .utf8) else {
+        throw URLError(.cannotDecodeContentData)
+    }
+
+    return html
+}
+
+func getHTML(of htmlContent: String, from domBegin: String, to domEnd: String) -> String {
+    guard let rangeTeamMembers = htmlContent.range(of: domBegin),
+          
+          let rangeFanart = htmlContent.range(of: domEnd) else {
+        print("=== fant.error")
+        return ""
+    }
+    
+    let htmlContentBetween = htmlContent[rangeTeamMembers.upperBound..<rangeFanart.lowerBound]
+    let resultString = String(htmlContentBetween)
+    
+    return resultString
+}

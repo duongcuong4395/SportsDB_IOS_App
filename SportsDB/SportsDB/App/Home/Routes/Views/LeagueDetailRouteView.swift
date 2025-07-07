@@ -33,6 +33,18 @@ struct LeagueDetailRouteView<
         forSpecific: (withTheRightConditions: Bool, withView: viewEventsSpecificView)
     )
     
+    @State var isVisibleViews: (
+        events: (
+            forEachRound: Bool,
+            inControl: Bool
+        ),
+        leagueTable: Bool
+    ) = (events: (
+        forEachRound: false,
+        inControl: false
+    ),
+    leagueTable: false)
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             if let league = leagueDetailVM.league {
@@ -74,6 +86,7 @@ struct LeagueDetailRouteView<
                 if events.forEachRound.inList.withTheRightConditions {
                     events.forEachRound.inList.withView
                         .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
+                        
                 }
                 
                 if events.forSpecific.withTheRightConditions {
@@ -95,6 +108,8 @@ struct LeagueDetailRouteView<
         EmptyView()
     }
 }
+
+
 
 
 

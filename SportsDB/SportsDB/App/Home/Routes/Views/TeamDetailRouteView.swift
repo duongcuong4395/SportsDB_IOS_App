@@ -10,59 +10,103 @@ import Kingfisher
 import GeminiAI
 import GoogleGenerativeAI
 
-struct TeamDetailRouteView<ViewForPlayers: View, ViewForMorePlayers: View>: View {
+struct TeamDetailRouteView<
+    ViewForEquipments: View,
+    ViewForPlayers: View,
+    ViewForTrophies: View,
+    ViewEventsOfTeamBySchedule: View
+>: View {
     var team: Team
+    //var team: Team
     
-    var players: (
-        withMainView: ViewForPlayers,
-        withMorePlayersView: ViewForMorePlayers
+    var events: (
+        condition: Bool,
+        withView: ViewEventsOfTeamBySchedule
+        
     )
     
+    var equipments: (
+        condition: Bool,
+        withView: ViewForEquipments
+    )
+    
+    var players: (
+        condition: Bool,
+        withMainView: ViewForPlayers
+    )
+    
+    var trophies: (
+        condition: Bool,
+        withView: ViewForTrophies
+    )
     
     var badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (width: 60, height: 60)
     @EnvironmentObject var chatVM: ChatViewModel
     
     @State var trophyGroup: [TrophyGroup] = []
-    //@State var players: [PlayersAIResponse] = []
+    @State var isVisible: Bool = false
     
-    //var getPlayers: (Team, inout [PlayersAIResponse]) -> Void
+    @State var isVisibleViews: (
+        forEvents: Bool,
+        forEquipment: Bool
+    ) = (forEvents: false,
+         forEquipment: false)
+    
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
-                VStack {
-                    
+                LazyVStack {
+                
                     TeamItemView(team: team, badgeImageSize: badgeImageSizePerLeague)
+                    if events.condition {
+                        events.withView
+                            .onAppear{
+                                isVisibleViews.forEvents = true
+                            }
+                            .slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
+                    }
+                    
+                    TitleComponentView(title: "Equipments")
+                    if equipments.condition {
+                        equipments.withView
+                            .onAppear{
+                                isVisibleViews.forEquipment = true
+                            }
+                            .slideInEffect(isVisible: $isVisibleViews.forEquipment, delay: 0.5, direction: .leftToRight)
+                    }
+                    
                     
                     TitleComponentView(title: "Players")
-                    TabView{
+                    if players.condition {
                         players.withMainView
-                        players.withMorePlayersView
+                            .frame(height:  players.condition ? UIScreen.main.bounds.height / 2 : 0)
+                            .slideInEffect(isVisible: $isVisible, delay: 0.5, direction: .leftToRight)
+                            .onAppear{
+                                withAnimation(.spring()){
+                                    isVisible = true
+                                }
+                            }
+                            .onDisappear{
+                                withAnimation(.spring()){
+                                    isVisible = false
+                                }
+                            }
                     }
-                    .tabViewStyle(PageTabViewStyle())
-                    .frame(height: UIScreen.main.bounds.height / 2)
+                    
                     
                     TitleComponentView(title: "Trophies")
-                    TrophyListView(trophyGroup: trophyGroup)
-                        .frame(height: UIScreen.main.bounds.height/2)
-                    
+                    if trophies.condition {
+                        trophies.withView
+                            .frame(height: trophies.condition ? UIScreen.main.bounds.height/2 : 0)
+                    }
                     
                     TeamAdsView(team: team)
                 }
             }
         }
-        
-        .onAppear{
-            
-            //getPlayers(team, &players)
-            /*
-            team.fetchPlayersAndTrophies(chatVM: chatVM) { trophyGroups, players in
-                self.trophyGroup = trophyGroups
-                print("=== players.count ", players.count, players.map{ $0.name })
-                self.players =  Array(players.prefix(25)) // [players[0]]
-            }
-             */
+        .onChange(of: team) { oldValue, newValue in
+            print("=== team changed", team.teamName)
         }
-        
     }
     
     
@@ -93,10 +137,3 @@ struct PlayersAndTrophiesAIResponse: Codable {
         case players
     }
 }
-
-
-
-
-
-import SwiftSoup
-import GeminiAI

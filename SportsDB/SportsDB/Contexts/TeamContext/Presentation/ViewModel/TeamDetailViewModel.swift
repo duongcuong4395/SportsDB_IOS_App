@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+@MainActor
 class TeamDetailViewModel: ObservableObject {
     @Published var teamSelected: Team?
     @Published var equipments: [Equipment] = []
@@ -34,5 +36,9 @@ class TeamDetailViewModel: ObservableObject {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+    
+    func resetEquipment() {
+        equipments = []
     }
 }

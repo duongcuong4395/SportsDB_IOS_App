@@ -8,7 +8,7 @@
 // CountryContext/Presentation/ViewModel/CountryListViewModel.swift
 import Foundation
 
-@MainActor
+// @MainActor
 final class CountryListViewModel: ObservableObject {
     @Published var countries: [Country] = []
     @Published var countrySelected: Country?
@@ -23,13 +23,28 @@ final class CountryListViewModel: ObservableObject {
     }
 
     func fetchCountries() async {
-        isLoading = true
-        defer { isLoading = false }
-
+        DispatchQueueManager.share.runOnMain {
+            self.isLoading = true
+        }
+        
+        defer {
+            DispatchQueueManager.share.runOnMain {
+                self.isLoading = false
+            }
+        }
+        
         do {
-            countries = try await useCase.execute()
+            let cts =  try await useCase.execute()
+            
+            DispatchQueueManager.share.runOnMain {
+                self.countries = cts
+            }
+            
         } catch {
-            errorMessage = "Failed to load countries: \(error.localizedDescription)"
+            DispatchQueueManager.share.runOnMain {
+                self.errorMessage = "Failed to load countries: \(error.localizedDescription)"
+            }
+            
         }
     }
     

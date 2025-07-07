@@ -44,23 +44,4 @@ struct PlayersAIResponse: Codable {
     var name: String
 }
 
-import SwiftUI
 
-
-
-struct MorePlayersView: View {
-    var players: [PlayersAIResponse]
-    var team: Team
-    var body: some View {
-        TabView{
-            ForEach(self.players, id: \.name) { player in
-                PlayerDetailByAIView(playerName: player.name, teamName: team.teamName)
-                    
-            }
-        }
-        .tabViewStyle(PageTabViewStyle())
-        .frame(height: UIScreen.main.bounds.height / 2)
-    }
-
-    
-}

@@ -31,3 +31,5 @@ struct Event: Equatable, Identifiable {
     var video: String?
     var status, postponed, locked: String?
 }
+
+

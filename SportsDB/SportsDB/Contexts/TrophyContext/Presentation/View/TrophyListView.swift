@@ -7,6 +7,8 @@
 
 import SwiftUI
 import Kingfisher
+
+
 struct TrophyListView: View {
     //var trophies: [Trophy]
     var trophyGroup: [TrophyGroup]
@@ -25,6 +27,7 @@ struct TrophyListView: View {
                                 .placeholder { progress in
                                     //LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                                     ProgressView()
+                                        .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
                                 }
                                 .resizable()
                                 .scaledToFill()

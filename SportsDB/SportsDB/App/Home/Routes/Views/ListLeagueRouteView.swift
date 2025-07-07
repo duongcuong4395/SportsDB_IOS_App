@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ListLeagueRouteView: View {
-    //@EnvironmentObject var leagueListVM: LeagueListViewModel
     
     var leagues: [League]
     var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]

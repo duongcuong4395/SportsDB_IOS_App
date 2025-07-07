@@ -8,7 +8,7 @@
 import Foundation
 
 // LeagueContext/Presentation/ViewModel/LeagueListViewModel.swift
-@MainActor
+//@MainActor
 final class LeagueListViewModel: ObservableObject {
     @Published var leagues: [League] = []
     @Published var leaguesTable: [LeagueTable] = []

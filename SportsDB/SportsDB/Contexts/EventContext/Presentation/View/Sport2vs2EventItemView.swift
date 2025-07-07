@@ -8,14 +8,20 @@
 import SwiftUI
 import Kingfisher
 
+enum KindTeam {
+    case AwayTeam
+    case HomeTeam
+}
+
 struct Sport2vs2EventItemView<OptionsView: View>: View {
     @Binding var isVisible: Bool
     var delay: Double
     var event: Event
     var optionView: (Event) -> OptionsView
     
-    var homeTeamTapped: (Event) -> Void
-    var awayTeamTapped: (Event) -> Void
+    //var homeTeamTapped: (Event) -> Void
+    //var awayTeamTapped: (Event) -> Void
+    var tapOnTeam: (Event, KindTeam) -> Void
     
     var body: some View {
         VStack(spacing: 0) {
@@ -76,7 +82,8 @@ struct Sport2vs2EventItemView<OptionsView: View>: View {
                     }
                 }
                 .onTapGesture {
-                    homeTeamTapped(event)
+                    //homeTeamTapped(event)
+                    tapOnTeam(event, .HomeTeam)
                 }
                 
                 Spacer()
@@ -128,7 +135,7 @@ struct Sport2vs2EventItemView<OptionsView: View>: View {
                 }
                 .slideInEffect(isVisible: $isVisible, delay: delay, direction: .rightToLeft)
                 .onTapGesture {
-                    awayTeamTapped(event)
+                    tapOnTeam(event, .AwayTeam)
                 }
             }
             .padding(0)

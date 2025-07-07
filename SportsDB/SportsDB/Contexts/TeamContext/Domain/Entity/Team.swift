@@ -100,80 +100,18 @@ struct Team: Equatable, Identifiable {
 
 extension Team {
     
-    func fetchPlayersAndTrophies(chatVM: ChatViewModel, completion: @escaping ([TrophyGroup], [PlayersAIResponse]) -> Void) {
-        // fetchHTML(from: "https://www.thesportsdb.com/team/133612-manchester-united?a=1#alltrophies") { result in
-        fetchHTML(from: "https://www.thesportsdb.com/team/\(idTeam ?? "")-\(teamName)?a=1#alltrophies") { result in
-            switch result {
-            case .success(let htmlContent):
-                //print("HTML:\n\(htmlContent)")
-                // TODO: parse với SwiftSoup nếu cần
-                // , "position": "", "flagLink"
-                Task {
-                    
-                    let prompt = """
-                    Phân tích nội dung HTML sau và trích xuất dữ liệu thành JSON theo cấu trúc:
-                    {
-                      "players": [
-                        {"name": "Họ Tên đầy đủ của cầu thủ thuộc đội bóng \(teamName)"}
-                      ],
-                      "honours": [
-                        {
-                        "title": "Tên danh hiệu",
-                        "years": ["Năm 1", "Năm 2", "..."],
-                        "honourArtworkLink": "Link ảnh danh hiệu"
-                    }
-                      ]
-                    }
-                    
-                    Cấu trúc HTML như sau:
-                    1. Team Members
-                    - Nằm bên dưới <b id="playerImages">Team Members</b>
-                    - Các cầu thủ được hiển thị trong các phần tử <td
-                    - Hiển thị Họ và tên đầy đủ của cầu thủ thuộc đội bóng \(teamName)
-                    - ví dụ như nếu phần tử <td là "Martínez" thì bạn hãy tìm ra họ tên đầy đủ của cầu thủ đó trong đội tuyển Man U là 'Lisandro Martínez"
-                    
-                    2. Honours (Trophies):
-                    - Nằm bên dưới <b id="alltrophies">Trophies</b>
-                    - Mỗi danh hiệu hiển thị trong phần tử <td 
-                    - Gồm:
-                       - `img` chứa ảnh danh hiệu, có thuộc tính `title` là tên danh hiệu
-                      - Text đi kèm là năm
-                    Hãy phân tích HTML và trả về đúng cấu trúc JSON phía trên. Đảm bảo giữ nguyên link ảnh (img.src) và text nội dung. Không tạo thêm hoặc giả định dữ liệu nếu không có trong HTML.
-
-                    Dữ liệu HTML: 
-                    \(htmlContent)
-                    """
-                    
-                    var res = try await chatVM.aiSend(prompt: prompt)
-                    
-                    res = res.replacingOccurrences(of: "```", with: "")
-                    res = res.replacingOccurrences(of: "json", with: "")
-                    
-                    if let jsonData = res.data(using: .utf8) {
-                        do {
-                            let decoder = JSONDecoder()
-                            let result = try decoder.decode(PlayersAndTrophiesAIResponse.self, from: jsonData)
-                            print("=== result.players.count", result.players.count)
-                            print("=== result.honours.count", result.trophies.count)
-                            //self.trophies = result.trophies
-                            
-                            let trophyGroups = groupTrophies(result.trophies)
-                            
-                            completion(trophyGroups, result.players)
-                        } catch {
-                            print("Lỗi parse JSON: \(error)")
-                            completion([], [])
-                        }
-                    }
-                    
-                    
-                }
-                
-                
-            case .failure(let error):
-                print("Error fetching HTML: \(error.localizedDescription)")
-            }
-        }
+    
+    func fetchPlayersAndTrophies() async throws -> ([Player], [TrophyGroup]) {
+        
+        let htmlContent = try await fetchHTML(from: "https://www.thesportsdb.com/team/\(idTeam ?? "")-\(teamName)?a=1#alltrophies")
+        let htmlPlayersAndTrophies = getHTML(of: htmlContent, from: ">Team Members</b>", to: "<b>Fanart<")
+        
+        let trophies = parseTrophies(from: htmlPlayersAndTrophies)
+        print("==== trophies.res", trophies.count)
+        let players = parsePlayers(from: htmlPlayersAndTrophies)
+    
+        let trophyGroups = groupTrophies(trophies)
+        return (players, trophyGroups)
     }
     
     func groupTrophies(_ trophies: [Trophy]) -> [TrophyGroup] {
@@ -189,4 +127,82 @@ extension Team {
             )
         }
     }
+}
+
+import SwiftSoup
+
+func parseTrophies(from html: String) -> [Trophy] {
+    var trophies: [Trophy] = []
+
+    do {
+        let doc: Document = try SwiftSoup.parse(html)
+        let tdElements = try doc.select("td[align=center]")
+        for td in tdElements {
+            
+            guard
+                let a = try? td.select("a").first(),
+                let img = try? td.select("img").first(),
+                let year = try? td.ownText().trimmingCharacters(in: .whitespacesAndNewlines),
+                let title = try? img.attr("title"),
+                let imageURL = try? img.attr("src")
+            else { continue }
+            let trophy = Trophy(title: title, years: [year], honourArtworkLink: imageURL)
+            trophies.append(trophy)
+        }
+
+    } catch {
+        print("⚠️ Parse error: \(error)")
+    }
+
+    
+    return trophies
+}
+
+func parsePlayers(from html: String) -> [Player] {
+    var players: [Player] = []
+
+    do {
+        let doc: Document = try SwiftSoup.parse(html)
+        let tdElements = try doc.select("td[valign=top]")
+        for td in tdElements {
+            
+            guard
+                let a = try? td.select("a").first(),
+                let img = try? td.select("img[alt=player render]").first(),
+                let h = try? td.ownText().trimmingCharacters(in: .whitespacesAndNewlines),
+                let imageURL = try? img.attr("src"),
+                let pathFullName = try? a.attr("href")
+            else { continue }
+
+            guard let index = pathFullName.firstIndex(of: "-") else {
+                continue
+            }
+            
+            let afterColonIndex = pathFullName.index(after: index)
+            var fullName = String(pathFullName[afterColonIndex...])
+            fullName = decodeAndFormat(fullName)
+            let player = Player(player: fullName, cutout: imageURL, render: imageURL)
+            players.append(player)
+        }
+
+    } catch {
+        print("⚠️ Parse error: \(error)")
+    }
+
+    
+    return players
+}
+
+
+func decodeAndFormat(_ raw: String) -> String {
+    // 1. Decode percent-encoding
+    guard let decoded = raw.removingPercentEncoding else { return raw }
+    
+    // 2. Replace hyphens with spaces
+    let spaced = decoded.replacingOccurrences(of: "-", with: " ")
+    
+    // 3. Capitalize each word
+    let formatted = spaced.capitalized(with: Locale(identifier: "tr_TR")) // Turkish locale
+    
+    return formatted
 }

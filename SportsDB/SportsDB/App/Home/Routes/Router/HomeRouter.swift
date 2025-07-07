@@ -27,4 +27,8 @@ class SportRouter: BaseRouter<SportRoute> {
     func navigateToTeamDetail(by teamID: String) {
         push(.TeamDetail(by: teamID))
     }
+    
+    func navigateToReplaceTeamDetail(by teamID: String) {
+        replace(with: .TeamDetail(by: teamID))
+    }
 }

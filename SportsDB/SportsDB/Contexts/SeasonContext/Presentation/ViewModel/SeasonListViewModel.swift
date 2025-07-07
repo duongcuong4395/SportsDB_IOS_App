@@ -21,9 +21,10 @@ class SeasonListViewModel: ObservableObject {
     }
     
     
-    func setSeason(by season: Season?) {
-        self.seasonSelected = nil
-        self.seasonSelected = season
+    func setSeason(by season: Season?, completion: @escaping (Season?) -> Void) {
+        seasonSelected = nil
+        seasonSelected = season
+        completion(season)
     }
     
     func getListSeasons(leagueID: String) async {

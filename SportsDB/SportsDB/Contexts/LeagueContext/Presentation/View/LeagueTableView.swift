@@ -10,14 +10,14 @@ import Kingfisher
 
 struct LeagueTableView: View {
     @EnvironmentObject var leagueListVM: LeagueListViewModel
-    var leagueTables: [LeagueTable]
+    
     var tappedTeam: (LeagueTable) -> Void
     
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
                 LazyVStack {
-                    ForEach(Array(leagueTables.enumerated()), id: \.element.id) { index, rank in
+                    ForEach(Array(leagueListVM.leaguesTable.enumerated()), id: \.element.id) { index, rank in
                         HStack {
                             ArrowShape()
                                 .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.blue, .white, .pink]), startPoint: .topLeading, endPoint: .bottomTrailing))
@@ -70,11 +70,16 @@ struct LeagueTableView: View {
                             delay: Double(index) * 0.1,
                             direction: .leftToRight)
                         .onAppear{
+                            print("=== leagueListVM.showRanks", leagueListVM.showRanks.count)
                             leagueListVM.showRanks[index] = true
                         }
                     }
                 }
             }
+        }
+        
+        .onAppear{
+            print("=== leagueListVM.showRanks", leagueListVM.showRanks.count)
         }
     }
 }

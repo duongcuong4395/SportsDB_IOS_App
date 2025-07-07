@@ -13,10 +13,11 @@ struct PlayerDetailByAIView: View {
     var teamName: String
     @State var player: Player?
     
+    var plushPlayer: (Player) -> Void
     
     var body: some View {
         VStack {
-            if var player = player {
+            if let player = player {
                 
                 PlayerItemView(player: player)
             }
@@ -24,6 +25,7 @@ struct PlayerDetailByAIView: View {
         .onAppear{
             guard player == nil else { return }
             self.player = Player(player: playerName)
+            
             Task {
                 
                 
@@ -39,14 +41,8 @@ struct PlayerDetailByAIView: View {
                             self.player = Player(player: playerName)
                         }
                     }
-                    
-                    
-                    
-                    
                 }
             }
-            
         }
-        
     }
 }

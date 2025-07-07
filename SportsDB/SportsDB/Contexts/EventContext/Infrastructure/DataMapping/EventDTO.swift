@@ -106,3 +106,60 @@ struct EventDTO: Codable {
               locked: locked)
     }
 }
+
+
+let eventExampleJson = """
+{
+            "idEvent": "2070119",
+            "idAPIfootball": "1208304",
+            "strEvent": "Arsenal vs Chelsea",
+            "strEventAlternate": "Chelsea @ Arsenal",
+            "strFilename": "English Premier League 2025-03-16 Arsenal vs Chelsea",
+            "strSport": "Soccer",
+            "idLeague": "4328",
+            "strLeague": "English Premier League",
+            "strLeagueBadge": "https://www.thesportsdb.com/images/media/league/badge/gasy9d1737743125.png",
+            "strSeason": "2024-2025",
+            "strDescriptionEN": "",
+            "strHomeTeam": "Arsenal",
+            "strAwayTeam": "Chelsea",
+            "intHomeScore": "1",
+            "intRound": "29",
+            "intAwayScore": "0",
+            "intSpectators": null,
+            "strOfficial": "",
+            "strTimestamp": "2025-03-16T13:30:00",
+            "dateEvent": "2025-03-16",
+            "dateEventLocal": "2025-03-16",
+            "strTime": "13:30:00",
+            "strTimeLocal": "13:30:00",
+            "strGroup": "",
+            "idHomeTeam": "133604",
+            "strHomeTeamBadge": "https://r2.thesportsdb.com/images/media/team/badge/uyhbfe1612467038.png",
+            "idAwayTeam": "133610",
+            "strAwayTeamBadge": "https://r2.thesportsdb.com/images/media/team/badge/yvwvtu1448813215.png",
+            "intScore": null,
+            "intScoreVotes": null,
+            "strResult": "",
+            "idVenue": "15528",
+            "strVenue": "Emirates Stadium",
+            "strCountry": "England",
+            "strCity": "",
+            "strPoster": "https://r2.thesportsdb.com/images/media/event/poster/7vasnz1689062738.jpg",
+            "strSquare": "https://r2.thesportsdb.com/images/media/event/square/m57qk51689062881.jpg",
+            "strFanart": null,
+            "strThumb": "https://r2.thesportsdb.com/images/media/event/thumb/wy5re41689062588.jpg",
+            "strBanner": "https://r2.thesportsdb.com/images/media/event/banner/tiaudc1689063002.jpg",
+            "strMap": null,
+            "strTweet1": "",
+            "strTweet2": "",
+            "strTweet3": "",
+            "strVideo": "https://www.youtube.com/watch?v=_D3B-_8Na40",
+            "strStatus": "Match Finished",
+            "strPostponed": "no",
+            "strLocked": "unlocked"
+        }
+"""
+
+
+

@@ -10,13 +10,9 @@ import SwiftUI
 struct ListEventView<OptionEventView: View>: View {
     var events: [Event]
     @State private var showModels: [Bool] = []
-    
     @State private var repeatAnimationOnApear = false
-    
     var optionEventView: (Event) -> OptionEventView
-    
-    var homeTeamTapped: (Event) -> Void
-    var awayTeamTapped: (Event) -> Void
+    var tapOnTeam: (Event, KindTeam) -> Void
     var eventTapped: (Event) -> Void
     
     var body: some View {
@@ -32,8 +28,7 @@ struct ListEventView<OptionEventView: View>: View {
                                 
                                 event: event,
                                 optionView: optionEventView,
-                                homeTeamTapped: homeTeamTapped,
-                                awayTeamTapped: awayTeamTapped,
+                                tapOnTeam: tapOnTeam,
                                 eventTapped: eventTapped)
                             .rotateOnAppear()
                             .onAppear{
@@ -60,13 +55,17 @@ struct ListEventView<OptionEventView: View>: View {
                             $showModels[index] : .constant(false),
                             delay: Double(index) * 0.01,
                             
-                            event: event, optionView: optionEventView, homeTeamTapped: homeTeamTapped, awayTeamTapped: awayTeamTapped, eventTapped: eventTapped)
+                            event: event, optionView: optionEventView,
+                            //homeTeamTapped: homeTeamTapped, awayTeamTapped: awayTeamTapped,
+                            tapOnTeam: tapOnTeam,
+                            eventTapped: eventTapped)
                             .rotateOnAppear()
                             
                     }
                 }
             }
         }
+        
         .onAppear{
             withAnimation {
                 if showModels.count != events.count {
@@ -75,5 +74,6 @@ struct ListEventView<OptionEventView: View>: View {
             }
             
         }
+        
     }
 }

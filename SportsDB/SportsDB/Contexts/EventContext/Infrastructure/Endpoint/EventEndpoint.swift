@@ -8,6 +8,11 @@
 import Foundation
 import Alamofire
 
+enum NextAndPrevious: String {
+    case Next = "next"
+    case Previous = "previous"
+}
+
 enum EventEndpoint<T: Decodable> {
     
     case SearchEvents(eventName: String, season: String)
@@ -29,6 +34,8 @@ enum EventEndpoint<T: Decodable> {
     
     //https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id=4328
     case LookupEventsPastLeague(leagueID: String)
+        
+    case GetEvents(of: String, by: NextAndPrevious)
 }
 
 
@@ -61,6 +68,20 @@ extension EventEndpoint: HttpRouter {
             return "api/v1/json/3/eventsseason.php"
         case .LookupEventsPastLeague(leagueID: _):
             return "api/v1/json/123/eventspastleague.php"
+            
+            /*
+        case .GetUpcomingEventsForATeam(teamID: let teamID):
+            return "api/v1/json/123/eventsnext.php"
+        case .GetRecentEventsForATeam(teamID: let teamID):
+            return "api/v1/json/3/eventslast.php"
+            */
+        case .GetEvents(of: _, by: let nextAndPrevious):
+            switch nextAndPrevious {
+            case .Next:
+                return "api/v1/json/123/eventsnext.php"
+            case .Previous:
+                return "api/v1/json/3/eventslast.php"
+            }
         }
     }
     
@@ -99,6 +120,14 @@ extension EventEndpoint: HttpRouter {
             return ["id": leagueID, "s": season]
         case .LookupEventsPastLeague(leagueID: let leagueID):
             return ["id": leagueID]
+            /*
+        case .GetUpcomingEventsForATeam(teamID: let teamID):
+            return ["id": teamID]
+        case .GetRecentEventsForATeam(teamID: let teamID):
+            return ["id": teamID]
+             */
+        case .GetEvents(of: let teamID, by: _):
+            return ["id": teamID]
         }
     }
     

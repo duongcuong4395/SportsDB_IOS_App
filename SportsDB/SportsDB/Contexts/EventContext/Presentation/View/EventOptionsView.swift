@@ -14,7 +14,7 @@ struct EventOptionsView: View, ItemDelegate {
     
     var body: some View {
         HStack(spacing: 30) {
-            if let awayTeamName = event.awayTeam {
+            if event.awayTeam != nil {
                 if event.homeTeam != "" && event.awayTeam != "" {
                     if event.homeScore == nil {
                         event.getBtnViewDetail(with: self, type: .MultiStar)
