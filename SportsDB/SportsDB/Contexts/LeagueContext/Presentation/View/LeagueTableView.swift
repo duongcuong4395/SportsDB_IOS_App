@@ -9,15 +9,15 @@ import SwiftUI
 import Kingfisher
 
 struct LeagueTableView: View {
-    @EnvironmentObject var leagueListVM: LeagueListViewModel
-    
+    var leaguesTable: [LeagueTable]
+    @Binding var showRanks: [Bool]
     var tappedTeam: (LeagueTable) -> Void
     
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
                 LazyVStack {
-                    ForEach(Array(leagueListVM.leaguesTable.enumerated()), id: \.element.id) { index, rank in
+                    ForEach(Array(leaguesTable.enumerated()), id: \.element.id) { index, rank in
                         HStack {
                             ArrowShape()
                                 .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.blue, .white, .pink]), startPoint: .topLeading, endPoint: .bottomTrailing))
@@ -65,13 +65,13 @@ struct LeagueTableView: View {
                             Spacer()
                         }
                         .slideInEffect(
-                            isVisible: leagueListVM.showRanks.indices.contains(index) ?
-                                               $leagueListVM.showRanks[index] : .constant(false),
+                            isVisible: showRanks.indices.contains(index) ?
+                                               $showRanks[index] : .constant(false),
                             delay: Double(index) * 0.1,
                             direction: .leftToRight)
                         .onAppear{
-                            print("=== leagueListVM.showRanks", leagueListVM.showRanks.count)
-                            leagueListVM.showRanks[index] = true
+                            print("=== leagueListVM.showRanks", showRanks.count)
+                            showRanks[index] = true
                         }
                     }
                 }
@@ -79,7 +79,7 @@ struct LeagueTableView: View {
         }
         
         .onAppear{
-            print("=== leagueListVM.showRanks", leagueListVM.showRanks.count)
+            print("=== leagueListVM.showRanks", showRanks.count)
         }
     }
 }

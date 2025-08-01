@@ -53,6 +53,28 @@ class PlayerListViewModel: ObservableObject {
         self.lookupAllPlayersUseCase = lookupAllPlayersUseCase
     }
     
+    
+}
+
+extension PlayerListViewModel {
+    func resetAll() {
+        self.playersByLookUp = []
+        self.playersByLookUpAllForaTeam = []
+        self.playersBySearch = []
+        
+        self.honoursByLookUp = []
+        self.formerTeamsByLookUp = []
+        self.milestonesByLookUp = []
+        self.contractsByLookUp = []
+        
+        self.playersByAI = []
+        
+        self.isLoading = false
+        self.errorMessage = ""
+    }
+}
+
+extension PlayerListViewModel {
     func resetPlayersByLookUpAllForaTeam() {
         playersByLookUpAllForaTeam = []
     }

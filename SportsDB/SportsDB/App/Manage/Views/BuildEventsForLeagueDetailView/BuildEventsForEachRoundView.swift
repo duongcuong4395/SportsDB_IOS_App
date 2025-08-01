@@ -53,59 +53,37 @@ struct BuildEventsForEachRoundView: View, SelectTeamDelegate, EventOptionsViewDe
     
     var body: some View {
         VStack {
-            getEventView(by: eventsPerRoundInSeasonVM.events)
-        }
-    }
-    
-    @ViewBuilder
-    func getEventView(by executeStatus: ModelsStatus<[Event]>) -> some View {
-        switch executeStatus {
-        case .Success(model: let events):
-            if events.count <= 0 {
-                Text("None...")
-                    .transition(.opacity)
-            } else {
-                ListEventView(events: events,
-                              optionEventView: getEventOptionsView,
-                              tapOnTeam: tapOnTeam,
-                              eventTapped: { event in })
-                .transition(.opacity.combined(with: .slide))
-                
-            }
-        case .Idle:
-            VStack {
-                Text("Event Idle")
-                ForEach((1...5).reversed(), id: \.self) { _ in
-                    EventItemView(isVisible: .constant(false),
-                                  delay: 0.5,
-                                  event: eventListVM.getEventExample(),
-                                  optionView: getEventOptionsView,
-                                  tapOnTeam: { event, kind in },
+            switch eventsPerRoundInSeasonVM.eventsStatus {
+            case .success(data: _):
+                if eventsPerRoundInSeasonVM.events.count <= 0 {
+                    Text("No events found.")
+                        .transition(.opacity)
+                } else {
+                    ListEventView(events: eventsPerRoundInSeasonVM.events,
+                                  optionEventView: getEventOptionsView,
+                                  tapOnTeam: tapOnTeam,
                                   eventTapped: { event in })
-                    .redacted(reason: .placeholder)
-                    .shimmering()
+                    .transition(.opacity.combined(with: .slide))
                 }
-            }
-            .transition(.opacity)
-            
-        case .Progressing:
-            VStack {
-                Text("Event Progressing")
-                ForEach((1...5).reversed(), id: \.self) { _ in
-                    EventItemView(isVisible: .constant(false),
-                                  delay: 0.5,
-                                  event: eventListVM.getEventExample(),
-                                  optionView: getEventOptionsView,
-                                  tapOnTeam: { event, kind in },
-                                  eventTapped: { event in })
-                    .redacted(reason: .placeholder)
-                    .shimmering()
+            case .idle:
+                EmptyView()
+            case .loading:
+                VStack {
+                    ForEach((1...5).reversed(), id: \.self) { _ in
+                        EventItemView(isVisible: .constant(false),
+                                      delay: 0.5,
+                                      event: eventListVM.getEventExample(),
+                                      optionView: getEventOptionsView,
+                                      tapOnTeam: { event, kind in },
+                                      eventTapped: { event in })
+                        .redacted(reason: .placeholder)
+                        .shimmering()
+                    }
                 }
-            }
-            .transition(.opacity)
-        case .Fail(message: _):
-            Text("EventsOfTeamForPrevious fail")
                 .transition(.opacity)
+            case .failure(error: let error):
+                ErrorStateView(error: error, onRetry: {})
+            }
         }
     }
 }

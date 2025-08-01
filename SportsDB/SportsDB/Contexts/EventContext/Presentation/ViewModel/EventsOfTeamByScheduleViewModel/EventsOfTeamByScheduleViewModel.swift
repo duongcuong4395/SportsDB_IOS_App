@@ -9,13 +9,12 @@ import SwiftUI
 
 @MainActor
 class EventsOfTeamByScheduleViewModel: ObservableObject {
-    @Published var eventsForPrevious: ModelsStatus<[Event]> = .Idle
-    @Published var eventsForNext: ModelsStatus<[Event]> = .Idle
+    @Published var eventsForPrevious: ModelsStatus<[Event]> = .idle
+    @Published var eventsForNext: ModelsStatus<[Event]> = .idle
     
     private var getEventsOfTeamByScheduleUseCase: GetEventsOfTeamByScheduleUseCase
     
     init(getEventsOfTeamByScheduleUseCase: GetEventsOfTeamByScheduleUseCase) {
-        
         self.getEventsOfTeamByScheduleUseCase = getEventsOfTeamByScheduleUseCase
     }
     
@@ -25,8 +24,13 @@ class EventsOfTeamByScheduleViewModel: ObservableObject {
             
             let resForNext = try await self.getEventsOfTeamByScheduleUseCase.execute(of: team.idTeam ?? "", by: .Next)
             try await Task.sleep(nanoseconds: 500_000_000)
-            eventsForNext = .Success(model: resForNext)
-            eventsForPrevious = .Success(model: resForPrevious)
+            eventsForNext = .success(data: resForNext)
+            eventsForPrevious = .success(data: resForPrevious)
         }
+    }
+    
+    func resetAll() {
+        eventsForPrevious = .idle
+        eventsForNext = .idle
     }
 }

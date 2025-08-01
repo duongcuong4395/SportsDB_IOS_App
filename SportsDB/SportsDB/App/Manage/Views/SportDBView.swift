@@ -50,30 +50,54 @@ struct SportDBView: View {
     
     @StateObject private var eventsPerRoundInSeasonVM = EventsPerRoundInSeasonViewModel(lookupListEventsUseCase: LookupListEventsUseCase(repository: EventAPIService()))
     
-    
-    
     @StateObject private var eventsOfTeamByScheduleVM = EventsOfTeamByScheduleViewModel(getEventsOfTeamByScheduleUseCase: GetEventsOfTeamByScheduleUseCase(repository: EventAPIService()))
     
-        @StateObject private var playerListVM = PlayerListViewModel(
-            lookupPlayerUseCase: LookupPlayerUseCase(repository: PlayerAPIService()),
-            searchPlayersUseCase: SearchPlayersUseCase(repository: PlayerAPIService()),
-            lookupHonoursUseCase: LookupHonoursUseCase(repository: PlayerAPIService()),
-            lookupFormerTeamsUseCase: LookupFormerTeamsUseCase(repository: PlayerAPIService()),
-            lookupMilestonesUseCase: LookupMilestonesUseCase(repository: PlayerAPIService()),
-            lookupContractsUseCase: LookupContractsUseCase(repository: PlayerAPIService()),
-            lookupAllPlayersUseCase: LookupAllPlayersUseCase(repository: PlayerAPIService())
-        )
-        @StateObject private var trophyListVM = TrophyListViewModel()
-        @StateObject private var chatVM = ChatViewModel()
+    @StateObject private var playerListVM = PlayerListViewModel(
+        lookupPlayerUseCase: LookupPlayerUseCase(repository: PlayerAPIService()),
+        searchPlayersUseCase: SearchPlayersUseCase(repository: PlayerAPIService()),
+        lookupHonoursUseCase: LookupHonoursUseCase(repository: PlayerAPIService()),
+        lookupFormerTeamsUseCase: LookupFormerTeamsUseCase(repository: PlayerAPIService()),
+        lookupMilestonesUseCase: LookupMilestonesUseCase(repository: PlayerAPIService()),
+        lookupContractsUseCase: LookupContractsUseCase(repository: PlayerAPIService()),
+        lookupAllPlayersUseCase: LookupAllPlayersUseCase(repository: PlayerAPIService())
+    )
+    @StateObject private var trophyListVM = TrophyListViewModel()
+    @StateObject private var chatVM = ChatViewModel()
 
-        // MARK: - UI Constants
-        private let badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (60, 60)
+    // MARK: - UI Constants
+    private let badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (60, 60)
     
     var body: some View {
         VStack {
-               GenericNavigationStack(router: sportRouter, rootContent: {
-                   ListCountryRouteView(tappedCountry: handleTappedCountry)
-               }, destination: sportDestination)
+           GenericNavigationStack(
+            router: sportRouter
+            , rootContent: {
+               ListCountryRouteView()
+            }
+            , destination: sportDestination)
+            
+            ListSportView(tappedSport: { sport in
+                sportRouter.popToRoot()
+                
+                leagueListVM.resetAll()
+                leagueDetailVM.resetAll()
+                
+                teamListVM.resetAll()
+                teamDetailVM.resetAll()
+                
+                seasonListVM.resetAll()
+                
+                eventListVM.resetAll()
+                eventsInSpecificInSeasonVM.resetAll()
+                eventsRecentOfLeagueVM.resetAll()
+                eventsPerRoundInSeasonVM.resetAll()
+                eventsOfTeamByScheduleVM.resetAll()
+                
+                playerListVM.resetAll()
+                trophyListVM.resetAll()
+                
+                
+            })
        }
         .environmentObject(sportVM)
         .environmentObject(countryListVM)
@@ -92,8 +116,6 @@ struct SportDBView: View {
         .environmentObject(eventsPerRoundInSeasonVM)
         .environmentObject(eventsOfTeamByScheduleVM)
         
-        
-        
         .environmentObject(sportRouter)
         
         .environmentObject(chatVM)
@@ -102,23 +124,12 @@ struct SportDBView: View {
         .onAppear(perform: onAppear)
     }
     
-    // MARK: - Handlers
-        private func handleTappedCountry(_ country: Country) {
-            UIApplication.shared.endEditing()
-            countryListVM.setCountry(by: country)
-
-            Task {
-                await leagueListVM.fetchLeagues(country: country.name, sport: sportVM.sportSelected.rawValue)
-                sportRouter.navigateToListLeague(by: country.name, and: sportVM.sportSelected.rawValue)
-            }
+    private func onAppear() {
+        chatVM.initChat()
+        Task {
+            await countryListVM.fetchCountries()
         }
-
-        private func onAppear() {
-            chatVM.initChat()
-            Task {
-                await countryListVM.fetchCountries()
-            }
-        }
+    }
 }
 
 
@@ -128,74 +139,15 @@ private extension SportDBView {
     func sportDestination(_ route: SportRoute) -> some View {
         switch route {
         case .ListCountry:
-            ListCountryRouteView(tappedCountry: handleTappedCountry)
+            ListCountryRouteView()
         case .ListLeague(by: let country, and: let sport):
-            ListLeagueRouteView(
-                leagues: leagueListVM.leagues,
-                badgeImageSizePerLeague: badgeImageSizePerLeague,
-                tappedLeague: { league in
-                    leagueDetailVM.setLeague(by: league)
-                    Task {
-                        await teamListVM.getListTeams(leagueName: league.leagueName ?? "", sportName: sport, countryName: country)
-                        //await eventListVM.lookupEventsPastLeague(leagueID: league.idLeague ?? "")
-                        await seasonListVM.getListSeasons(leagueID: league.idLeague ?? "")
-                        
-                        
-                    }
-                    eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
-                    sportRouter.navigateToLeagueDetail(by: league.idLeague ?? "")
-                    
-                })
+            ListLeagueRouteView(country: country, sport: sport)
         case .LeagueDetail(by: let leagueID):
-            LeagueDetailRouteView(
-                listTeamByLeagueView: buildTeamListView(),
-                seasonForLeagueView: BuildSeasonForLeagueView(leagueID: leagueID),
-                leagueTable: (
-                    withConditions: seasonListVM.seasonSelected != nil && leagueListVM.leaguesTable.count > 0,
-                    withView: BuildLeagueTableView()
-                ),
-                events: (
-                    forPastLeague: (
-                        withTheRightConditions: true,
-                        withView: BuildEventsForPastLeagueView()),
-                    forEachRound: (
-                        inControl: (
-                            withTheRightConditions: seasonListVM.seasonSelected != nil,
-                            withView: BuildEventsForEachRoundInControl(leagueID: leagueID)),
-                        inList: (
-                            // (eventListVM.eventsByRoundAndSeason.models ?? []).count > 0
-                            withTheRightConditions: true,
-                            withView: BuildEventsForEachRoundView())
-                    ),
-                    forSpecific: (
-                        // sdd
-                        
-                        /// eventListVM.eventsInSpecific.count > 0
-                        withTheRightConditions: true,
-                        withView: BuildEventsForSpecific())
-                )
-            )
+            LeagueDetailRouteView(leagueID: leagueID)
+                .navigationBarHidden(true)
         case .TeamDetail(by: _):
             if let team = teamDetailVM.teamSelected {
-                TeamDetailRouteView(
-                    team: team,
-                    events: (
-                        condition: true,
-                        withView: BuildEventsOfTeamByScheduleView(team: team)
-                    ),
-                    equipments: (
-                        condition: teamDetailVM.equipments.count > 0,
-                        withView: EquipmentsListView(equipments: teamDetailVM.equipments)
-                    ),
-                    players: (
-                        condition: playerListVM.playersByLookUpAllForaTeam.count > 0,
-                        withMainView: BuildPlayersForTeamDetailView(team: team, progressing: false)
-                    ),
-                    trophies: (
-                        condition: trophyListVM.trophyGroups.count > 0,
-                        withView: TrophyListView(trophyGroup: trophyListVM.trophyGroups)
-                    )
-                )
+                TeamDetailRouteView(team: team)
             }
         }
     }
@@ -226,71 +178,86 @@ extension SportDBView {
     }
 }
 
-struct buildTeamListView: View, SelectTeamDelegate {
-    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
+
+
+struct ErrorStateView: View {
+    let error: String
+    let onRetry: () -> Void
     
-    @EnvironmentObject var teamListVM: TeamListViewModel
-    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
-    @EnvironmentObject var trophyListVM: TrophyListViewModel
-    @EnvironmentObject var playerListVM: PlayerListViewModel
-    @EnvironmentObject var sportRouter: SportRouter
-    @EnvironmentObject var eventListVM: EventListViewModel
-    
-    private let badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (60, 60)
     var body: some View {
-        TeamListView(
-            teams: teamListVM.teams,
-            badgeImageSizePerTeam: badgeImageSizePerLeague,
-            teamTapped: { team in
+        VStack(spacing: 20) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .font(.system(size: 60))
+                .foregroundColor(.red)
+            
+            VStack(spacing: 8) {
+                Text("Something went wrong")
+                    .font(.headline)
                 
-                withAnimation {
-                    teamDetailVM.teamSelected = nil
-                    trophyListVM.resetTrophies()
-                    playerListVM.resetPlayersByLookUpAllForaTeam()
-                }
-                
-                teamDetailVM.setTeam(by: team)
-                selectTeam(by: team.teamName)
-                
-                guard let team = teamDetailVM.teamSelected else { return }
-                
-                sportRouter.navigateToTeamDetail(by: team.idTeam ?? "")
+                Text(error)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
             }
-        )
+            
+            Button("Try Again") {
+                onRetry()
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding(40)
     }
 }
 
-
-
-
-
-struct buildLeagueTableView: View, SelectTeamDelegate {
-    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
-    
-    @EnvironmentObject var teamListVM: TeamListViewModel
-    
-    @EnvironmentObject var eventListVM: EventListViewModel
-    
-    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
-    @EnvironmentObject var trophyListVM: TrophyListViewModel
-    @EnvironmentObject var playerListVM: PlayerListViewModel
-    @EnvironmentObject var sportRouter: SportRouter
+struct LoadingStateView: View {
+    var kindName: String
     
     var body: some View {
-        LeagueTableView(
-            tappedTeam: { leagueTable in
-                
-                withAnimation {
-                    teamDetailVM.teamSelected = nil
-                    trophyListVM.resetTrophies()
-                    playerListVM.resetPlayersByLookUpAllForaTeam()
-                }
-                
-                selectTeam(by: leagueTable.teamName ?? "")
-                sportRouter.navigateToTeamDetail(by: leagueTable.idTeam ?? "")
-            })
+        VStack(spacing: 16) {
+            ProgressView()
+                .scaleEffect(1.2)
+            
+            Text("Loading \(kindName)...")
+                .font(.headline)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+
+struct IdleStateView: View {
+    
+    var kindName: String
+    let onLoadTapped: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "globe.americas.fill")
+                .font(.system(size: 80))
+                .foregroundColor(.blue)
+            
+            VStack(spacing: 8) {
+                Text("Welcome to \(kindName)")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                Text("Discover \(kindName) around the world")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+            
+            Button("Load \(kindName)") {
+                onLoadTapped()
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+        }
+        .padding(40)
+    }
+}
+
+
 
 
 

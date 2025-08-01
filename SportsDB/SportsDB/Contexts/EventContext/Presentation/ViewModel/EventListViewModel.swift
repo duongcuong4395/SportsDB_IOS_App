@@ -39,6 +39,28 @@ class EventListViewModel: ObservableObject {
 }
 
 extension EventListViewModel {
+    func resetAll() {
+        self.eventsBySearch = []
+        self.eventsByLookup = []
+        
+        self.eventsResult = []
+        self.eventsPastLeague = []
+        
+        self.lineups = []
+        self.timelines = []
+        self.statistics = []
+        self.tvBroadcasts = []
+        
+        self.currentRound = 1
+        self.hasNextRound = true
+        
+        self.isLoading = false
+        self.errorMessage = nil
+    }
+    
+}
+
+extension EventListViewModel {
     func setCurrentRound(by round: Int, competion: @escaping (Int) ->  Void) {
         self.currentRound = round
         competion(self.currentRound)

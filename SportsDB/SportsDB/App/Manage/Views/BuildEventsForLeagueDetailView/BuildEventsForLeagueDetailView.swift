@@ -7,20 +7,6 @@
 
 import SwiftUI
 
-struct BuildEventsForLeagueDetailView: View {
-    
-    
-    var body: some View {
-        BuildEventsForPastLeagueView()
-        
-        
-        
-    }
-}
-
-
-
-
 struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelegate {
     @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     
@@ -34,18 +20,18 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     
     var body: some View {
-        switch eventsInSpecificInSeasonVM.events {
-        case .Success(model: let models):
+        switch eventsInSpecificInSeasonVM.eventsStatus {
+        case .success(data: _):
             ListEventView(
-                events: models,
+                events: eventsInSpecificInSeasonVM.events,
                 optionEventView: getEventOptionsView,
                 tapOnTeam: tapOnTeam,
                 eventTapped: { event in })
-        case .Fail(message: _):
-            Text("fail")
-        case .Progressing:
+        case .failure(error: let error):
+            ErrorStateView(error: error, onRetry: {})
+        case .loading:
             ProgressView()
-        case .Idle:
+        case .idle:
             EmptyView()
         }
         
@@ -66,26 +52,33 @@ struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewD
     
     @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
     
+    @State var numbRetry: Int = 0
+    
+    let onRetry: () -> Void
+    
     var body: some View {
         
         switch eventsRecentOfLeagueVM.events {
-        case .Idle:
+        case .idle:
             EmptyView()
-        case .Progressing:
+        case .loading:
             Text("Progressing...")
-        case .Success(let models):
+        case .success(data: let models):
             ListEventView(
                 events: models,
                 optionEventView: getEventOptionsView,
                 tapOnTeam: tapOnTeam,
                 eventTapped: { event in })
-        case .Fail(_):
-            EmptyView()
+        case .failure(error: let error):
+            ErrorStateView(error: error, onRetry: {})
+                .onAppear{
+                    numbRetry += 1
+                    guard numbRetry <= 3 else { return }
+                    onRetry()
+                }
         }
         
     }
-    
-    
 }
 
 
@@ -116,31 +109,7 @@ extension EventOptionsViewDelegate {
 
 
 
-struct BuildLeagueTableView: View, SelectTeamDelegate {
-    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
-    
-    @EnvironmentObject var teamListVM: TeamListViewModel
-    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
-    @EnvironmentObject var playerListVM: PlayerListViewModel
-    @EnvironmentObject var trophyListVM: TrophyListViewModel
-    @EnvironmentObject var sportRouter: SportRouter
-    @EnvironmentObject var eventListVM: EventListViewModel
-    
-    var body: some View {
-        LeagueTableView(
-            tappedTeam: { leagueTable in
-                
-                withAnimation {
-                    teamDetailVM.teamSelected = nil
-                    trophyListVM.resetTrophies()
-                    playerListVM.resetPlayersByLookUpAllForaTeam()
-                }
-                
-                selectTeam(by: leagueTable.teamName ?? "")
-                sportRouter.navigateToTeamDetail(by: leagueTable.idTeam ?? "")
-            })
-    }
-}
+
 
 
 struct BuildSeasonForLeagueView: View {
@@ -167,8 +136,6 @@ struct BuildSeasonForLeagueView: View {
                         }
                     }
                     
-                    
-                    //eventListVM.resetEventsInSpecific()
                     leagueListVM.resetLeaguesTable()
                     
                     Task {

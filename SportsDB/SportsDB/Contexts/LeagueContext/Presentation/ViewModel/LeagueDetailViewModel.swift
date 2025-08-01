@@ -13,4 +13,8 @@ final class LeagueDetailViewModel: ObservableObject {
     func setLeague(by league: League?) {
         self.league = league
     }
+    
+    func resetAll() {
+        self.league = nil
+    }
 }

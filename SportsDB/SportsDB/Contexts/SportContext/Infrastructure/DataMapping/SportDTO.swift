@@ -18,8 +18,20 @@ enum CompetitionFormat: String, Codable {
     case multiFormat = ""
 }
 
+import Kingfisher
 
-enum SportType: String, Codable, CaseIterable {
+enum SportType: String, Codable, CaseIterable, TabItem {
+    @MainActor
+    func getIcon() -> AnyView {
+        AnyView(KFImage(URL(string: getImageUrl()))
+            .placeholder({ progress in
+                //LoadingIndicator(animation: .circleBars, size: .small, speed: .normal)
+                ProgressView()
+            })
+            .resizable()
+            .scaledToFill())
+    }
+    
     
     case Motorsport = "Motorsport"
     case Soccer = "Soccer"

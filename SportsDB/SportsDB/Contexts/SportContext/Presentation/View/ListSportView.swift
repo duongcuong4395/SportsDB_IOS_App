@@ -13,6 +13,20 @@ struct ListSportView: View {
     
     var tappedSport: (SportType) -> Void
     var body: some View {
+        FloatingTabBar(
+            activeBackground: .blue
+            , activeTab: $sportVM.sportSelected
+            , touchTabBar: { sport in
+                withAnimation {
+                    if sportVM.sportSelected == sport {
+                        return
+                    }
+                    sportVM.sportSelected = sport
+                    
+                    tappedSport(sportVM.sportSelected)
+                }
+            })
+        /*
         HStack {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
@@ -55,5 +69,6 @@ struct ListSportView: View {
         .padding(5)
         .padding(.horizontal, 10)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 35, style: .continuous))
+         */
     }
 }

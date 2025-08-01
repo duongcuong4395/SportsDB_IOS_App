@@ -18,4 +18,8 @@ class TrophyListViewModel: ObservableObject {
     func resetTrophies() {
         trophyGroups = []
     }
+    
+    func resetAll() {
+        self.trophyGroups = []
+    }
 }

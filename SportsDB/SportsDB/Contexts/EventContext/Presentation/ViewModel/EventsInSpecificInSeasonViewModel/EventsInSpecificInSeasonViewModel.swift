@@ -9,7 +9,11 @@ import SwiftUI
 
 @MainActor
 class EventsInSpecificInSeasonViewModel: ObservableObject {
-    @Published var events: ModelsStatus<[Event]> = .Idle
+    @Published var eventsStatus: ModelsStatus<[Event]> = .idle
+    
+    var events: [Event] {
+        eventsStatus.data ?? []
+    }
     
     private var lookupEventsInSpecificUseCase: LookupEventsInSpecificUseCase
     
@@ -19,11 +23,15 @@ class EventsInSpecificInSeasonViewModel: ObservableObject {
     
     func getEvents(leagueID: String, season: String) async {
         Task {
-            events = .Progressing
+            eventsStatus = .loading
             let res = try await self.lookupEventsInSpecificUseCase.execute(leagueID: leagueID, season: season)
             // Delay of 7.5 seconds (1 second = 1_000_000_000 nanoseconds)
             try? await Task.sleep(nanoseconds: 500_000_000)
-            events = .Success(model: res)
+            eventsStatus = .success(data: res)
         }
+    }
+    
+    func resetAll() {
+        self.eventsStatus = .idle
     }
 }

@@ -8,15 +8,37 @@
 import Foundation
 
 // LeagueContext/Presentation/ViewModel/LeagueListViewModel.swift
-//@MainActor
-final class LeagueListViewModel: ObservableObject {
-    @Published var leagues: [League] = []
-    @Published var leaguesTable: [LeagueTable] = []
+class LeagueListViewModel: ObservableObject {
     
+    // private(set) đảm bảo chỉ ViewModel mới modify được
+    @Published private(set) var leaguesStatus: ModelsStatus<[League]> = .idle
+    @Published private(set) var leaguesTableStatus: ModelsStatus<[LeagueTable]> = .idle
     
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+    var leaguesTable: [LeagueTable] {
+        leaguesTableStatus.data ?? []
+    }
+    
+    var leagues: [League] {
+        leaguesStatus.data ?? []
+        //(currentSearchText.isEmpty ? countriesStatus : filteredCountriesStatus).data ?? []
+    }
+    
+    var isLoading: Bool {
+        leaguesStatus.isLoading
+    }
 
+    var error: String? {
+        leaguesStatus.error
+    }
+
+    var isEmpty: Bool {
+        leagues.isEmpty && leaguesStatus.isSuccess
+    }
+
+    var hasData: Bool {
+        leaguesStatus.isSuccess
+    }
+    
     @Published var showRanks = [Bool](repeating: false, count: 0)
     
     private let getLeaguesUseCase: GetLeaguesUseCase
@@ -30,56 +52,80 @@ final class LeagueListViewModel: ObservableObject {
         self.lookupLeagueUseCase = lookupLeagueUseCase
         self.lookupLeagueTableUseCase = lookupLeagueTableUseCase
     }
-
-    func resetShowRank() {
-        self.showRanks = [Bool](repeating: false, count: 0)
-    }
-    
-    func resetLeaguesTable() {
-        self.leaguesTable = []
-    }
 }
 
 // MARK: For Each Use Case
-@MainActor
 extension LeagueListViewModel {
     func fetchLeagues(country: String, sport: String) async {
-        isLoading = true
-        defer { isLoading = false }
-        print("=== fetchLeagues", country, sport)
         do {
+            DispatchQueueManager.share.runOnMain {
+                self.leaguesStatus = .loading
+            }
+            async let leagues1Task = getLeaguesUseCase.execute(country: country, sport: "")
+            async let leagues2Task = getLeaguesUseCase.execute(country: country, sport: sport)
             
-            let leagues1 = try await getLeaguesUseCase.execute(country: country, sport: "")
-            let leagues2 = try await getLeaguesUseCase.execute(country: country, sport: sport)
+            let leagues1 = try await leagues1Task
+            let leagues2 = try await leagues2Task
             
             var leaguesMerge = leagues1 + leagues2
             leaguesMerge = Array(Set(leaguesMerge))
             leaguesMerge = leaguesMerge.filter { $0.sportType?.rawValue == sport }
-            self.leagues = leaguesMerge.sorted { $0.leagueName ?? "" > $1.leagueName ?? "" }
+            leaguesMerge = leaguesMerge.sorted { $0.leagueName ?? "" > $1.leagueName ?? "" }
+            DispatchQueueManager.share.runOnMain {
+                self.leaguesStatus = .success(data: leaguesMerge)
+            }
         } catch {
-            errorMessage = error.localizedDescription
+            await MainActor.run {
+                self.leaguesStatus = .failure(error: error.localizedDescription)
+            }
         }
     }
     
     
     func lookupLeague(leagueID: String) async {
-        isLoading = true
-        defer { isLoading = false }
         do{
-            leagues = try await lookupLeagueUseCase.execute(with: leagueID)
+            leaguesStatus = .loading
+            let res = try await lookupLeagueUseCase.execute(with: leagueID)
+            self.leaguesStatus = .success(data: res)
         } catch {
-            errorMessage = error.localizedDescription
+            self.leaguesStatus = .failure(error: error.localizedDescription)
         }
     }
 
     func lookupLeagueTable(leagueID: String, season: String) async {
-        isLoading = true
-        defer { isLoading = false }
         do {
-            leaguesTable = try await lookupLeagueTableUseCase.execute(league_ID: leagueID, season: season)
-            self.showRanks = [Bool](repeating: false, count: leaguesTable.count)
+            DispatchQueueManager.share.runOnMain {
+                self.leaguesTableStatus = .loading
+            }
+            let res = try await lookupLeagueTableUseCase.execute(league_ID: leagueID, season: season)
+            DispatchQueueManager.share.runOnMain {
+                self.showRanks = [Bool](repeating: false, count: res.count)
+                self.leaguesTableStatus = .success(data: res)
+            }
         } catch {
-            errorMessage = error.localizedDescription
+            DispatchQueueManager.share.runOnMain {
+                self.leaguesTableStatus = .failure(error: error.localizedDescription)
+            }
         }
+    }
+}
+
+extension LeagueListViewModel {
+    func resetShowRank() {
+        self.showRanks = [Bool](repeating: false, count: 0)
+    }
+    
+    func resetLeaguesTable() {
+        self.leaguesTableStatus = .idle
+    }
+    
+    func resetLeagues() {
+        self.leaguesStatus = .idle
+    }
+    
+    func resetAll() {
+        resetShowRank()
+        resetLeaguesTable()
+        resetLeagues()
     }
 }

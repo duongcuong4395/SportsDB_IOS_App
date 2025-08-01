@@ -10,37 +10,14 @@ import Kingfisher
 import GeminiAI
 import GoogleGenerativeAI
 
-struct TeamDetailRouteView<
-    ViewForEquipments: View,
-    ViewForPlayers: View,
-    ViewForTrophies: View,
-    ViewEventsOfTeamBySchedule: View
->: View {
+struct TeamDetailRouteView: View {
     var team: Team
-    //var team: Team
-    
-    var events: (
-        condition: Bool,
-        withView: ViewEventsOfTeamBySchedule
-        
-    )
-    
-    var equipments: (
-        condition: Bool,
-        withView: ViewForEquipments
-    )
-    
-    var players: (
-        condition: Bool,
-        withMainView: ViewForPlayers
-    )
-    
-    var trophies: (
-        condition: Bool,
-        withView: ViewForTrophies
-    )
     
     var badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (width: 60, height: 60)
+    
+    @EnvironmentObject var trophyListVM: TrophyListViewModel
+    @EnvironmentObject var playerListVM: PlayerListViewModel
+    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
     @EnvironmentObject var chatVM: ChatViewModel
     
     @State var trophyGroup: [TrophyGroup] = []
@@ -58,28 +35,24 @@ struct TeamDetailRouteView<
                 LazyVStack {
                 
                     TeamItemView(team: team, badgeImageSize: badgeImageSizePerLeague)
-                    if events.condition {
-                        events.withView
-                            .onAppear{
-                                isVisibleViews.forEvents = true
-                            }
-                            .slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
-                    }
+                    BuildEventsOfTeamByScheduleView(team: team)
+                        .onAppear{
+                            isVisibleViews.forEvents = true
+                        }
+                        .slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
                     
                     TitleComponentView(title: "Equipments")
-                    if equipments.condition {
-                        equipments.withView
-                            .onAppear{
-                                isVisibleViews.forEquipment = true
-                            }
-                            .slideInEffect(isVisible: $isVisibleViews.forEquipment, delay: 0.5, direction: .leftToRight)
-                    }
-                    
+                    EquipmentsListView(equipments: teamDetailVM.equipments)
+                        .onAppear{
+                            isVisibleViews.forEquipment = true
+                        }
+                        .slideInEffect(isVisible: $isVisibleViews.forEquipment, delay: 0.5, direction: .leftToRight)
                     
                     TitleComponentView(title: "Players")
-                    if players.condition {
-                        players.withMainView
-                            .frame(height:  players.condition ? UIScreen.main.bounds.height / 2 : 0)
+                    if playerListVM.playersByLookUpAllForaTeam.count > 0 {
+                        BuildPlayersForTeamDetailView(team: team, progressing: false)
+                        
+                            .frame(height:  playerListVM.playersByLookUpAllForaTeam.count > 0 ? UIScreen.main.bounds.height / 2 : 0)
                             .slideInEffect(isVisible: $isVisible, delay: 0.5, direction: .leftToRight)
                             .onAppear{
                                 withAnimation(.spring()){
@@ -95,18 +68,16 @@ struct TeamDetailRouteView<
                     
                     
                     TitleComponentView(title: "Trophies")
-                    if trophies.condition {
-                        trophies.withView
-                            .frame(height: trophies.condition ? UIScreen.main.bounds.height/2 : 0)
+                    if trophyListVM.trophyGroups.count > 0 {
+                        TrophyListView(trophyGroup: trophyListVM.trophyGroups)
+                            .frame(height: trophyListVM.trophyGroups.count > 0 ? UIScreen.main.bounds.height/2 : 0)
                     }
                     
                     TeamAdsView(team: team)
                 }
             }
         }
-        .onChange(of: team) { oldValue, newValue in
-            print("=== team changed", team.teamName)
-        }
+        
     }
     
     

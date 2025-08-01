@@ -21,6 +21,16 @@ class SeasonListViewModel: ObservableObject {
     }
     
     
+}
+
+
+extension SeasonListViewModel {
+    func resetAll() {
+        self.seasons = []
+        self.seasonSelected = nil
+        self.errorMessage = ""
+    }
+    
     func setSeason(by season: Season?, completion: @escaping (Season?) -> Void) {
         seasonSelected = nil
         seasonSelected = season

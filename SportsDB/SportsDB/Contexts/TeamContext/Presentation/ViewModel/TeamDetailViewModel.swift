@@ -41,4 +41,12 @@ class TeamDetailViewModel: ObservableObject {
     func resetEquipment() {
         equipments = []
     }
+    
+    func resetAll() {
+        self.teamSelected = nil
+        self.equipments = []
+        
+        self.isLoading = false
+        self.errorMessage = ""
+    }
 }

@@ -9,8 +9,21 @@ import SwiftUI
 
 @MainActor
 class TeamListViewModel: ObservableObject {
-    @Published var teams: [Team] = []
+    
+    @Published private(set) var teamsStatus: ModelsStatus<[Team]> = .idle
+    
     @Published var teamsBySearch: [Team] = []
+    
+    
+    // MARK: - Computed Properties (Public Interface)
+    var teams: [Team] {
+        teamsStatus.data ?? []
+        //(currentSearchText.isEmpty ? countriesStatus : filteredCountriesStatus).data ?? []
+    }
+    
+    var isLoading: Bool {
+        teamsStatus.isLoading
+    }
     
     @Published var isloading: Bool = false
     @Published var erroMessage: String = ""
@@ -24,13 +37,24 @@ class TeamListViewModel: ObservableObject {
         self.searchTeamsUseCase = searchTeamsUseCase
     }
     
+}
+
+extension TeamListViewModel {
     func getListTeams(leagueName: String, sportName: String, countryName: String) async {
-        isloading = true
-        defer { isloading = false }
         do {
-            teams = try await getListTeamsUseCase.execute(leagueName: leagueName, sportName: sportName, countryName: countryName)
+            DispatchQueueManager.share.runOnMain {
+                self.teamsStatus  = .loading
+            }
+            
+            let res = try await getListTeamsUseCase.execute(leagueName: leagueName, sportName: sportName, countryName: countryName)
+            DispatchQueueManager.share.runOnMain {
+                self.teamsStatus = .success(data: res)
+            }
         } catch {
-            erroMessage = error.localizedDescription
+            DispatchQueueManager.share.runOnMain {
+                print("=== getListTeams", error.localizedDescription)
+                self.teamsStatus = .failure(error: error.localizedDescription)
+            }
         }
     }
     
@@ -55,3 +79,11 @@ class TeamListViewModel: ObservableObject {
 }
 
 
+extension TeamListViewModel {
+    func resetAll() {
+        self.teamsStatus = .idle
+        self.teamsBySearch = []
+        self.isloading = false
+        self.erroMessage = ""
+    }
+}

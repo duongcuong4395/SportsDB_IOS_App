@@ -34,7 +34,7 @@ struct EventsOfTeamByScheduleView<OptionEventView: View>: View {
     @ViewBuilder
     func getEventView(by executeStatus: ModelsStatus<[Event]>) -> some View {
         switch executeStatus {
-        case .Success(model: let events):
+        case .success(data: let events):
             if events.count <= 0 {
                 Text("None...")
                     .transition(.opacity)
@@ -46,7 +46,7 @@ struct EventsOfTeamByScheduleView<OptionEventView: View>: View {
                 .transition(.opacity.combined(with: .slide))
                 
             }
-        case .Idle:
+        case .idle:
             VStack {
                 ForEach((1...5).reversed(), id: \.self) { _ in
                     EventItemView(isVisible: .constant(false),
@@ -61,7 +61,7 @@ struct EventsOfTeamByScheduleView<OptionEventView: View>: View {
             }
             .transition(.opacity)
             
-        case .Progressing:
+        case .loading:
             VStack {
                 ForEach((1...5).reversed(), id: \.self) { _ in
                     EventItemView(isVisible: .constant(false),
@@ -75,7 +75,7 @@ struct EventsOfTeamByScheduleView<OptionEventView: View>: View {
                 }
             }
             .transition(.opacity)
-        case .Fail(message: _):
+        case .failure(error: _):
             Text("EventsOfTeamForPrevious fail")
                 .transition(.opacity)
         }

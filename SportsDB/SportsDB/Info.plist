@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LSEnvironment</key>
+	<dict>
+		<key>Key_User</key>
+		<string>3</string>
+		<key>Key_System</key>
+		<string>123</string>
+		<key>BaseURL_Sport</key>
+		<string>https://www.thesportsdb.com</string>
+	</dict>
+</dict>
+</plist>
