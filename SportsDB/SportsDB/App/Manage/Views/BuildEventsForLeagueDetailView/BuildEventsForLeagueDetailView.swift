@@ -128,6 +128,7 @@ struct BuildSeasonForLeagueView: View {
         SeasonForLeagueView(
             tappedSeason: { season in
                 withAnimation(.spring()) {
+                    guard seasonListVM.seasonSelected != season else { return }
                     seasonListVM.setSeason(by: season) { season in
                         guard let season = season else { return }
                         

@@ -10,7 +10,7 @@ import Kingfisher
 
 struct TrophyView: View {
     var league: League
-    
+    var size: CGFloat = 200
     var body: some View {
         VStack {
             KFImage(URL(string: league.trophy ?? ""))
@@ -22,7 +22,7 @@ struct TrophyView: View {
                 }
                 .resizable()
                 .scaledToFill()
-                .frame(width: 200, height: 200)
+                .frame(width: size, height: size) 
                 .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
                 .fadeInEffect(duration: 1)
             

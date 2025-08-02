@@ -11,6 +11,8 @@ struct SocialItemView: View {
     @Environment(\.openURL) var openURL
     var socialLink: String?
     var iconName: String
+    var size: CGFloat = 30
+    
     var body: some View {
         if let socialLink = socialLink {
             Button (action: {
@@ -19,7 +21,7 @@ struct SocialItemView: View {
                 Image(iconName)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 30, height: 30)
+                    .frame(width: size, height: size)
             })
         }
     }

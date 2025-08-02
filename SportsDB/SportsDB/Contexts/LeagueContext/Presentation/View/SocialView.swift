@@ -25,8 +25,9 @@ struct SocialView: View {
             SocialItemView(socialLink: facebook, iconName: "facebook")
             Spacer()
             SocialItemView(socialLink: website, iconName: "Sports")
-        }.padding(5)
-            .padding(.horizontal, 5)
-            .background(.thinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        }
+        .padding(5)
+        .padding(.horizontal, 5)
+        .background(.thinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }

@@ -14,7 +14,7 @@ struct SportsDBApp: App {
             //ContentView()
             
             //DemoResizableHeaderScrollView()
-            
+            //AutoScrollingTabView()
             SportDBView()
         }
     }

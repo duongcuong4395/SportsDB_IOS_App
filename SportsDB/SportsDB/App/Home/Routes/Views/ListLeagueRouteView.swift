@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ListLeagueRouteView: View {
     @EnvironmentObject var leagueListVM: LeagueListViewModel
@@ -21,7 +22,6 @@ struct ListLeagueRouteView: View {
     let sport: String
     
     @State var isSticky: Bool = false
-    
     var animation: Namespace.ID
     
     var body: some View {
@@ -31,38 +31,32 @@ struct ListLeagueRouteView: View {
             ignoresSafeAreaTop: true,
             isSticky: isSticky
         ) { progress, safeArea in
-            /*
-             ZStack {
-                 
-                 GeometryReader {
-                     let height = $0.size.height
-                     Text("\(height)")
-                     .padding(.horizontal, 5)
-                 }
-                 
-             }
-             */
-            VStack {
-                HStack(spacing: 10) {
-                    Button(action: {
-                        leagueListVM.resetAll()
-                        sportRouter.pop()
-                    }, label: {
-                        Image(systemName: "chevron.left")
-                            .font(.title2)
-                    })
-                    .padding(5)
-                    
-                    if let country = countryListVM.countrySelected {
-                        CountryItemView(country: country, isHStack: true)
-                            //.matchedGeometryEffect(id: "country_\(country.name)", in: animation)
+            HStack(spacing: 10) {
+                Button(action: {
+                    leagueListVM.resetAll()
+                    sportRouter.pop()
+                }, label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title2)
+                })
+                if let country = countryListVM.countrySelected {
+                    HStack(spacing: 5) {
+                        KFImage(URL(string: country.getFlag(by: .Medium)))
+                            .placeholder {
+                                ProgressView()
+                            }
+                            .font(.caption)
+                            .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                            //.frame(width: 50, height: 50)
+                        //.matchedGeometryEffect(id: "country_\(country.name)", in: animation)
+                            .scaleEffect(1 - ( 0.2 * progress), anchor: .leading)
+                        Text(country.name)
+                            .font(.caption)
                     }
-                    Spacer()
                 }
-                .scaleEffect(1 - ( 0.2 * progress), anchor: .leading)
-                .padding(.horizontal)
+                Spacer()
             }
-            
+            .padding(.horizontal)
             .background {
                 Rectangle()
                     .fill(.ultraThinMaterial)
@@ -74,65 +68,7 @@ struct ListLeagueRouteView: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 100) // Extra space at bottom
         }
-        
-        
-        
-        /*
-        VStack {
-            HStack(spacing: 10) {
-                Button(action: {
-                    leagueListVM.resetAll()
-                    sportRouter.pop()
-                }, label: {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                })
-                .padding(5)
-                
-                
-                if let country = countryListVM.countrySelected {
-                    CountryItemView(country: country, isHStack: true)
-                        .matchedGeometryEffect(id: "country_\(country.name)", in: animation)
-                }
-                Spacer()
-            }
-            .padding(.horizontal, 5)
-            
-            switch leagueListVM.leaguesStatus {
-            case .loading:
-                Spacer()
-                ProgressView()
-                Spacer()
-            case .success(data: _):
-                VStack {
-                    ScrollView(showsIndicators: false) {
-                        LazyVGrid(columns: columns) {
-                            LeaguesView(leagues: leagueListVM.leagues, badgeImageSizePerLeague: badgeImageSizePerLeague, tappedLeague: tappedLeague)
-                        }
-                    }
-                }
-            case .idle:
-                Spacer()
-            case .failure(error: _):
-                Spacer()
-                Circle()
-                    .onAppear{
-                        Task {
-                            reloadNumb += 1
-                            guard reloadNumb <= 3 else { return }
-                            await leagueListVM.fetchLeagues(country: country, sport: sportVM.sportSelected.rawValue)
-                        }
-                        
-                    }
-            }
-            
-        }
-        */
     }
-    
-    
-    
-    
 }
 
 struct ListLeaguesView: View {
@@ -155,49 +91,52 @@ struct ListLeaguesView: View {
     @State var isSticky: Bool = false
     
     var body: some View {
-        VStack {
-            switch leagueListVM.leaguesStatus {
-            case .loading:
-                Spacer()
-                
-                ProgressView()
-                Spacer()
-            case .success(data: _):
-                LazyVGrid(columns: columns) {
-                    LeaguesView(leagues: leagueListVM.leagues, badgeImageSizePerLeague: badgeImageSizePerLeague, tappedLeague: tappedLeague)
-                }
-                
-            case .idle:
-                Spacer()
-            case .failure(error: _):
-                Spacer()
-                Circle()
-                    .onAppear{
-                        Task {
-                            reloadNumb += 1
-                            guard reloadNumb <= 3 else { return }
-                            await leagueListVM.fetchLeagues(country: country, sport: sportVM.sportSelected.rawValue)
-                        }
-                        
-                    }
+        switch leagueListVM.leaguesStatus {
+        case .loading:
+            Spacer()
+            ProgressView()
+            Spacer()
+        case .success(data: _):
+            LazyVGrid(columns: columns) {
+                LeaguesView(leagues: leagueListVM.leagues, badgeImageSizePerLeague: badgeImageSizePerLeague, tappedLeague: tappedLeague)
             }
+        case .idle:
+            Spacer()
+        case .failure(error: _):
+            Spacer()
+            Circle()
+                .onAppear{
+                    Task {
+                        reloadNumb += 1
+                        guard reloadNumb <= 3 else { return }
+                        await leagueListVM.fetchLeagues(country: country, sport: sportVM.sportSelected.rawValue)
+                    }
+                    
+                }
         }
         
     }
     
     func tappedLeague(by league: League) {
-        sportRouter.navigateToLeagueDetail(by: league.idLeague ?? "")
-        leagueDetailVM.setLeague(by: league)
+        Task {
+            
+            await seasonListVM.getListSeasons(leagueID: league.idLeague ?? "")
+            leagueDetailVM.setLeague(by: league)
+            sportRouter.navigateToLeagueDetail(by: league.idLeague ?? "")
+        }
+        
+        
         
         Task {
             // Get list teams
             await teamListVM.getListTeams(leagueName: league.leagueName ?? "", sportName: sport, countryName: country)
             //await eventListVM.lookupEventsPastLeague(leagueID: league.idLeague ?? "")
             // Get list Season
-            await seasonListVM.getListSeasons(leagueID: league.idLeague ?? "")
+            
         }
         
         eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
+        
     }
     
 }
