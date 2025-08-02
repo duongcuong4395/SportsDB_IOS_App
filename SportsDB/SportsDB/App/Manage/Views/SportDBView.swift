@@ -67,14 +67,17 @@ struct SportDBView: View {
     // MARK: - UI Constants
     private let badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (60, 60)
     
+    @Namespace var animation
+    
     var body: some View {
         VStack {
            GenericNavigationStack(
             router: sportRouter
             , rootContent: {
-               ListCountryRouteView()
+                ListCountryRouteView(animation: animation)
             }
             , destination: sportDestination)
+           //.ignoresSafeArea(.container, edges: [.top])
             
             ListSportView(tappedSport: { sport in
                 sportRouter.popToRoot()
@@ -139,9 +142,10 @@ private extension SportDBView {
     func sportDestination(_ route: SportRoute) -> some View {
         switch route {
         case .ListCountry:
-            ListCountryRouteView()
+            ListCountryRouteView(animation: animation)
         case .ListLeague(by: let country, and: let sport):
-            ListLeagueRouteView(country: country, sport: sport)
+            ListLeagueRouteView(country: country, sport: sport, animation: animation)
+                .navigationBarHidden(true)
         case .LeagueDetail(by: let leagueID):
             LeagueDetailRouteView(leagueID: leagueID)
                 .navigationBarHidden(true)

@@ -16,12 +16,13 @@ struct ListCountryRouteView: View {
     @EnvironmentObject var countryListVM: CountryListViewModel
     
     var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]
+    var animation: Namespace.ID
     
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: columns) {
-                    CountriesView(countries: countryListVM.countries, tappedCountry: tapped)
+                    CountriesView(countries: countryListVM.countries, tappedCountry: tapped, animation: animation)
                 }
             }
         }
@@ -29,11 +30,12 @@ struct ListCountryRouteView: View {
     
     func tapped(by country: Country) {
         UIApplication.shared.endEditing()
-        countryListVM.setCountry(by: country)
-
-        Task {
-            sportRouter.navigateToListLeague(by: country.name, and: sportVM.sportSelected.rawValue)
-            await leagueListVM.fetchLeagues(country: country.name, sport: sportVM.sportSelected.rawValue)
+        withAnimation {
+            countryListVM.setCountry(by: country)
+            Task {
+                await leagueListVM.fetchLeagues(country: country.name, sport: sportVM.sportSelected.rawValue)
+                sportRouter.navigateToListLeague(by: country.name, and: sportVM.sportSelected.rawValue)
+            }
         }
     }
 }
