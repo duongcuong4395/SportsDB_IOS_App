@@ -19,7 +19,7 @@ struct PlayerDetailByAIView: View {
         VStack {
             if let player = player {
                 
-                PlayerItemView(player: player)
+                //PlayerItemView(player: player)
             }
         }
         .onAppear{

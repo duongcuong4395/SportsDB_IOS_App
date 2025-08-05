@@ -52,10 +52,11 @@ struct TeamDetailRouteHeaderView: View {
     }
     
     func backRoute() {
-        sportRouter.pop()
+        
         eventsOfTeamByScheduleVM.resetAll()
         teamDetailVM.resetAll()
         playerListVM.resetAll()
         trophyListVM.resetAll()
+        sportRouter.pop()
     }
 }

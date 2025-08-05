@@ -19,7 +19,8 @@ struct PlayerListView_Old: View {
     var body: some View {
         TabView {
             ForEach(players, id: \.player) { player in
-                PlayerItemView(player: player)
+                //PlayerItemView(player: player)
+                EmptyView()
                     .cornerRadius(10)
                     .shadow(radius: 5)
                     .onAppear{
@@ -47,7 +48,8 @@ struct AllPlayerOfTeamView: View {
     var body: some View {
         TabView {
             ForEach(playerListVM.playersByLookUpAllForaTeam, id: \.player) { player in
-                PlayerItemView(player: player)
+                //PlayerItemView(player: player)
+                EmptyView()
                     .cornerRadius(10)
                     .shadow(radius: 5)
                     .onAppear{
@@ -71,75 +73,26 @@ enum PlayerExecuteStatus {
 struct PlayerListView: View {
     let players: [Player]
     let refreshPlayer: (Player) async -> PlayerExecuteStatus
-    
+    let getPlayerDetail: (Player) async -> Player?
     @State private var currentIndex: Int = 0
     
     @State var playerExecuteStatus: PlayerExecuteStatus = .Idle
     
+    var animation: Namespace.ID
+    
     var body: some View {
-        VStack {
-            // Custom pager instead of TabView for better performance
-            GeometryReader { geometry in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: 0) {
-                        ForEach(Array(players.enumerated()), id: \.element.player) { index, player in
-                            PlayerItemView(player: player)
-                                //.frame(width: geometry.size.width * 0.85)
-                                .frame(width: UIScreen.main.bounds.width)
-                                .cornerRadius(10)
-                                .shadow(radius: 5)
-                                .onAppear {
-                                    // Only refresh if needed
-                                    if player.idPlayer?.isEmpty != false {
-                                        playerExecuteStatus = .Progressing
-                                        Task {
-                                            let res = await refreshPlayer(player)
-                                            playerExecuteStatus = res
-                                        }
-                                        
-                                    }
-                                }
-                                .overlay {
-                                    if playerExecuteStatus == .TryAgain {
-                                        VStack {
-                                            Spacer()
-                                            HStack {
-                                                Spacer()
-                                                
-                                                Image(systemName: "circle.hexagonpath")
-                                                    .font(.title)
-                                                    .padding()
-                                                    .onTapGesture {
-                                                        Task {
-                                                            _ = await refreshPlayer(player)
-                                                        }
-                                                        
-                                                    }
-                                            }
-                                        }
-                                    }
-                                    
-                                }
-                        }
+        ForEach(Array(players.enumerated()), id: \.element.player) { index, player in
+            PlayerItemView(player: player, animation: animation)
+                //.frame(width: geometry.size.width * 0.85)
+                .frame(width: UIScreen.main.bounds.width)
+                .cornerRadius(10)
+                .shadow(radius: 5)
+                .onTapGesture {
+                    Task {
+                        await getPlayerDetail(player)
                     }
                 }
-                .scrollTargetBehavior(.paging)
-            }
             
-            // Page indicator
-            /*
-            if players.count > 1 {
-                HStack(spacing: 6) {
-                    ForEach(0..<players.count, id: \.self) { index in
-                        Circle()
-                            .fill(index == currentIndex ? Color.primary : Color.secondary.opacity(0.5))
-                            .frame(width: 8, height: 8)
-                            .animation(.easeInOut(duration: 0.2), value: currentIndex)
-                    }
-                }
-                .padding(.top, 8)
-            }
-            */
         }
     }
 }

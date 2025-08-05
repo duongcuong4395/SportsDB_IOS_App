@@ -24,6 +24,8 @@ class PlayerListViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String = ""
     
+    @Published var playerDetail: Player?
+    
     private var lookupPlayerUseCase: LookupPlayerUseCase
     private var searchPlayersUseCase: SearchPlayersUseCase
     private var lookupHonoursUseCase: LookupHonoursUseCase

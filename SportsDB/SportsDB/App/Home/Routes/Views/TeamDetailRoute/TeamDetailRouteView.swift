@@ -20,5 +20,17 @@ struct TeamDetailRouteView: View {
             // MARK: Content
             TeamDetailRouteContentView(team: team)
         }
+        .background(
+            KFImage(URL(string: team.fanart1 ?? ""))
+                .placeholder { progress in
+                    // LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
+                    ProgressView()
+                }
+                //.resizable()
+                //.scaledToFill()
+                //.frame(height: 100)
+                .opacity(0.15)
+                .ignoresSafeArea(.all)
+        )
     }
 }

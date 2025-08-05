@@ -39,8 +39,11 @@ struct TeamDetailRouteContentView: View {
             TabView(selection: $selectedTab) {
                 GeneralView
                     .tag(0)
-                PlayersView
-                    .tag(1)
+                if playerListVM.playersByLookUpAllForaTeam.count > 0 {
+                    PlayersView
+                        .tag(1)
+                }
+                
                 EventsView
                     .tag(2)
                 TrophiesView
@@ -118,26 +121,7 @@ struct TeamDetailRouteContentView: View {
     }
     
     var PlayersView: some View {
-        VStack {
-            TitleComponentView(title: "Players")
-            if playerListVM.playersByLookUpAllForaTeam.count > 0 {
-                BuildPlayersForTeamDetailView(team: team, progressing: false)
-                
-                    .frame(height:  playerListVM.playersByLookUpAllForaTeam.count > 0 ? UIScreen.main.bounds.height / 2 : 0)
-                    .slideInEffect(isVisible: $isVisible, delay: 0.5, direction: .leftToRight)
-                    .onAppear{
-                        withAnimation(.spring()){
-                            isVisible = true
-                        }
-                    }
-                    .onDisappear{
-                        withAnimation(.spring()){
-                            isVisible = false
-                        }
-                    }
-            }
-        }
-        
+        BuildPlayersForTeamDetailView(team: team, progressing: false)
     }
 
     var EventsView: some View {
