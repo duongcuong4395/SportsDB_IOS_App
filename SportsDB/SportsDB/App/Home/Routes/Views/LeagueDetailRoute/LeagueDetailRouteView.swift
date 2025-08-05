@@ -8,7 +8,14 @@
 import SwiftUI
 import Kingfisher
 
-enum LeagueDetailRouteMenu: String, CaseIterable {
+protocol RouteMenu: CaseIterable {
+    var title: String { get }
+    var icon: String { get }
+    var color: Color { get }
+}
+
+enum LeagueDetailRouteMenu: String, RouteMenu {
+    
     case General
     case Teams
     case Events
@@ -90,18 +97,39 @@ struct LeagueDetailRouteView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
-                            VStack {
-                                Text(league.leagueName ?? "")
-                                    .font(.caption.bold())
-                                Text(league.currentSeason ?? "")
-                                    .font(.caption)
-                            }
+                            
                         }
                     }
-                    Spacer()
+                    
+                    //Spacer()
+                    VStack {
+                        Text(league.leagueName ?? "")
+                            .font(.caption.bold())
+                        Text(league.currentSeason ?? "")
+                            .font(.caption)
+                        
+                        HStack {
+                            SocialItemView(socialLink: league.youtube, iconName: "youtube", size: 15)
+                            Spacer()
+                            SocialItemView(socialLink: league.twitter, iconName: "twitter", size: 15)
+                            Spacer()
+                            SocialItemView(socialLink: league.instagram, iconName: "instagram", size: 15)
+                            Spacer()
+                            SocialItemView(socialLink: league.facebook, iconName: "facebook", size: 15)
+                            //Spacer()
+                            //SocialItemView(socialLink: website, iconName: "Sports")
+                        }
+                        .padding(.horizontal, 5)
+                    }
+                    
+                    //Spacer()
+                    if let league = leagueDetailVM.league {
+                        TrophyView(league: league, size: 60)
+                    }
+                    
                 }
                 .padding(.horizontal)
-                .frame(height: 60)
+                .frame(height: 70)
                 .background {
                     Rectangle()
                         .fill(.ultraThinMaterial)
@@ -128,12 +156,14 @@ struct BuildLeagueTableView: View, SelectTeamDelegate {
     
     var onRetry: () -> Void
     
+    @State var numbRetry: Int = 0
+    
     var body: some View {
         switch leagueListVM.leaguesTableStatus {
         case .idle:
-            IdleStateView(kindName: "League table", onLoadTapped: {})
+            EmptyView()
         case .loading:
-            LoadingStateView(kindName: "League table")
+            ProgressView()
         case .success(_):
             LeagueTableView(
                 leaguesTable: leagueListVM.leaguesTable
@@ -148,8 +178,10 @@ struct BuildLeagueTableView: View, SelectTeamDelegate {
                     sportRouter.navigateToTeamDetail(by: leagueTable.idTeam ?? "")
                 })
         case .failure(_):
-            ErrorStateView(error: "", onRetry: {})
+            ProgressView()
                 .onAppear{
+                    numbRetry += 1
+                    guard numbRetry <= 3 else { numbRetry = 0 ; return }
                     onRetry()
                 }
         }
@@ -229,6 +261,7 @@ struct LeagueDetailRouteContentView: View {
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     
     @Binding var selectedTab: Int
+    let tabs = LeagueDetailRouteMenu.allCases
     @State private var timer: Timer?
     @State private var dragOffset: CGFloat = 0
     
@@ -240,7 +273,7 @@ struct LeagueDetailRouteContentView: View {
     let autoScrollEnabled: Bool = false
     let autoScrollInterval: TimeInterval = 3.0
     
-    let tabs = LeagueDetailRouteMenu.allCases
+    
     
     @State private var tabHeights: [CGFloat] = []
     
@@ -289,8 +322,8 @@ struct LeagueDetailRouteContentView: View {
     private var generalTabContent: some View {
         ScrollView(showsIndicators: false) {
             VStack {
-                TitleComponentView(title: "Trophy")
-                TrophyView(league: league)
+                // TitleComponentView(title: "Trophy")
+                // TrophyView(league: league)
                 
                 TitleComponentView(title: "Description")
                 Text(league.descriptionEN ?? "")
@@ -329,9 +362,7 @@ struct LeagueDetailRouteContentView: View {
                     
                     TitleComponentView(title: "Seasons")
                     BuildSeasonForLeagueView(leagueID: leagueID)
-                    
                         .onAppear{
-                            print("=== Season onApear", seasonListVM.seasons.count)
                             guard let season = seasonListVM.seasonSelected else { return }
                              
                             eventListVM.setCurrentRound(by: 1) { round in
@@ -355,7 +386,14 @@ struct LeagueDetailRouteContentView: View {
                     
                     
                     TitleComponentView(title: "Ranks")
-                    BuildLeagueTableView(onRetry: {})
+                    BuildLeagueTableView(onRetry: {
+                        Task {
+                            guard let season = seasonListVM.seasonSelected else { return }
+                            await leagueListVM.lookupLeagueTable(
+                                leagueID: leagueID,
+                                season: season.season)
+                        }
+                    })
                     .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
 
                     TitleComponentView(title: "Events")

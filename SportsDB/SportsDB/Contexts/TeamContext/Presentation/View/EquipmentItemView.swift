@@ -16,12 +16,11 @@ struct EquipmentItemView: View {
         VStack {
             KFImage(URL(string: equipment.equipment ?? ""))
                 .placeholder { progress in
-                    //LoadingIndicator(animation: .circleBars, size: .medium, speed: .normal)
                     ProgressView()
                 }
                 .resizable()
                 .scaledToFill()
-                .frame(width: 100, height: 100)
+                .rotateOnAppear(angle: -90, duration: 0.5, axis: .y)
             Text(equipment.season ?? "")
                 .font(.callout.bold())
         }

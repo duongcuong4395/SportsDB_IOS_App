@@ -50,7 +50,7 @@ struct ListLeagueRouteView: View {
                 Spacer()
             }
             .padding(.horizontal)
-            .frame(height: 60)
+            .frame(height: 70)
             .background {
                 Rectangle()
                     .fill(.ultraThinMaterial)

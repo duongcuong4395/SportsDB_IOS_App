@@ -110,7 +110,7 @@ struct AutoScrollingTabView: View {
 }
 
 struct MenuTabIndicatorView: View {
-    let menu: LeagueDetailRouteMenu
+    var menu: any RouteMenu
     let isSelected: Bool
     
     

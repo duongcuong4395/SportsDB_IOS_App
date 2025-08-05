@@ -150,10 +150,15 @@ private extension SportDBView {
             LeagueDetailRouteView(leagueID: leagueID)
                 .navigationBarHidden(true)
         case .TeamDetail(by: _):
-            if let team = teamDetailVM.teamSelected {
-                TeamDetailRouteView(team: team)
-                    .navigationBarHidden(true)
+            VStack {
+                if let team = teamDetailVM.teamSelected {
+                    TeamDetailRouteView(team: team)
+                        
+                }
             }
+            .padding(0)
+            .navigationBarHidden(true)
+            
         }
     }
 }
@@ -286,6 +291,7 @@ extension SelectTeamDelegate {
     func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
         Task {
             await resetWhenTapTeam()
+            
         }
         
         withAnimation {
@@ -295,9 +301,9 @@ extension SelectTeamDelegate {
             let awayTeam = String(homeVSAwayTeam?[1] ?? "")
             let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
             let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
-            
-            selectTeam(by: team)
             sportRouter.navigateToTeamDetail(by: teamID)
+            selectTeam(by: team)
+            
         }
     }
     

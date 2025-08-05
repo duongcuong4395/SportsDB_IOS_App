@@ -31,14 +31,6 @@ struct LeagueTableView: View {
                             KFImage(URL(string: rank.badge ?? ""))
                                 .placeholder { progress in
                                     ProgressView()
-                                    /*
-                                    //Image("Sports")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .foregroundStyle(.black)
-                                        .opacity(0.3)
-                                        .fadeInEffect(duration: 1, isLoop: true)
-                                    */
                                 }
                                 .resizable()
                                 .scaledToFill()
@@ -70,7 +62,7 @@ struct LeagueTableView: View {
                             delay: Double(index) * 0.1,
                             direction: .leftToRight)
                         .onAppear{
-                            print("=== leagueListVM.showRanks", showRanks.count)
+                            //print("=== leagueListVM.showRanks", showRanks.count)
                             showRanks[index] = true
                         }
                     }
@@ -79,7 +71,7 @@ struct LeagueTableView: View {
         }
         
         .onAppear{
-            print("=== leagueListVM.showRanks", showRanks.count)
+            //print("=== leagueListVM.showRanks", showRanks.count)
         }
     }
 }
