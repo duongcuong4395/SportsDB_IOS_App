@@ -25,12 +25,8 @@ struct ListLeagueRouteView: View {
     var animation: Namespace.ID
     
     var body: some View {
-        ResizableHeaderScrollView(
-            minimumHeight: 50,
-            maximumHeight: 70,
-            ignoresSafeAreaTop: true,
-            isSticky: isSticky
-        ) { progress, safeArea in
+        VStack {
+            // MARK: Header
             HStack(spacing: 10) {
                 Button(action: {
                     leagueListVM.resetAll()
@@ -47,9 +43,6 @@ struct ListLeagueRouteView: View {
                             }
                             .font(.caption)
                             .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
-                            //.frame(width: 50, height: 50)
-                        //.matchedGeometryEffect(id: "country_\(country.name)", in: animation)
-                            .scaleEffect(1 - ( 0.2 * progress), anchor: .leading)
                         Text(country.name)
                             .font(.caption)
                     }
@@ -57,16 +50,20 @@ struct ListLeagueRouteView: View {
                 Spacer()
             }
             .padding(.horizontal)
+            .frame(height: 60)
             .background {
                 Rectangle()
                     .fill(.ultraThinMaterial)
-                    .opacity(progress)
+                    //.opacity(progress)
                     .ignoresSafeArea(.all)
             }
-        } content: {
-            ListLeaguesView(country: country, sport: sport)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 100) // Extra space at bottom
+            
+            // MARK: Content
+            ScrollView(showsIndicators: false) {
+                ListLeaguesView(country: country, sport: sport)
+                    //.padding(.horizontal, 16)
+            }
+            
         }
     }
 }
@@ -118,16 +115,11 @@ struct ListLeaguesView: View {
     }
     
     func tappedLeague(by league: League) {
+        
         Task {
-            
             await seasonListVM.getListSeasons(leagueID: league.idLeague ?? "")
             leagueDetailVM.setLeague(by: league)
             sportRouter.navigateToLeagueDetail(by: league.idLeague ?? "")
-        }
-        
-        
-        
-        Task {
             // Get list teams
             await teamListVM.getListTeams(leagueName: league.leagueName ?? "", sportName: sport, countryName: country)
             //await eventListVM.lookupEventsPastLeague(leagueID: league.idLeague ?? "")
@@ -136,6 +128,8 @@ struct ListLeaguesView: View {
         }
         
         eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
+        
+        
         
     }
     

@@ -30,17 +30,10 @@ struct AutoScrollingTabView: View {
                                 isSelected: selectedTab == index
                             )
                             .onTapGesture {
-                                /*
-                                withAnimation(.easeInOut(duration: 0.3)) {
+                                withAnimation {
                                     selectedTab = index
-                                    if autoScrollEnabled {
-                                        stopAutoScroll()
-                                        startAutoScroll()
-                                    }
                                 }
-                                */
-                                // Không đặt animation ở đây để TabView tự xử lý
-                                selectedTab = index
+                                
                                 if autoScrollEnabled {
                                     stopAutoScroll()
                                     startAutoScroll()
@@ -120,6 +113,7 @@ struct MenuTabIndicatorView: View {
     let menu: LeagueDetailRouteMenu
     let isSelected: Bool
     
+    
     var body: some View {
         VStack(spacing: 8) {
             // Icon với animation
@@ -144,11 +138,7 @@ struct MenuTabIndicatorView: View {
         }
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(isSelected ? menu.color.opacity(0.1) : Color.clear)
-                .animation(.easeInOut(duration: 0.3), value: isSelected)
-        )
+        
     }
 }
 

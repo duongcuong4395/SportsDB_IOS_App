@@ -20,8 +20,13 @@ struct TeamDetailRouteView: View {
     @EnvironmentObject var teamDetailVM: TeamDetailViewModel
     @EnvironmentObject var chatVM: ChatViewModel
     
+    
+    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
+    
     @State var trophyGroup: [TrophyGroup] = []
     @State var isVisible: Bool = false
+    
+    @EnvironmentObject var sportRouter: SportRouter
     
     @State var isVisibleViews: (
         forEvents: Bool,
@@ -31,6 +36,45 @@ struct TeamDetailRouteView: View {
     
     var body: some View {
         VStack {
+            // MARK: Header
+            HStack(spacing: 10) {
+                Button(action: {
+                    sportRouter.pop()
+                    
+                    eventsOfTeamByScheduleVM.resetAll()
+                    teamDetailVM.resetAll()
+                    playerListVM.resetAll()
+                    trophyListVM.resetAll()
+                }, label: {
+                    
+                    Image(systemName: "chevron.left")
+                        .font(.title2)
+                })
+                if let team = teamDetailVM.teamSelected {
+                    HStack(spacing: 5) {
+                        KFImage(URL(string: team.badge ?? ""))
+                            .placeholder {
+                                ProgressView()
+                            }
+                            .resizable()
+                            .scaledToFit()
+                            .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                        VStack {
+                            Text(team.teamName)
+                                .font(.caption.bold())
+                        }
+                    }
+                }
+                Spacer()
+            }
+            .padding(.horizontal)
+            .frame(height: 60)
+            .background {
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                    .ignoresSafeArea(.all)
+            }
+            
             ScrollView(showsIndicators: false) {
                 LazyVStack {
                 

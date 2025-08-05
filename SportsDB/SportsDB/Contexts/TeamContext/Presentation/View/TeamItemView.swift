@@ -16,11 +16,7 @@ struct TeamItemView: View {
         VStack{
             KFImage(URL(string: team.badge ?? ""))
                 .placeholder { progress in
-                    //LoadingIndicator(animation: .circleBars, size: .medium, speed: .normal)
                     ProgressView()
-                    //Image("Sports")
-                        //.resizable()
-                        //.scaledToFill()
                 }
                 .resizable()
                 .scaledToFill()

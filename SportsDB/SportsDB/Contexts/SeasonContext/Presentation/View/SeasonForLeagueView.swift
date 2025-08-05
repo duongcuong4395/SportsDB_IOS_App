@@ -12,6 +12,8 @@ struct SeasonForLeagueView: View {
     
     var tappedSeason: (Season) -> Void
     
+    @Namespace var animation
+    
     var body: some View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
@@ -23,10 +25,20 @@ struct SeasonForLeagueView: View {
                         Text("\(season.season)")
                             .font(.callout.bold())
                             .padding(5)
-                            .background(.thinMaterial.opacity(isSelected  ? 1 : 0)
-                                        , in: RoundedRectangle(cornerRadius: 25))
+                            .background{
+                                if season == seasonListVM.seasonSelected {
+                                    Color.clear
+                                        .background(.thinMaterial.opacity(season == seasonListVM.seasonSelected  ? 1 : 0)
+                                                , in: RoundedRectangle(cornerRadius: 25))
+                                        .matchedGeometryEffect(id: "season", in: animation)
+                                }
+                                
+                            }
                             .onTapGesture {
-                                tappedSeason(season)
+                                withAnimation {
+                                    tappedSeason(season)
+                                }
+                                
                             }
                     }
                 }

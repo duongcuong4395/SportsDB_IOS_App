@@ -152,6 +152,7 @@ private extension SportDBView {
         case .TeamDetail(by: _):
             if let team = teamDetailVM.teamSelected {
                 TeamDetailRouteView(team: team)
+                    .navigationBarHidden(true)
             }
         }
     }
