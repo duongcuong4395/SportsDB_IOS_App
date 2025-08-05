@@ -139,6 +139,15 @@ struct LeagueDetailRouteView: View {
                 // MARK: Content
                 LeagueDetailRouteContentView(league: league, leagueID: leagueID, selectedTab: $selectedTab)
             }
+            .background {
+                KFImage(URL(string: league.poster ?? ""))
+                    .placeholder { progress in
+                        //LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
+                        ProgressView()
+                    }
+                    .opacity(0.1)
+                    .ignoresSafeArea(.all)
+            }
         }
     }
 }

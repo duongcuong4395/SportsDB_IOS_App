@@ -23,13 +23,9 @@ struct TeamDetailRouteView: View {
         .background(
             KFImage(URL(string: team.fanart1 ?? ""))
                 .placeholder { progress in
-                    // LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                     ProgressView()
                 }
-                //.resizable()
-                //.scaledToFill()
-                //.frame(height: 100)
-                .opacity(0.15)
+                .opacity(0.1)
                 .ignoresSafeArea(.all)
         )
     }

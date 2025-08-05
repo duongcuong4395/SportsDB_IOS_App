@@ -189,20 +189,12 @@ struct BuildPlayersForTeamDetailView: View {
                                 }
                         }
                     }
-                    /*
-                    PlayerListView(
-                        players: playerListVM.playersByLookUpAllForaTeam
-                        , refreshPlayer: getRefreshPlayer
-                        , getPlayerDetail: getPlayerDetail
-                        , animation: animation
-                    )
-                    */
                 }
             }
-            //.opacity(viewPlayerDetail ? 0 : 1)
+            
             if viewPlayerDetail {
                 Color.clear
-                    //.ignoresSafeArea(.all)
+                    .ignoresSafeArea(.all)
                     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                     .onTapGesture {
                         withAnimation {
@@ -214,11 +206,26 @@ struct BuildPlayersForTeamDetailView: View {
                     .overlay {
                         if let playerDetail = playerListVM.playerDetail {
                             PlayerDetailView(player: playerDetail, animation: animation)
-                                .padding(.vertical)
+                                //.padding(.vertical)
+                                .padding(5)
                         }
                         
                     }
+                    //.padding(.vertical)
+                    .overlay(alignment: .topTrailing, content: {
+                        Image(systemName: "xmark")
+                            .padding(10)
+                            .background(.ultraThinMaterial, in: Circle())
+                            .padding(5)
+                            .onTapGesture {
+                                withAnimation {
+                                    playerListVM.playerDetail = nil
+                                    viewPlayerDetail.toggle()
+                                }
+                            }
+                    })
                     .opacity(viewPlayerDetail ? 1 : 0)
+                
             }
             
         }
