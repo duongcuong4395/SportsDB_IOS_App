@@ -56,6 +56,7 @@ struct FloatingTabBar<T: TabItem>: View {
                                             .lineLimit(1)
                                     }
                                 }
+                                
                                 .foregroundStyle(activeTab == tab ? activeForeground : .black)
                                 .padding(.vertical, 2)
                                 .padding(.leading, 10)

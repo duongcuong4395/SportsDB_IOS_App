@@ -102,7 +102,7 @@ struct SportDBView: View {
                 playerListVM.resetAll()
                 trophyListVM.resetAll()
             })
-            .background(.clear)
+            .padding(.horizontal, 5)
         })
         .environmentObject(sportVM)
         .environmentObject(countryListVM)

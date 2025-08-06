@@ -10,23 +10,68 @@ import Kingfisher
 
 struct ListSportView: View {
     @EnvironmentObject var sportVM: SportViewModel
-    
     var tappedSport: (SportType) -> Void
+    
+    @State var showExpandedContent: Bool = false
+    @State var showFullScreenCover: Bool = false
+    
+    @Namespace var animation
+    
     var body: some View {
-        FloatingTabBar(
-            activeBackground: .blue
-            , activeTab: $sportVM.sportSelected
-            , touchTabBar: { sport in
-                withAnimation {
-                    if sportVM.sportSelected == sport {
-                        return
+        VStack {
+            MorphingButton(
+                backgroundColor: .black
+                , showExpandedContent: $showExpandedContent
+                , showFullScreenCover: $showFullScreenCover) {
+                    HStack(spacing: 5) {
+                        sportVM.sportSelected.getIcon()
+                            .font(.title3)
+                            .frame(width: 30, height: 30)
+                        Text(sportVM.sportSelected.displayName)
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .lineLimit(1)
+                        
                     }
-                    sportVM.sportSelected = sport
+                    .padding(5)
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                } content: {
+                    FloatingTabBar(
+                        activeBackground: .blue
+                        , activeTab: $sportVM.sportSelected
+                        , touchTabBar: { sport in
+                            withAnimation {
+                                if sportVM.sportSelected == sport {
+                                    return
+                                }
+                                sportVM.sportSelected = sport
+                                showFullScreenCover = false
+                                tappedSport(sportVM.sportSelected)
+                            }
+                        })
                     
-                    tappedSport(sportVM.sportSelected)
+                } expandedContent: {
+                    EmptyView()
                 }
-            })
-        .background(.clear)
+
+            /*
+            FloatingTabBar(
+                activeBackground: .blue
+                , activeTab: $sportVM.sportSelected
+                , touchTabBar: { sport in
+                    withAnimation {
+                        if sportVM.sportSelected == sport {
+                            return
+                        }
+                        sportVM.sportSelected = sport
+                        
+                        tappedSport(sportVM.sportSelected)
+                    }
+                })
+            .background(.clear)
+            */
+        }
+        
         /*
         HStack {
             ScrollView(.horizontal, showsIndicators: false) {
