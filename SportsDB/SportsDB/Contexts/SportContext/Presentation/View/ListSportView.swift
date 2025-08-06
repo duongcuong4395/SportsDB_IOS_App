@@ -26,6 +26,7 @@ struct ListSportView: View {
                     tappedSport(sportVM.sportSelected)
                 }
             })
+        .background(.clear)
         /*
         HStack {
             ScrollView(.horizontal, showsIndicators: false) {

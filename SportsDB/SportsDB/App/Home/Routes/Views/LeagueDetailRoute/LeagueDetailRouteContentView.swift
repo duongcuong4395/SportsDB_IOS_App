@@ -47,17 +47,7 @@ struct LeagueDetailRouteContentView: View {
             
             TabView(selection: $selectedTab) {
                 generalTabContent
-                    //.frostedGlass()
                     .liquidGlass(intensity: 0.8)
-                /*
-                    .liquidGlass(
-                        intensity: 0.3,
-                        tintColor: .white,
-                        isInteractive: true,
-                        hasShimmer: false,  // Mới: kiểm soát shimmer
-                        hasGlow: true      // Mới: kiểm soát glow
-                    )
-                */
                     .padding(.horizontal, 5)
                     .tag(0)
                 teamsTabContent
@@ -138,17 +128,15 @@ struct LeagueDetailRouteContentView: View {
     }
     
     private var teamsTabContent: some View {
-        VStack {
-            buildTeamListView(onRetry: {
-                Task {
-                    await teamListVM.getListTeams(
-                        leagueName: league.leagueName ?? ""
-                        , sportName: sportVM.sportSelected.rawValue
-                        , countryName: countryListVM.countrySelected?.name ?? "")
-                }
-            })
-            Spacer()
-        }
+        buildTeamListView(onRetry: {
+            Task {
+                await teamListVM.getListTeams(
+                    leagueName: league.leagueName ?? ""
+                    , sportName: sportVM.sportSelected.rawValue
+                    , countryName: countryListVM.countrySelected?.name ?? "")
+            }
+        })
+        .padding()
     }
     
     private var eventsTabContent: some View {
@@ -162,30 +150,6 @@ struct LeagueDetailRouteContentView: View {
                     
                     TitleComponentView(title: "Seasons")
                     BuildSeasonForLeagueView(leagueID: leagueID)
-                    
-                    /*
-                        .onAppear{
-                            guard let season = seasonListVM.seasonSelected else { return }
-                             
-                            eventListVM.setCurrentRound(by: 1) { round in
-                                eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
-                            }
-                            
-                            leagueListVM.resetLeaguesTable()
-                            
-                            Task {
-                                await leagueListVM.lookupLeagueTable(
-                                    leagueID: leagueID,
-                                    season: season.season)
-                                
-                                
-                                await eventsInSpecificInSeasonVM.getEvents(
-                                    leagueID: leagueID,
-                                    season: season.season)
-                            }
-                            
-                        }
-                    */
                     
                     if seasonListVM.seasonSelected == nil {
                         Text("Select season to see more about table rank and round events.")
@@ -216,6 +180,7 @@ struct LeagueDetailRouteContentView: View {
                     }
                 }
             }
+            .padding()
             
         }
     }

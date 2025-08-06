@@ -79,6 +79,9 @@ struct SportDBView: View {
             , destination: sportDestination)
            //.ignoresSafeArea(.container, edges: [.top])
             
+            
+       }
+        .overlay(alignment: .bottomLeading, content: {
             ListSportView(tappedSport: { sport in
                 sportRouter.popToRoot()
                 
@@ -98,10 +101,9 @@ struct SportDBView: View {
                 
                 playerListVM.resetAll()
                 trophyListVM.resetAll()
-                
-                
             })
-       }
+            .background(.clear)
+        })
         .environmentObject(sportVM)
         .environmentObject(countryListVM)
         .environmentObject(leagueListVM)

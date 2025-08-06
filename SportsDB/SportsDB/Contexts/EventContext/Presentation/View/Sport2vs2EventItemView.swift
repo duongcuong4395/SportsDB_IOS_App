@@ -24,6 +24,7 @@ struct Sport2vs2EventItemView<OptionsView: View>: View {
     var tapOnTeam: (Event, KindTeam) -> Void
     
     var body: some View {
+        
         VStack(spacing: 0) {
             // MARK: - Date Time
             HStack {
@@ -53,26 +54,26 @@ struct Sport2vs2EventItemView<OptionsView: View>: View {
                         .font(.caption2)
                         .foregroundStyle(.white)
                         .lineLimit(2)
-                        .frame(width: UIScreen.main.bounds.width/2 - 50.0)
+                        .frame(width: UIScreen.main.bounds.width/2 - 80.0)
                         .background {
                             ArrowShape()
-                                //.fill(.green)
                                 .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.white.opacity(0.1), .black, .black, .black]), startPoint: .leading, endPoint: .trailing))
-                                .frame(width: UIScreen.main.bounds.width/2 - 50.0, height: 30)
-                                .overlay {
-                                    HStack {
-                                        KFImage(URL(string: event.homeTeamBadge ?? ""))
-                                            .placeholder { progress in
-                                                ProgressView()
-                                            }
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 40, height: 40)
-                                            .offset(y: -25)
-                                            .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
-                                        Spacer()
+                                .frame(width: UIScreen.main.bounds.width/2 - 80.0, height: 30)
+                                
+                        }
+                        .overlay {
+                            HStack {
+                                KFImage(URL(string: event.homeTeamBadge ?? ""))
+                                    .placeholder { progress in
+                                        ProgressView()
                                     }
-                                }
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 40, height: 40)
+                                    .offset(y: -25)
+                                    .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                                Spacer()
+                            }
                         }
                 }
                 .slideInEffect(isVisible: $isVisible, delay: delay, direction: .leftToRight)
@@ -110,27 +111,28 @@ struct Sport2vs2EventItemView<OptionsView: View>: View {
                         .font(.caption)
                         .foregroundStyle(.white)
                         .lineLimit(2)
-                        .frame(width: UIScreen.main.bounds.width/2 - 50.0)
+                        .frame(width: UIScreen.main.bounds.width/2 - 80.0)
                         .background {
                             ArrowShape()
                                 .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.black, .black, .black, .white.opacity(0.1)]), startPoint: .trailing, endPoint: .leading))
                                 .rotation3DEffect(Angle(degrees: 180), axis: (0, 1, 0))
-                                .frame(width: UIScreen.main.bounds.width/2 - 50.0, height: 30) // width: 40,
-                                .overlay {
-                                    HStack {
-                                        Spacer()
-                                        KFImage(URL(string: event.awayTeamBadge ?? ""))
-                                            .placeholder { progress in
-                                                //LoadingIndicator(animation: .circleBars, size: .medium, speed: .normal)
-                                                ProgressView()
-                                            }
-                                            .resizable()
-                                            .scaledToFill()
-                                            .frame(width: 40, height: 40)
-                                            .offset(y: -25)
-                                            .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                                .frame(width: UIScreen.main.bounds.width/2 - 80.0, height: 30)
+                                
+                        }
+                        .overlay {
+                            HStack {
+                                Spacer()
+                                KFImage(URL(string: event.awayTeamBadge ?? ""))
+                                    .placeholder { progress in
+                                        //LoadingIndicator(animation: .circleBars, size: .medium, speed: .normal)
+                                        ProgressView()
                                     }
-                                }
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 40, height: 40)
+                                    .offset(y: -25)
+                                    .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                            }
                         }
                 }
                 .slideInEffect(isVisible: $isVisible, delay: delay, direction: .rightToLeft)
