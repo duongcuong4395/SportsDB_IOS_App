@@ -11,6 +11,7 @@ import Combine
 // MARK: - LiquidGlass Core Material
 @available(iOS 13.0, *)
 public struct LiquidGlassMaterial: ViewModifier {
+    let cornerRadius: Double
     let intensity: Double
     let tintColor: Color
     let isInteractive: Bool
@@ -22,6 +23,7 @@ public struct LiquidGlassMaterial: ViewModifier {
     @State private var hoverScale: CGFloat = 1.0
     
     public init(
+        cornerRadius: Double = 16,
         intensity: Double = 0.8,
         tintColor: Color = .white,
         isInteractive: Bool = true,
@@ -33,6 +35,7 @@ public struct LiquidGlassMaterial: ViewModifier {
         self.isInteractive = isInteractive
         self.hasShimmer = hasShimmer
         self.hasGlow = hasGlow
+        self.cornerRadius = cornerRadius
     }
     
     public func body(content: Content) -> some View {
@@ -40,7 +43,7 @@ public struct LiquidGlassMaterial: ViewModifier {
             .background(
                 ZStack {
                     // Base glass layer
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: cornerRadius)
                         .fill(
                             LinearGradient(
                                 colors: [
@@ -54,7 +57,7 @@ public struct LiquidGlassMaterial: ViewModifier {
                     
                     // Shimmer overlay (only if enabled)
                     if hasShimmer {
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedRectangle(cornerRadius: cornerRadius)
                             .fill(
                                 LinearGradient(
                                     colors: [
@@ -66,11 +69,11 @@ public struct LiquidGlassMaterial: ViewModifier {
                                     endPoint: UnitPoint(x: shimmerOffset + 0.3, y: 1)
                                 )
                             )
-                            .mask(RoundedRectangle(cornerRadius: 16))
+                            .mask(RoundedRectangle(cornerRadius: cornerRadius))
                     }
                     
                     // Border highlight
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: cornerRadius)
                         .strokeBorder(
                             LinearGradient(
                                 colors: [
@@ -402,6 +405,7 @@ struct TabBarButton: View {
 @available(iOS 13.0, *)
 extension View {
     public func liquidGlass(
+        cornerRadius: Double = 16,
         intensity: Double = 0.8,
         tintColor: Color = .white,
         isInteractive: Bool = true,
@@ -410,6 +414,7 @@ extension View {
     ) -> some View {
         self.modifier(
             LiquidGlassMaterial(
+                cornerRadius: cornerRadius,
                 intensity: intensity,
                 tintColor: tintColor,
                 isInteractive: isInteractive,

@@ -57,7 +57,7 @@ struct MorphingButton<Label: View, Content: View, ExpandedContent: View>: View {
                 }
                 .geometryGroup()
                 .clipShape(.rect(cornerRadius: 30, style: .continuous))
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
+                //.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 30, style: .continuous))
                 /*
                 .background {
                     RoundedRectangle(cornerRadius: 30, style: .continuous)

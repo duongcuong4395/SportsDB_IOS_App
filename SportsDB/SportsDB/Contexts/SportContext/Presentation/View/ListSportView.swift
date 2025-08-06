@@ -8,7 +8,7 @@
 import SwiftUI
 import Kingfisher
 
-struct ListSportView: View {
+struct SelectSportView : View {
     @EnvironmentObject var sportVM: SportViewModel
     var tappedSport: (SportType) -> Void
     
@@ -33,14 +33,19 @@ struct ListSportView: View {
                             .lineLimit(1)
                         
                     }
+                    .matchedGeometryEffect(id: "sport_\(sportVM.sportSelected.displayName)", in: animation)
                     .padding(5)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    .background{
+                        Color.clear
+                            .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
+                    }
+                    .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    
+                    
                 } content: {
-                    FloatingTabBar(
-                        activeBackground: .blue
-                        , activeTab: $sportVM.sportSelected
-                        , touchTabBar: { sport in
-                            withAnimation {
+                    VStack {
+                        ListSportView(sportSelected: sportVM.sportSelected, animation: animation, touchSport: { sport in
+                            withAnimation(.spring()) {
                                 if sportVM.sportSelected == sport {
                                     return
                                 }
@@ -49,72 +54,91 @@ struct ListSportView: View {
                                 tappedSport(sportVM.sportSelected)
                             }
                         })
+                        .frame(height: UIScreen.main.bounds.height / 2)
+                        .background{
+                            Color.clear
+                                .liquidGlass(cornerRadius: 25, intensity: 0.1, tintColor: .white, hasShimmer: false, hasGlow: false)
+                        }
+                        .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                        .padding(.top, 15)
+                        .overlay(alignment: .topTrailing) {
+                            Image(systemName: "xmark")
+                                .font(.title3)
+                                .padding(5)
+                                .background{
+                                    Color.clear
+                                        .liquidGlass(cornerRadius: 25, intensity: 0.5, tintColor: .white, hasShimmer: false, hasGlow: false)
+                                }
+                                .background(.ultraThinMaterial.opacity(0.5), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                                .onTapGesture {
+                                    withAnimation(.spring()) {
+                                        showFullScreenCover = false
+                                    }
+                                }
+                                .padding(.top, 5)
+                            
+                        }
+                    }
+                    
+                    
+                
+                    
                     
                 } expandedContent: {
                     EmptyView()
                 }
+                
 
-            /*
-            FloatingTabBar(
-                activeBackground: .blue
-                , activeTab: $sportVM.sportSelected
-                , touchTabBar: { sport in
-                    withAnimation {
-                        if sportVM.sportSelected == sport {
-                            return
-                        }
-                        sportVM.sportSelected = sport
-                        
-                        tappedSport(sportVM.sportSelected)
-                    }
-                })
-            .background(.clear)
-            */
         }
         
         /*
-        HStack {
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack {
+        FloatingTabBar(
+            activeBackground: .blue
+            , activeTab: $sportVM.sportSelected
+            , touchTabBar: { sport in
+                withAnimation {
+                    if sportVM.sportSelected == sport {
+                        return
+                    }
+                    sportVM.sportSelected = sport
+                    showFullScreenCover = false
+                    tappedSport(sportVM.sportSelected)
+                }
+            })
+        */
+    }
+}
+
+struct ListSportView: View {
+    var sportSelected: SportType
+    var animation: Namespace.ID
+    var touchSport: (SportType) -> Void
+    var body: some View {
+        VStack {
+            ScrollView(showsIndicators: false) {
+                LazyVGrid(columns: AppUtility.columns, spacing: 20) {
                     ForEach(SportType.allCases, id: \.self) { sport in
-                        
-                        if sport != .Darts {
-                            VStack {
-                                KFImage(URL(string: sport.getImageUrl(with: sport == sportVM.sportSelected)
-                                           ))
-                                    .placeholder { progress in
-                                        //LoadingIndicator(animation: .circleBars, size: .medium, speed: .normal)
-                                        ProgressView()
-                                    }
-                                    .resizable()
-                                    .scaledToFill()
+                        if sport != sportSelected {
+                            VStack(spacing: 5) {
+                                sport.getIcon()
+                                    .font(.title3)
                                     .frame(width: 30, height: 30)
-                                    
-                                Text(sport.rawValue)
-                                    .font(sport == sportVM.sportSelected ? .caption.bold() : .caption)
+                                Text(sport.displayName)
+                                    .font(.caption)
+                                    .fontWeight(.semibold)
+                                    .lineLimit(1)
                             }
-                            .padding(.horizontal, 5)
-                            
+                            .matchedGeometryEffect(id: "sport_\(sport.displayName)", in: animation)
                             .onTapGesture {
-                                withAnimation {
-                                    if sportVM.sportSelected == sport {
-                                        return
-                                    }
-                                    sportVM.sportSelected = sport
-                                    
-                                    tappedSport(sportVM.sportSelected)
-                                }
+                                touchSport(sport)
                             }
                         }
+                        
                     }
                 }
                 
             }
+            .padding()
         }
-        .frame(height: 50)
-        .padding(5)
-        .padding(.horizontal, 10)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 35, style: .continuous))
-         */
     }
 }

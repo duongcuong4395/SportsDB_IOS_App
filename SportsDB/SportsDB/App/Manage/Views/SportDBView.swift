@@ -77,12 +77,9 @@ struct SportDBView: View {
                 ListCountryRouteView(animation: animation)
             }
             , destination: sportDestination)
-           //.ignoresSafeArea(.container, edges: [.top])
-            
-            
        }
         .overlay(alignment: .bottomLeading, content: {
-            ListSportView(tappedSport: { sport in
+            SelectSportView(tappedSport: { sport in
                 sportRouter.popToRoot()
                 
                 leagueListVM.resetAll()
@@ -124,7 +121,6 @@ struct SportDBView: View {
         .environmentObject(sportRouter)
         
         .environmentObject(chatVM)
-        
         
         .onAppear(perform: onAppear)
     }
