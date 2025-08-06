@@ -69,15 +69,40 @@ struct SportDBView: View {
     
     @Namespace var animation
     
+    
+    
     var body: some View {
         VStack {
            GenericNavigationStack(
             router: sportRouter
             , rootContent: {
                 ListCountryRouteView(animation: animation)
+                    .background{
+                        // Background gradient
+                        LinearGradient(
+                            colors: [
+                                Color.blue.opacity(0.3),
+                                Color.purple.opacity(0.3),
+                                Color.pink.opacity(0.3)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        .ignoresSafeArea()
+                        
+                        // Particle background
+                        ParticleGlass()
+                            .ignoresSafeArea()
+                    }
+                    
             }
-            , destination: sportDestination)
+            , destination:
+                sportDestination
+                
+           )
+           
        }
+        
         .overlay(alignment: .bottomLeading, content: {
             SelectSportView(tappedSport: { sport in
                 sportRouter.popToRoot()
@@ -127,9 +152,7 @@ struct SportDBView: View {
     
     private func onAppear() {
         chatVM.initChat()
-        Task {
-            await countryListVM.fetchCountries()
-        }
+        
     }
 }
 
@@ -138,26 +161,46 @@ struct SportDBView: View {
 private extension SportDBView {
     @ViewBuilder
     func sportDestination(_ route: SportRoute) -> some View {
-        switch route {
-        case .ListCountry:
-            ListCountryRouteView(animation: animation)
-        case .ListLeague(by: let country, and: let sport):
-            ListLeagueRouteView(country: country, sport: sport, animation: animation)
-                .navigationBarHidden(true)
-        case .LeagueDetail(by: let leagueID):
-            LeagueDetailRouteView(leagueID: leagueID)
-                .navigationBarHidden(true)
-        case .TeamDetail(by: _):
-            VStack {
-                if let team = teamDetailVM.teamSelected {
-                    TeamDetailRouteView(team: team)
-                        
+        VStack {
+            switch route {
+            case .ListCountry:
+                ListCountryRouteView(animation: animation)
+            case .ListLeague(by: let country, and: let sport):
+                ListLeagueRouteView(country: country, sport: sport, animation: animation)
+                    .navigationBarHidden(true)
+            case .LeagueDetail(by: let leagueID):
+                LeagueDetailRouteView(leagueID: leagueID)
+                    .navigationBarHidden(true)
+            case .TeamDetail(by: _):
+                VStack {
+                    if let team = teamDetailVM.teamSelected {
+                        TeamDetailRouteView(team: team)
+                            
+                    }
                 }
+                .padding(0)
+                .navigationBarHidden(true)
+                
             }
-            .padding(0)
-            .navigationBarHidden(true)
-            
         }
+        .background{
+            // Background gradient
+            LinearGradient(
+                colors: [
+                    Color.blue.opacity(0.3),
+                    Color.purple.opacity(0.3),
+                    Color.pink.opacity(0.3)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+            
+            // Particle background
+            ParticleGlass()
+                .ignoresSafeArea()
+        }
+        
     }
 }
 
@@ -361,5 +404,50 @@ extension SelectTeamDelegate {
         DispatchQueueManager.share.runOnMain {
             playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
         }
+    }
+}
+
+
+struct TextFieldSearchView: View {
+    //@EnvironmentObject var appVM: appv
+    @State var listModels: [[Any]]
+    @Binding var textSearch: String
+
+    @State var showClear: Bool = true
+    var body: some View {
+        
+        
+        HStack{
+            Image(systemName: "magnifyingglass")
+                //.foregroundStyleItemView(by: appVM.appMode)
+                .padding(.leading, 5)
+            TextField("Enter text", text: $textSearch)
+                //.foregroundStyleItemView(by: appVM.appMode)
+                
+            if showClear {
+                if !textSearch.isEmpty {
+                    Button(action: {
+                        self.textSearch = ""
+                        for i in 0..<listModels.count {
+                            listModels[i] = []
+                        }
+                    }, label: {
+                        Image(systemName: "xmark.circle")
+                    })
+                    //.foregroundStyleItemView(by: appVM.appMode)
+                    .padding(.trailing, 5)
+                }
+            }
+        }
+        //.avoidKeyboard()
+        .padding(.vertical, 3)
+        .liquidGlassBlur()
+        /*
+        .background(
+            .ultraThinMaterial,
+            in: RoundedRectangle(cornerRadius: 10, style: .continuous)
+        )
+         */
+        //.edgesIgnoringSafeArea(.bottom)
     }
 }

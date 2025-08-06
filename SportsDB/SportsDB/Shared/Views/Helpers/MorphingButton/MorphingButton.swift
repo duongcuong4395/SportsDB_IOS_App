@@ -16,7 +16,7 @@ struct MorphingButton<Label: View, Content: View, ExpandedContent: View>: View {
     @ViewBuilder var expandedContent: ExpandedContent
 
     // View Properties
-    //@State private var showFullScreenCover: Bool = false
+    
     @State private var animateContent: Bool = false
     @State private var viewPosition: CGRect = .zero
 

@@ -18,23 +18,91 @@ struct ListCountryRouteView: View {
     var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]
     var animation: Namespace.ID
     
+    @State var countryFilter : [Country] = []
+    
+    @State var showTextSearch: Bool = false
+    @State var textSearch: String = ""
+    
     var body: some View {
         VStack {
+            if showTextSearch {
+                HStack(spacing: 10) {
+                    TextFieldSearchView(listModels: [countryFilter], textSearch: $textSearch)
+                    Image(systemName: "xmark")
+                        .padding(5)
+                        .liquidGlassBlur()
+                        .onTapGesture {
+                            withAnimation {
+                                textSearch = ""
+                                showTextSearch.toggle()
+                            }
+                        }
+                }
+                .padding(.horizontal)
+            }
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: columns) {
-                    CountriesView(countries: countryListVM.countries, tappedCountry: tapped, animation: animation)
+                    CountriesView(countries: countryFilter, tappedCountry: tapped, animation: animation)
                 }
             }
         }
+        .overlay(alignment: .topTrailing) {
+            if !showTextSearch {
+                HStack {
+                    Spacer()
+                    Image(systemName: "magnifyingglass")
+                        .padding(5)
+                        .liquidGlassBlur()
+                        .onTapGesture {
+                            withAnimation {
+                                showTextSearch.toggle()
+                            }
+                        }
+                    
+                }
+                .padding(.horizontal)
+            }
+            
+        }
+        .onChange(of: textSearch) { oldValue, newValue in
+            withAnimation {
+                let _ = filterCountry()
+            }
+        }
+        .onAppear{
+            if countryListVM.countries.count <= 0 {
+                Task {
+                    await countryListVM.fetchCountries()
+                    self.countryFilter = countryListVM.countries
+                }
+            } else {
+                self.countryFilter = countryListVM.countries
+            }
+        }
+        .onDisappear{
+            textSearch = ""
+            showTextSearch = false
+        }
+    }
+    
+    func filterCountry() -> [Country] {
+        //self.countryFilter
+        self.countryFilter = textSearch.isEmpty ? countryListVM.countries : countryListVM.countries.filter( { $0.name.lowercased().contains(textSearch.lowercased()) } )
+        return []
+        
     }
     
     func tapped(by country: Country) {
         UIApplication.shared.endEditing()
         withAnimation {
             countryListVM.setCountry(by: country)
+            sportRouter.navigateToListLeague(by: country.name, and: sportVM.sportSelected.rawValue)
+            textSearch = ""
             Task {
+                
                 await leagueListVM.fetchLeagues(country: country.name, sport: sportVM.sportSelected.rawValue)
-                sportRouter.navigateToListLeague(by: country.name, and: sportVM.sportSelected.rawValue)
+                
+                
             }
         }
     }

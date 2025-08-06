@@ -45,12 +45,10 @@ struct SelectSportView : View {
                 } content: {
                     VStack {
                         ListSportView(sportSelected: sportVM.sportSelected, animation: animation, touchSport: { sport in
-                            withAnimation(.spring()) {
-                                if sportVM.sportSelected == sport {
-                                    return
-                                }
-                                sportVM.sportSelected = sport
+                            withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
+                                //if sportVM.sportSelected == sport { return }
                                 showFullScreenCover = false
+                                sportVM.sportSelected = sport
                                 tappedSport(sportVM.sportSelected)
                             }
                         })
@@ -71,7 +69,7 @@ struct SelectSportView : View {
                                 }
                                 .background(.ultraThinMaterial.opacity(0.5), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
                                 .onTapGesture {
-                                    withAnimation(.spring()) {
+                                    withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
                                         showFullScreenCover = false
                                     }
                                 }
