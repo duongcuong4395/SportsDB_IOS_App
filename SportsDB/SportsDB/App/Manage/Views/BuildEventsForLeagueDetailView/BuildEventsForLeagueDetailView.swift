@@ -19,6 +19,9 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
     
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     
+    @State var numbRetry: Int = 0
+    var onRetry: () -> Void
+    
     var body: some View {
         switch eventsInSpecificInSeasonVM.eventsStatus {
         case .success(data: _):
@@ -27,12 +30,19 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
                 optionEventView: getEventOptionsView,
                 tapOnTeam: tapOnTeam,
                 eventTapped: { event in })
-        case .failure(error: let error):
-            ErrorStateView(error: error, onRetry: {})
+        
         case .loading:
             ProgressView()
         case .idle:
             EmptyView()
+        case .failure(error: _):
+            Text("Please return in a few minutes")
+                .font(.caption2)
+                .onAppear {
+                    numbRetry += 1
+                    guard numbRetry <= 3 else { numbRetry = 0 ; return }
+                    onRetry()
+                }
         }
         
     }
@@ -194,8 +204,10 @@ struct BuildPlayersForTeamDetailView: View {
             
             if viewPlayerDetail {
                 Color.clear
-                    .ignoresSafeArea(.all)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    //.ignoresSafeArea(.all)
+                    //.liquidGlass(intensity: 0.7, cornerRadius: 15)
+                    .frostedGlass(blur: 0.3, opacity: 0.3, cornerRadius: 20)
+                    //.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                     .onTapGesture {
                         withAnimation {
                             playerListVM.playerDetail = nil
@@ -203,19 +215,23 @@ struct BuildPlayersForTeamDetailView: View {
                         }
                     }
                     
+                    
                     .overlay {
-                        if let playerDetail = playerListVM.playerDetail {
-                            PlayerDetailView(player: playerDetail, animation: animation)
-                                //.padding(.vertical)
-                                .padding(5)
+                        VStack {
+                            if let playerDetail = playerListVM.playerDetail {
+                                PlayerDetailView(player: playerDetail, animation: animation)
+                                    
+                            }
                         }
+                        .padding(10)
+                        
                         
                     }
-                    //.padding(.vertical)
                     .overlay(alignment: .topTrailing, content: {
                         Image(systemName: "xmark")
                             .padding(10)
-                            .background(.ultraThinMaterial, in: Circle())
+                            //.background(.ultraThinMaterial, in: Circle())
+                            .liquidGlass(intensity: 0.7, cornerRadius: 50)
                             .padding(5)
                             .onTapGesture {
                                 withAnimation {
@@ -224,10 +240,9 @@ struct BuildPlayersForTeamDetailView: View {
                                 }
                             }
                     })
+                    .padding(.horizontal, 10)
                     .opacity(viewPlayerDetail ? 1 : 0)
-                
             }
-            
         }
         .onDisappear{
             withAnimation {

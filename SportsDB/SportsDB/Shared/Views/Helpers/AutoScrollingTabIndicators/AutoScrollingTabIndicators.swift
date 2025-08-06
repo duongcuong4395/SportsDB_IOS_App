@@ -130,14 +130,17 @@ struct MenuTabIndicatorView: View {
                 .animation(.easeInOut(duration: 0.3), value: isSelected)
             
             // Animated Indicator Line
+            
             Rectangle()
                 .fill(menu.color)
                 .frame(width: isSelected ? 40 : 0, height: 3)
                 .cornerRadius(1.5)
                 .animation(.spring(response: 0.5, dampingFraction: 0.7), value: isSelected)
+             
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
+        .padding(5)
+        //.padding(.vertical, 12)
+        //.padding(.horizontal, 16)
         
     }
 }

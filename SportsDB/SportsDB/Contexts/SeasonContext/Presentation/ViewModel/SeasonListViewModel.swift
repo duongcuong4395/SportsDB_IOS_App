@@ -41,7 +41,7 @@ extension SeasonListViewModel {
         do {
             let res = try await getListSeasonsUseCase.execute(leagueID: leagueID)
             seasons = res.sorted{ $0.season > $1.season }
-            seasonSelected = seasons[0]
+            //seasonSelected = seasons[0]
         } catch {
             errorMessage = error.localizedDescription
         }

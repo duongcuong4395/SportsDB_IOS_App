@@ -52,9 +52,8 @@ struct ListLeagueRouteView: View {
             .padding(.horizontal)
             .frame(height: 70)
             .background {
-                Rectangle()
-                    .fill(.ultraThinMaterial)
-                    //.opacity(progress)
+                Color.clear
+                    .liquidGlass(intensity: 0.8)
                     .ignoresSafeArea(.all)
             }
             

@@ -51,6 +51,9 @@ struct BuildEventsForEachRoundView: View, SelectTeamDelegate, EventOptionsViewDe
     
     @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
     
+    @State var numbRetry: Int = 0
+    var onRetry: () -> Void
+    
     var body: some View {
         VStack {
             switch eventsPerRoundInSeasonVM.eventsStatus {
@@ -81,8 +84,14 @@ struct BuildEventsForEachRoundView: View, SelectTeamDelegate, EventOptionsViewDe
                     }
                 }
                 .transition(.opacity)
-            case .failure(error: let error):
-                ErrorStateView(error: error, onRetry: {})
+            case .failure(error: _):
+                Text("Please return in a few minutes")
+                    .font(.caption2)
+                    .onAppear {
+                        numbRetry += 1
+                        guard numbRetry <= 3 else { numbRetry = 0 ; return }
+                        onRetry()
+                    }
             }
         }
     }

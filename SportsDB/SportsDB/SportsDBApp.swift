@@ -11,11 +11,15 @@ import SwiftUI
 struct SportsDBApp: App {
     var body: some Scene {
         WindowGroup {
-            //ContentView()
-            
-            //DemoResizableHeaderScrollView()
-            //AutoScrollingTabView()
+            // ContentView()
+            // DemoResizableHeaderScrollView()
+            // AutoScrollingTabView()
             // DemoStickyHeader()
+            
+            // LiquidGlassExamples()
+            
+            // LiquidGlassDemoApp()
+            
             SportDBView()
         }
     }

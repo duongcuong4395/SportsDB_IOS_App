@@ -24,11 +24,15 @@ class EventsPerRoundInSeasonViewModel: ObservableObject {
     @MainActor
     func getEvents(of leagueID: String, per round: String, in season: String) {
         Task {
-            eventsStatus = .loading
-            let res = try await self.lookupListEventsUseCase.execute(leagueID: leagueID, round: round, season: season)
-            try? await Task.sleep(nanoseconds: 500_000_000)
-            
-            eventsStatus = .success(data: res)
+            do {
+                eventsStatus = .loading
+                let res = try await self.lookupListEventsUseCase.execute(leagueID: leagueID, round: round, season: season)
+                try await Task.sleep(nanoseconds: 500_000_000)
+                
+                eventsStatus = .success(data: res)
+            } catch {
+                eventsStatus = .failure(error: error.localizedDescription)
+            }
         }
     }
     

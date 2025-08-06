@@ -21,7 +21,7 @@ struct LeaguesAdsView: View {
                 }
                 .resizable()
                 .scaledToFit()
-                .frame(width: UIScreen.main.bounds.width - 10, height: 100)
+                //.frame(width: UIScreen.main.bounds.width - 10, height: 100)
                 //.padding()
             
             LazyVGrid(columns: column) {
@@ -69,7 +69,7 @@ struct LeaguesAdsView: View {
                 }
                 .resizable()
                 .scaledToFit()
-                .frame(width: UIScreen.main.bounds.width - 10, height: 500)
+                //.frame(width: UIScreen.main.bounds.width - 10, height: 500)
         }
     }
 }
