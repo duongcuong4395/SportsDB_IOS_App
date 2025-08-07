@@ -26,6 +26,8 @@ struct LeagueDetailRouteView: View {
                 // MARK: Content
                 LeagueDetailRouteContentView(league: league)
             }
+            .backgroundOfRouteView(with: league.poster ?? "")
+            /*
             .background {
                 KFImage(URL(string: league.poster ?? ""))
                     .placeholder { progress in
@@ -34,6 +36,7 @@ struct LeagueDetailRouteView: View {
                     .opacity(0.1)
                     .ignoresSafeArea(.all)
             }
+            */
         }
     }
 }

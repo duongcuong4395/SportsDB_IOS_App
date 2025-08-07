@@ -16,17 +16,13 @@ struct LeagueDetailRouteContentView: View {
             MenuOfLeagueDetailRouteView(selectedTab: $selectedTab)
             TabView(selection: $selectedTab) {
                 GeneralTabOfLeagueDetailRouteView(league: league)
-                    .liquidGlass(intensity: 0.8)
-                    .padding(.horizontal, 5)
-                    .tag(0)
+                    .liquidGlassForTabView(with: 0)
+                    
                 TeamsTabOfLeagueDetailRouteView(league: league)
-                    .liquidGlass(intensity: 0.8)
-                    .padding(.horizontal, 5)
-                    .tag(1)
+                    .liquidGlassForTabView(with: 1)
+                    
                 EventsTabOfLeagueDetailRouteView(league: league)
-                    .liquidGlass(intensity: 0.8)
-                    .padding(.horizontal, 5)
-                    .tag(2)
+                    .liquidGlassForTabView(with: 2)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .animation(.easeInOut(duration: 0.2), value: selectedTab)

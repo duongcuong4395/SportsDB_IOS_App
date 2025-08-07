@@ -49,13 +49,7 @@ struct ListLeagueRouteView: View {
                 }
                 Spacer()
             }
-            .padding(.horizontal)
-            .frame(height: 70)
-            .background {
-                Color.clear
-                    .liquidGlass(intensity: 0.8)
-                    .ignoresSafeArea(.all)
-            }
+            .backgroundOfRouteHeaderView(with: 70)
             
             // MARK: Content
             ScrollView(showsIndicators: false) {

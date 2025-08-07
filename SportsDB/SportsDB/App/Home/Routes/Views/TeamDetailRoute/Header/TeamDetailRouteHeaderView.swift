@@ -42,17 +42,10 @@ struct TeamDetailRouteHeaderView: View {
             }
             Spacer()
         }
-        .padding(.horizontal)
-        .frame(height: 70)
-        .background {
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .ignoresSafeArea(.all)
-        }
+        .backgroundOfRouteHeaderView(with: 70)
     }
     
     func backRoute() {
-        
         eventsOfTeamByScheduleVM.resetAll()
         teamDetailVM.resetAll()
         playerListVM.resetAll()
@@ -60,3 +53,5 @@ struct TeamDetailRouteHeaderView: View {
         sportRouter.pop()
     }
 }
+
+
