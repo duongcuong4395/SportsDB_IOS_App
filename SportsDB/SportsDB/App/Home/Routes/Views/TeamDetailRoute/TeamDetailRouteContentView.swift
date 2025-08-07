@@ -38,17 +38,27 @@ struct TeamDetailRouteContentView: View {
             
             TabView(selection: $selectedTab) {
                 GeneralView
+                    .liquidGlass(intensity: 0.8)
+                    .padding(.horizontal, 5)
                     .tag(0)
                 if playerListVM.playersByLookUpAllForaTeam.count > 0 {
                     PlayersView
+                        .liquidGlass(intensity: 0.8)
+                        .padding(.horizontal, 5)
                         .tag(1)
                 }
                 
                 EventsView
+                    .liquidGlass(intensity: 0.8)
+                    .padding(.horizontal, 5)
                     .tag(2)
                 TrophiesView
+                    .liquidGlass(intensity: 0.8)
+                    .padding(.horizontal, 5)
                     .tag(3)
                 EquipmentsView
+                    .liquidGlass(intensity: 0.8)
+                    .padding(.horizontal, 5)
                     .tag(4)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -57,31 +67,47 @@ struct TeamDetailRouteContentView: View {
     }
     
     var tabBarView: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 20) {
-                ForEach(0..<tabs.count, id: \.self) { index in
-                    MenuTabIndicatorView(
-                        menu: tabs[index],
-                        isSelected: selectedTab == index
-                    )
-                    .background {
-                        if selectedTab == index {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(selectedTab == index ? tabs[index].color.opacity(0.1) : Color.clear)
+        HStack {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 20) {
+                    ForEach(0..<tabs.count, id: \.self) { index in
+                        MenuTabIndicatorView(
+                            menu: tabs[index],
+                            isSelected: selectedTab == index
+                        )
+                        .background {
+                            if selectedTab == index {
+                                ZStack {
+                                    LiquidGlassLibrary.GlassBackground(intensity: 0.9)
+                                    LiquidGlassLibrary.ShimmeringGlass()
+                                }
                                 .animation(.easeInOut(duration: 0.3), value: selectedTab == index)
                                 .matchedGeometryEffect(id: "TeamDetailRouteMenu", in: animation)
+                                /*
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(selectedTab == index ? tabs[index].color.opacity(0.1) : Color.clear)
+                                    .animation(.easeInOut(duration: 0.3), value: selectedTab == index)
+                                    .matchedGeometryEffect(id: "TeamDetailRouteMenu", in: animation)
+                                 */
+                            }
                         }
-                    }
-                    .onTapGesture {
-                        withAnimation {
-                            selectedTab = index
+                        .onTapGesture {
+                            withAnimation {
+                                selectedTab = index
+                            }
                         }
+                        .id(index)
                     }
-                    .id(index)
                 }
             }
         }
-        
+        .padding(.vertical, 5)
+        .padding(.horizontal, 10)
+        .background{
+            Color.clear
+                .liquidGlass(intensity: 0.8, cornerRadius: 20)
+        }
+        .padding(.horizontal, 5)
     }
     
     func groupTrophies(_ trophies: [Trophy]) -> [TrophyGroup] {
@@ -99,9 +125,12 @@ struct TeamDetailRouteContentView: View {
     }
     
     var GeneralView: some View {
-        ScrollView(showsIndicators: false) {
-            TeamAdsView(team: team)
+        VStack {
+            ScrollView(showsIndicators: false) {
+                TeamAdsView(team: team)
+            }
         }
+        .padding()
     }
     
     var EquipmentsView: some View {
@@ -110,6 +139,7 @@ struct TeamDetailRouteContentView: View {
                 isVisibleViews.forEquipment = true
             }
             //.slideInEffect(isVisible: $isVisibleViews.forEquipment, delay: 0.5, direction: .leftToRight)
+            .padding(.vertical)
     }
     
     var TrophiesView: some View {
@@ -118,10 +148,12 @@ struct TeamDetailRouteContentView: View {
                 TrophyListView(trophyGroup: trophyListVM.trophyGroups)
             }
         }
+        .padding(.vertical)
     }
     
     var PlayersView: some View {
         BuildPlayersForTeamDetailView(team: team, progressing: false)
+            
     }
 
     var EventsView: some View {
@@ -130,5 +162,6 @@ struct TeamDetailRouteContentView: View {
                 isVisibleViews.forEvents = true
             }
             .slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
+            .padding(.vertical)
     }
 }

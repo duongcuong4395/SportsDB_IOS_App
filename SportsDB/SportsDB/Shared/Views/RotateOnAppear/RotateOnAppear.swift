@@ -40,7 +40,7 @@ struct RotateOnAppearModifier_New: ViewModifier {
     @State private var hasAppeared = false
     let angle: Double
     let duration: Double
-    let direction: AnimationDirection
+    let direction: AnimationDirection1
 
     func body(content: Content) -> some View {
         content
@@ -55,7 +55,7 @@ struct RotateOnAppearModifier_New: ViewModifier {
             }
     }
 
-    private func axisVector(for direction: AnimationDirection) -> (x: CGFloat, y: CGFloat, z: CGFloat) {
+    private func axisVector(for direction: AnimationDirection1) -> (x: CGFloat, y: CGFloat, z: CGFloat) {
         switch direction {
         case .leftToRight, .rightToLeft:
             return (x: 0.0, y: 1.0, z: 0.0) // Y-axis rotation (vertical flip)

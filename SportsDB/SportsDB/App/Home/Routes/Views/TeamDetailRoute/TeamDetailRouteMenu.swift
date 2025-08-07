@@ -39,13 +39,13 @@ enum TeamDetailRouteMenu: String, RouteMenu {
         case .General:
             return .blue
         case .Players:
-            return .green
+            return .blue // .green
         case .Events:
-            return .orange
+            return .blue // .orange
         case .Equipments:
-            return .brown
+            return .blue // .brown
         case .Trophies:
-            return .yellow
+            return .blue // .yellow
         }
     }
 }

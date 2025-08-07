@@ -29,7 +29,7 @@ struct TeamAdsView: View {
                         }
                         .resizable()
                         .scaledToFit()
-                        .frame(width: UIScreen.main.bounds.width - 10, height: 100)
+                        //.frame(width: UIScreen.main.bounds.width - 10, height: 100)
                 }
                 
                 

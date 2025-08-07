@@ -9,8 +9,7 @@ import SwiftUI
 
 struct LeagueDetailRouteContentView: View {
     var league: League
-    var leagueID: String
-    
+    @State var selectedTab: Int = 0
     @EnvironmentObject var sportRouter: SportRouter
     @EnvironmentObject var leagueDetailVM: LeagueDetailViewModel
     @EnvironmentObject var seasonListVM: SeasonListViewModel
@@ -24,7 +23,7 @@ struct LeagueDetailRouteContentView: View {
     @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     
-    @Binding var selectedTab: Int
+    
     let tabs = LeagueDetailRouteMenu.allCases
     @State private var timer: Timer?
     @State private var dragOffset: CGFloat = 0
@@ -103,6 +102,7 @@ struct LeagueDetailRouteContentView: View {
             Color.clear
                 .liquidGlass(intensity: 0.8, cornerRadius: 20)
         }
+        .padding(.horizontal, 5)
     }
     
     private var generalTabContent: some View {
@@ -149,7 +149,9 @@ struct LeagueDetailRouteContentView: View {
                     })
                     
                     TitleComponentView(title: "Seasons")
-                    BuildSeasonForLeagueView(leagueID: leagueID)
+                    //BuildSeasonForLeagueView(leagueID: leagueID)
+                    BuildSeasonForLeagueView(leagueID: league.idLeague ?? "")
+                    
                     
                     if seasonListVM.seasonSelected == nil {
                         Text("Select season to see more about table rank and round events.")
@@ -162,14 +164,14 @@ struct LeagueDetailRouteContentView: View {
                             Task {
                                 guard let season = seasonListVM.seasonSelected else { return }
                                 await leagueListVM.lookupLeagueTable(
-                                    leagueID: leagueID,
+                                    leagueID: league.idLeague ?? "",
                                     season: season.season)
                             }
                         })
                         .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
 
                         TitleComponentView(title: "Events")
-                        BuildEventsForEachRoundInControl(leagueID: leagueID)
+                        BuildEventsForEachRoundInControl(leagueID: league.idLeague ?? "")
                         
                         BuildEventsForEachRoundView(onRetry: {  })
                             .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
@@ -180,7 +182,7 @@ struct LeagueDetailRouteContentView: View {
                     }
                 }
             }
-            .padding()
+            .padding(.vertical)
             
         }
     }

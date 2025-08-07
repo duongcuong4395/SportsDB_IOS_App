@@ -91,8 +91,8 @@ struct SportDBView: View {
                         .ignoresSafeArea()
                         
                         // Particle background
-                        ParticleGlass()
-                            .ignoresSafeArea()
+                        //ParticleGlass()
+                            //.ignoresSafeArea()
                     }
                     
             }
@@ -168,14 +168,13 @@ private extension SportDBView {
             case .ListLeague(by: let country, and: let sport):
                 ListLeagueRouteView(country: country, sport: sport, animation: animation)
                     .navigationBarHidden(true)
-            case .LeagueDetail(by: let leagueID):
-                LeagueDetailRouteView(leagueID: leagueID)
+            case .LeagueDetail(by: _):
+                LeagueDetailRouteView()
                     .navigationBarHidden(true)
             case .TeamDetail(by: _):
                 VStack {
                     if let team = teamDetailVM.teamSelected {
                         TeamDetailRouteView(team: team)
-                            
                     }
                 }
                 .padding(0)
@@ -197,8 +196,8 @@ private extension SportDBView {
             .ignoresSafeArea()
             
             // Particle background
-            ParticleGlass()
-                .ignoresSafeArea()
+            //ParticleGlass()
+                //.ignoresSafeArea()
         }
         
     }

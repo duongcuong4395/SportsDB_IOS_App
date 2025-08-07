@@ -131,18 +131,19 @@ struct PlayerDetailView: View {
                 Spacer()
                 
             }
-            ScrollView(showsIndicators: false) {
-                Text(player.descriptionEN ?? "")
-                    .font(.caption)
-                    .lineLimit(nil)
-                    .frame(height: 200, alignment: .leading)
-            }
             SocialView(facebook: player.facebook
                        , twitter: player.twitter
                        , instagram: player.instagram
                        , youtube: player.youtube
                        , website: player.website)
             .scaleEffect(0.9)
+            ScrollView(showsIndicators: false) {
+                Text(player.descriptionEN ?? "")
+                    .font(.caption)
+                    .lineLimit(nil)
+                    .frame(height: 200, alignment: .leading)
+            }
+            
         }
     }
 }

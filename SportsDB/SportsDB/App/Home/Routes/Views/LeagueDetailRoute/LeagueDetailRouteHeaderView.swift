@@ -10,7 +10,6 @@ import Kingfisher
 
 struct LeagueDetailRouteHeaderView: View {
     var league: League
-    @Binding var selectedTab: Int
     let tabs = LeagueDetailRouteMenu.allCases
     
     @EnvironmentObject var sportRouter: SportRouter

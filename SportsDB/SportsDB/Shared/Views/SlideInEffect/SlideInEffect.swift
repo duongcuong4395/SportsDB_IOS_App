@@ -10,7 +10,7 @@ import SwiftUI
 struct SlideInEffect: ViewModifier {
     @Binding var isVisible: Bool
     var delay: Double
-    var direction: AnimationDirection
+    var direction: AnimationDirection1
     
     func body(content: Content) -> some View {
         content
@@ -50,7 +50,7 @@ struct SlideInEffect: ViewModifier {
 }
 
 extension View {
-    func slideInEffect(isVisible: Binding<Bool>, delay: Double, direction: AnimationDirection) -> some View {
+    func slideInEffect(isVisible: Binding<Bool>, delay: Double, direction: AnimationDirection1) -> some View {
         return self.modifier(SlideInEffect(isVisible: isVisible, delay: delay, direction: direction))
     }
 }

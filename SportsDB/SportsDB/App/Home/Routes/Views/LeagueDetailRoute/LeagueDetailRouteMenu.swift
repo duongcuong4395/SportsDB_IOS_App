@@ -34,9 +34,9 @@ enum LeagueDetailRouteMenu: String, RouteMenu {
         case .General:
             return .blue
         case .Teams:
-            return .green
+            return .blue // .green
         case .Events:
-            return .orange
+            return .blue // .orange
         }
     }
 }

@@ -201,47 +201,50 @@ struct BuildPlayersForTeamDetailView: View {
                     }
                 }
             }
+            .padding()
             
             if viewPlayerDetail {
-                Color.clear
-                    //.ignoresSafeArea(.all)
-                    //.liquidGlass(intensity: 0.7, cornerRadius: 15)
-                    .frostedGlass(blur: 0.3, opacity: 0.3, cornerRadius: 20)
-                    //.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    .onTapGesture {
-                        withAnimation {
-                            playerListVM.playerDetail = nil
-                            viewPlayerDetail.toggle()
-                        }
-                    }
-                    
-                    
-                    .overlay {
-                        VStack {
-                            if let playerDetail = playerListVM.playerDetail {
-                                PlayerDetailView(player: playerDetail, animation: animation)
-                                    
+                VStack {
+                    Color.clear
+                        //.ignoresSafeArea(.all)
+                        //.liquidGlass(intensity: 0.7, cornerRadius: 15)
+                        .frostedGlass(blur: 0.3, opacity: 0.3, cornerRadius: 20)
+                        //.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                        .onTapGesture {
+                            withAnimation {
+                                playerListVM.playerDetail = nil
+                                viewPlayerDetail.toggle()
                             }
                         }
-                        .padding(10)
                         
                         
-                    }
-                    .overlay(alignment: .topTrailing, content: {
-                        Image(systemName: "xmark")
-                            .padding(10)
-                            //.background(.ultraThinMaterial, in: Circle())
-                            .liquidGlass(intensity: 0.7, cornerRadius: 50)
-                            .padding(5)
-                            .onTapGesture {
-                                withAnimation {
-                                    playerListVM.playerDetail = nil
-                                    viewPlayerDetail.toggle()
+                        .overlay {
+                            VStack {
+                                if let playerDetail = playerListVM.playerDetail {
+                                    PlayerDetailView(player: playerDetail, animation: animation)
+                                        
                                 }
                             }
-                    })
-                    .padding(.horizontal, 10)
-                    .opacity(viewPlayerDetail ? 1 : 0)
+                            .padding(10)
+                            
+                            
+                        }
+                        .overlay(alignment: .topTrailing, content: {
+                            Image(systemName: "xmark")
+                                .padding(10)
+                                //.background(.ultraThinMaterial, in: Circle())
+                                .liquidGlass(intensity: 0.7, cornerRadius: 50)
+                                .padding(5)
+                                .onTapGesture {
+                                    withAnimation {
+                                        playerListVM.playerDetail = nil
+                                        viewPlayerDetail.toggle()
+                                    }
+                                }
+                        })
+                        .padding(.horizontal, 10)
+                        .opacity(viewPlayerDetail ? 1 : 0)
+                }
             }
         }
         .onDisappear{

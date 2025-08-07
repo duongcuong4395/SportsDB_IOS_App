@@ -14,23 +14,20 @@ protocol RouteMenu: CaseIterable {
     var color: Color { get }
 }
 
-
-
 struct LeagueDetailRouteView: View {
     @EnvironmentObject var leagueDetailVM: LeagueDetailViewModel
     
-    var leagueID: String
+    //var leagueID: String
     @State private var selectedTab = 0
     
     var body: some View {
         if let league = leagueDetailVM.league {
             VStack {
                 // MARK: Header
-                LeagueDetailRouteHeaderView(league: league, selectedTab: $selectedTab)
+                LeagueDetailRouteHeaderView(league: league)
                 
                 // MARK: Content
-                LeagueDetailRouteContentView(league: league, leagueID: leagueID, selectedTab: $selectedTab)
-                    
+                LeagueDetailRouteContentView(league: league)
             }
             
             .background {
@@ -38,7 +35,7 @@ struct LeagueDetailRouteView: View {
                     .placeholder { progress in
                         ProgressView()
                     }
-                    .opacity(0.5)
+                    .opacity(0.1)
                     .ignoresSafeArea(.all)
             }
              
