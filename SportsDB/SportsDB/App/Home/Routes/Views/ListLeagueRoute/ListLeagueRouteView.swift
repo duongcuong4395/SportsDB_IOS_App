@@ -59,10 +59,10 @@ struct ListLeagueRouteView: View {
             
             // MARK: Content
             ScrollView(showsIndicators: false) {
-                ListLeaguesView(country: country, sport: sport)
-                    //.padding(.horizontal, 16)
+                ListLeaguesView(country: country, sport: sport, onRetry: {
+                    print("=== onRetry ListLeaguesView", country)
+                })
             }
-            
         }
     }
 }
@@ -86,6 +86,8 @@ struct ListLeaguesView: View {
     @State var reloadNumb: Int = 0
     @State var isSticky: Bool = false
     
+    @State var numbRetry: Int = 0
+    @State var onRetry: () -> Void
     var body: some View {
         switch leagueListVM.leaguesStatus {
         case .loading:
@@ -99,15 +101,12 @@ struct ListLeaguesView: View {
         case .idle:
             Spacer()
         case .failure(error: _):
-            Spacer()
-            Circle()
-                .onAppear{
-                    Task {
-                        reloadNumb += 1
-                        guard reloadNumb <= 3 else { return }
-                        await leagueListVM.fetchLeagues(country: country, sport: sportVM.sportSelected.rawValue)
-                    }
-                    
+            Text("Please return in a few minutes.")
+                .font(.caption2.italic())
+                .onAppear {
+                    numbRetry += 1
+                    guard numbRetry <= 3 else { numbRetry = 0 ; return }
+                    onRetry()
                 }
         }
         

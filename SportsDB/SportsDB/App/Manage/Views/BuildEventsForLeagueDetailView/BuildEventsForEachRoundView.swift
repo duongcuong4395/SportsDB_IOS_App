@@ -85,8 +85,8 @@ struct BuildEventsForEachRoundView: View, SelectTeamDelegate, EventOptionsViewDe
                 }
                 .transition(.opacity)
             case .failure(error: _):
-                Text("Please return in a few minutes")
-                    .font(.caption2)
+                Text("Please return in a few minutes.")
+                    .font(.caption2.italic())
                     .onAppear {
                         numbRetry += 1
                         guard numbRetry <= 3 else { numbRetry = 0 ; return }

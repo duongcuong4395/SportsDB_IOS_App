@@ -36,8 +36,8 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
         case .idle:
             EmptyView()
         case .failure(error: _):
-            Text("Please return in a few minutes")
-                .font(.caption2)
+            Text("Please return in a few minutes.")
+                .font(.caption2.italic())
                 .onAppear {
                     numbRetry += 1
                     guard numbRetry <= 3 else { numbRetry = 0 ; return }
@@ -80,7 +80,8 @@ struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewD
                 tapOnTeam: tapOnTeam,
                 eventTapped: { event in })
         case .failure(error: let error):
-            ErrorStateView(error: error, onRetry: {})
+            Text("Please return in a few minutes.")
+                .font(.caption2.italic())
                 .onAppear{
                     numbRetry += 1
                     guard numbRetry <= 3 else { return }
@@ -168,7 +169,7 @@ struct BuildSeasonForLeagueView: View {
 
 
 
-
+import Kingfisher
 
 
 struct BuildPlayersForTeamDetailView: View {
@@ -183,68 +184,40 @@ struct BuildPlayersForTeamDetailView: View {
         
         
         ZStack {
-            ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: columns) {
-                    ForEach(Array(playerListVM.playersByLookUpAllForaTeam.enumerated()), id: \.element.player) { index, player in
-                        if player.player != playerListVM.playerDetail?.player {
-                            PlayerItemView(player: player, animation: animation)
-                                //.frame(width: geometry.size.width * 0.85)
-                                .frame(width: UIScreen.main.bounds.width)
-                                .cornerRadius(10)
-                                .shadow(radius: 5)
-                                .onTapGesture {
-                                    Task {
-                                        await getPlayerDetail(player: player)
+            VStack {
+                ScrollView(showsIndicators: false) {
+                    LazyVGrid(columns: columns) {
+                        ForEach(Array(playerListVM.playersByLookUpAllForaTeam.enumerated()), id: \.element.player) { index, player in
+                            if player.player != playerListVM.playerDetail?.player {
+                                PlayerItemView(player: player, animation: animation)
+                                    .cornerRadius(10)
+                                    .shadow(radius: 5)
+                                    .onTapGesture {
+                                        Task {
+                                            await getPlayerDetail(player: player)
+                                        }
                                     }
-                                }
+                            }
                         }
                     }
                 }
+                .padding()
+                .padding(.top, viewPlayerDetail ? 50 : 0)
             }
-            .padding()
+            
             
             if viewPlayerDetail {
-                VStack {
-                    Color.clear
-                        //.ignoresSafeArea(.all)
-                        //.liquidGlass(intensity: 0.7, cornerRadius: 15)
-                        .frostedGlass(blur: 0.3, opacity: 0.3, cornerRadius: 20)
-                        //.background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                        .onTapGesture {
-                            withAnimation {
+                if let player = playerListVM.playerDetail {
+                    PlayerDetailView(player: player, animation: animation
+                        , resetPlayer: {
+                            withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
                                 playerListVM.playerDetail = nil
                                 viewPlayerDetail.toggle()
                             }
-                        }
-                        
-                        
-                        .overlay {
-                            VStack {
-                                if let playerDetail = playerListVM.playerDetail {
-                                    PlayerDetailView(player: playerDetail, animation: animation)
-                                        
-                                }
-                            }
-                            .padding(10)
-                            
-                            
-                        }
-                        .overlay(alignment: .topTrailing, content: {
-                            Image(systemName: "xmark")
-                                .padding(10)
-                                //.background(.ultraThinMaterial, in: Circle())
-                                .liquidGlass(intensity: 0.7, cornerRadius: 50)
-                                .padding(5)
-                                .onTapGesture {
-                                    withAnimation {
-                                        playerListVM.playerDetail = nil
-                                        viewPlayerDetail.toggle()
-                                    }
-                                }
                         })
-                        .padding(.horizontal, 10)
-                        .opacity(viewPlayerDetail ? 1 : 0)
+                    .opacity(viewPlayerDetail ? 1 : 0)
                 }
+                
             }
         }
         .onDisappear{
@@ -253,64 +226,6 @@ struct BuildPlayersForTeamDetailView: View {
                 viewPlayerDetail = false
             }
         }
-        
-        
-        /*
-        CarouselView(items: playerListVM.playersByLookUpAllForaTeam.map { player in
-            PlayerItemView(player: player)
-                .cornerRadius(10)
-                .shadow(radius: 5)
-                .onAppear{
-                    if player.idPlayer == nil {
-                        Task {
-                            
-                            
-                            let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
-                            if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
-                                print("=== playerF", playerF.player ?? "", playerF.idPlayer ?? "")
-                                
-                                if let id = playerF.idPlayer {
-                                    let players = await playerListVM.lookupPlayer(by: id)
-                                    if players.count > 0 {
-                                        guard let index = playerListVM.playersByLookUpAllForaTeam.firstIndex(where: { $0.player == player.player }) else { return }
-                                        playerListVM.playersByLookUpAllForaTeam[index] = players[0]
-                                        //self.player = players[0]
-                                    } else {
-                                        //self.player = Player(player: playerName)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            
-        }, spacing: 5,
-         cardWidth: UIScreen.main.bounds.width
-         , cardHeight: UIScreen.main.bounds.height / 2  - 20)
-        */
-        /*
-        AllPlayerOfTeamView { player in
-            Task {
-                
-                
-                let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
-                if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
-                    print("=== playerF", playerF.player ?? "", playerF.idPlayer ?? "")
-                    
-                    if let id = playerF.idPlayer {
-                        let players = await playerListVM.lookupPlayer(by: id)
-                        if players.count > 0 {
-                            guard let index = playerListVM.playersByLookUpAllForaTeam.firstIndex(where: { $0.player == player.player }) else { return }
-                            playerListVM.playersByLookUpAllForaTeam[index] = players[0]
-                            //self.player = players[0]
-                        } else {
-                            //self.player = Player(player: playerName)
-                        }
-                    }
-                }
-            }
-        }
-        */
     }
     
     func getPlayerDetail(player: Player) async  -> Player? {
@@ -320,29 +235,11 @@ struct BuildPlayersForTeamDetailView: View {
         
         let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
         if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
-            print("=== playerF", playerF.player ?? "", playerF.idPlayer ?? "")
-            
             if let id = playerF.idPlayer {
                 let players = await playerListVM.lookupPlayer(by: id)
                 withAnimation {
                     self.playerListVM.playerDetail = players.count > 0 ? players[0] : player
                     viewPlayerDetail = true
-                }
-                if players.count > 0 {
-                    guard let index = playerListVM.playersByLookUpAllForaTeam.firstIndex(where: { $0.player == player.player }) else { return nil }
-                    //playerListVM.playersByLookUpAllForaTeam[index] = players[0]
-                    //self.player = players[0]
-                    /*
-                    withAnimation {
-                        self.playerListVM.playerDetail = players[0]
-                        viewPlayerDetail = true
-                    }
-                    */
-                    
-                    return players[0]
-                } else {
-                    //self.player = Player(player: playerName)
-                    return nil
                 }
             }
         } else {
@@ -361,10 +258,8 @@ struct BuildPlayersForTeamDetailView: View {
                 if players.count > 0 {
                     guard let index = playerListVM.playersByLookUpAllForaTeam.firstIndex(where: { $0.player == player.player }) else { return .TryAgain}
                     playerListVM.playersByLookUpAllForaTeam[index] = players[0]
-                    //self.player = players[0]
                     return PlayerExecuteStatus.Success
                 } else {
-                    //self.player = Player(player: playerName)
                     return PlayerExecuteStatus.TryAgain
                 }
             }
@@ -372,5 +267,57 @@ struct BuildPlayersForTeamDetailView: View {
             return PlayerExecuteStatus.TryAgain
         }
         return PlayerExecuteStatus.Success
+    }
+}
+
+
+
+struct PlayerDetailView: View {
+    var player: Player
+    var animation: Namespace.ID
+    var resetPlayer: () -> Void
+    
+    var body: some View {
+        VStack {
+            PlayerItemView(player: player, hasDetail: true, animation: animation)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 5)
+                .background{
+                    Color.clear
+                        .liquidGlass(cornerRadius: 25, intensity: 0.1, tintColor: .white, hasShimmer: false, hasGlow: false)
+                }
+                .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                .padding(.top, 15)
+                .overlay(alignment: .topTrailing) {
+                    Image(systemName: "xmark")
+                        .font(.title3)
+                        .padding(5)
+                        .background{
+                            Color.clear
+                                .liquidGlass(cornerRadius: 25, intensity: 0.5, tintColor: .white, hasShimmer: false, hasGlow: false)
+                        }
+                        .background(.ultraThinMaterial.opacity(0.5), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                        .onTapGesture {
+                            resetPlayer()
+                        }
+                }
+        }
+        .padding(.top, 40)
+        .padding(.horizontal, 5)
+        .overlay(alignment: .topLeading, content: {
+            KFImage(URL(string: player.sport == .Motorsport ? player.cutout ?? "" : player.render ?? ""))
+                .placeholder { progress in
+                    ProgressView()
+                }
+                .resizable()
+                .scaledToFit()
+                .frame(width: UIScreen.main.bounds.width / 2)
+                .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                .padding(.top, 5)
+                .matchedGeometryEffect(id: "player_\(player.player ?? "")", in: animation)
+                .onTapGesture {
+                    resetPlayer()
+                }
+        })
     }
 }

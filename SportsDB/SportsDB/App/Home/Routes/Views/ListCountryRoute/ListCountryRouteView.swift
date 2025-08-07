@@ -101,8 +101,6 @@ struct ListCountryRouteView: View {
             Task {
                 
                 await leagueListVM.fetchLeagues(country: country.name, sport: sportVM.sportSelected.rawValue)
-                
-                
             }
         }
     }

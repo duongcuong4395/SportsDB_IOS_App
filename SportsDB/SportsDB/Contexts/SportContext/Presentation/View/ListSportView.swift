@@ -77,11 +77,6 @@ struct SelectSportView : View {
                             
                         }
                     }
-                    
-                    
-                
-                    
-                    
                 } expandedContent: {
                     EmptyView()
                 }

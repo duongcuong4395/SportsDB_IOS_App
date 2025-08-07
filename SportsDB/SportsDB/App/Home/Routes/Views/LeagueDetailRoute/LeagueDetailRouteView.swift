@@ -17,9 +17,6 @@ protocol RouteMenu: CaseIterable {
 struct LeagueDetailRouteView: View {
     @EnvironmentObject var leagueDetailVM: LeagueDetailViewModel
     
-    //var leagueID: String
-    @State private var selectedTab = 0
-    
     var body: some View {
         if let league = leagueDetailVM.league {
             VStack {
@@ -29,7 +26,6 @@ struct LeagueDetailRouteView: View {
                 // MARK: Content
                 LeagueDetailRouteContentView(league: league)
             }
-            
             .background {
                 KFImage(URL(string: league.poster ?? ""))
                     .placeholder { progress in
@@ -38,7 +34,6 @@ struct LeagueDetailRouteView: View {
                     .opacity(0.1)
                     .ignoresSafeArea(.all)
             }
-             
         }
     }
 }

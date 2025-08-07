@@ -64,45 +64,35 @@ struct SportDBView: View {
     @StateObject private var trophyListVM = TrophyListViewModel()
     @StateObject private var chatVM = ChatViewModel()
 
-    // MARK: - UI Constants
-    private let badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (60, 60)
-    
     @Namespace var animation
     
-    
-    
     var body: some View {
-        VStack {
-           GenericNavigationStack(
-            router: sportRouter
-            , rootContent: {
-                ListCountryRouteView(animation: animation)
-                    .background{
-                        // Background gradient
-                        LinearGradient(
-                            colors: [
-                                Color.blue.opacity(0.3),
-                                Color.purple.opacity(0.3),
-                                Color.pink.opacity(0.3)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                        .ignoresSafeArea()
-                        
-                        // Particle background
-                        //ParticleGlass()
-                            //.ignoresSafeArea()
-                    }
-                    
-            }
-            , destination:
-                sportDestination
-                
-           )
-           
-       }
-        
+        GenericNavigationStack(
+         router: sportRouter
+         , rootContent: {
+             ListCountryRouteView(animation: animation)
+                 .background{
+                     // Background gradient
+                     LinearGradient(
+                         colors: [
+                             Color.blue.opacity(0.3),
+                             Color.purple.opacity(0.3),
+                             Color.pink.opacity(0.3)
+                         ],
+                         startPoint: .topLeading,
+                         endPoint: .bottomTrailing
+                     )
+                     .ignoresSafeArea()
+                     
+                     // Particle background
+                     //ParticleGlass()
+                         //.ignoresSafeArea()
+                 }
+                 
+         }
+         , destination:
+             sportDestination
+        )
         .overlay(alignment: .bottomLeading, content: {
             SelectSportView(tappedSport: { sport in
                 sportRouter.popToRoot()

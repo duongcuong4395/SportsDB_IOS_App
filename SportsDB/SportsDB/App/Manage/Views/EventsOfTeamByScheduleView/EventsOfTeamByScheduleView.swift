@@ -76,8 +76,8 @@ struct EventsOfTeamByScheduleView<OptionEventView: View>: View {
             }
             .transition(.opacity)
         case .failure(error: _):
-            Text("EventsOfTeamForPrevious fail")
-                .transition(.opacity)
+            Text("Please return in a few minutes.")
+                .font(.caption2.italic())
         }
     }
 }

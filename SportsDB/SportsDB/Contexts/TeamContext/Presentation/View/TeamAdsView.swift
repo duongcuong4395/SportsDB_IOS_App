@@ -24,21 +24,16 @@ struct TeamAdsView: View {
                 if let logo = team.logo {
                     KFImage(URL(string: logo))
                         .placeholder { progress in
-                            //LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                             ProgressView()
                         }
                         .resizable()
                         .scaledToFit()
-                        //.frame(width: UIScreen.main.bounds.width - 10, height: 100)
                 }
-                
-                
                 
                 LazyVGrid(columns: column) {
                     if let fanart1 = team.fanart1 {
                         KFImage(URL(string: fanart1))
                             .placeholder { progress in
-                                // LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                                 ProgressView()
                             }
                             .resizable()
@@ -48,7 +43,6 @@ struct TeamAdsView: View {
                     if let fanart2 = team.fanart2 {
                         KFImage(URL(string: fanart2))
                             .placeholder { progress in
-                                // LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                                 ProgressView()
                             }
                             .resizable()
@@ -59,7 +53,6 @@ struct TeamAdsView: View {
                     if let fanart3 = team.fanart3 {
                         KFImage(URL(string: fanart3))
                             .placeholder { progress in
-                                // LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                                 ProgressView()
                             }
                             .resizable()
@@ -70,7 +63,6 @@ struct TeamAdsView: View {
                     if let fanart4 = team.fanart4 {
                         KFImage(URL(string: fanart4))
                             .placeholder { progress in
-                                // LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                                 ProgressView()
                             }
                             .resizable()
@@ -82,7 +74,6 @@ struct TeamAdsView: View {
                 if let banner = team.banner {
                     KFImage(URL(string: banner))
                         .placeholder { progress in
-                            // LoadingIndicator(animation: .circleBars, size: .medium, speed: .fast)
                             ProgressView()
                         }
                         .resizable()
