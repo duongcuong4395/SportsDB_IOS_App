@@ -30,7 +30,7 @@ struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewD
             EmptyView()
         case .loading:
             Text("Progressing...")
-        case .success(data: let models):
+        case .success(data: _):
             
             ListEventGenericView(
                 events: eventsRecentOfLeagueVM.events
@@ -38,7 +38,6 @@ struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewD
                 , onEvent: { event in
                     handle(event)
                 })
-            
             /*
             ListEventView(
                 events: eventsRecentOfLeagueVM.events,
@@ -49,7 +48,7 @@ struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewD
                 })
             */
             
-        case .failure(error: let error):
+        case .failure(error: _):
             Text("Please return in a few minutes.")
                 .font(.caption2.italic())
                 .onAppear{
@@ -67,13 +66,7 @@ struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewD
             print("=== toggle like event:", event.eventName ?? "")
             var newEvent = event
             newEvent.like.toggle()
-            print("=== newItem like", newEvent.like)
             eventsRecentOfLeagueVM.updateItem(from: event, with: newEvent)
-            /*
-            _ = eventsRecentOfLeagueVM.eventsStatus.updateElement(where: { oldEvent in
-                oldEvent.idEvent == event.idEvent
-            }, with: newEvent)
-             */
         default: return
         }
     }

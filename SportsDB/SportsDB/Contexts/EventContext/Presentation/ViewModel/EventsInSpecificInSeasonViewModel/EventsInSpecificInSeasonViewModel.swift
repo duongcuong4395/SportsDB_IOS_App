@@ -39,4 +39,10 @@ class EventsInSpecificInSeasonViewModel: ObservableObject {
     func resetAll() {
         self.eventsStatus = .idle
     }
+    
+    func updateItem(from oldItem: Event, with newItem: Event) {
+        self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
+            oldEvent.idEvent == oldItem.idEvent
+        }, with: newItem)
+    }
 }

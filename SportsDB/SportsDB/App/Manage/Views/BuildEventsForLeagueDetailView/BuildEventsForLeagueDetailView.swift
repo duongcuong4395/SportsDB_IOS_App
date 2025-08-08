@@ -25,12 +25,20 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
     var body: some View {
         switch eventsInSpecificInSeasonVM.eventsStatus {
         case .success(data: _):
+            
+            ListEventGenericView(
+                events: eventsInSpecificInSeasonVM.events
+                , itemBuilder: ItemBuilderForEventsOfPastLeague()
+                , onEvent: { event in
+                    handle(event)
+                })
+            /*
             ListEventView(
                 events: eventsInSpecificInSeasonVM.events,
                 optionEventView: getEventOptionsView,
                 tapOnTeam: tapOnTeam,
                 eventTapped: { event in })
-        
+        */
         case .loading:
             ProgressView()
         case .idle:
@@ -45,6 +53,17 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
                 }
         }
         
+    }
+    
+    func handle(_ event: ItemEvent<Event>) {
+        switch event {
+        case .toggleLike(for: let event) :
+            print("=== toggle like event:", event.eventName ?? "")
+            var newEvent = event
+            newEvent.like.toggle()
+            eventsInSpecificInSeasonVM.updateItem(from: event, with: newEvent)
+        default: return
+        }
     }
 }
 
