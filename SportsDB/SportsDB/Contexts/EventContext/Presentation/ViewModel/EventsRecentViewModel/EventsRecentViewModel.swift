@@ -9,7 +9,16 @@ import SwiftUI
 
 @MainActor
 class EventsRecentOfLeagueViewModel: ObservableObject {
-    @Published var events: ModelsStatus<[Event]> = .idle
+    @Published private(set) var eventsStatus: ModelsStatus<[Event]> = .idle
+    
+    
+    var events: [Event] {
+        eventsStatus.data ?? []
+    }
+    
+    var hasData: Bool {
+        eventsStatus.isSuccess
+    }
     
     private var lookupEventsPastLeagueUseCase: LookupEventsPastLeagueUseCase
     
@@ -19,14 +28,26 @@ class EventsRecentOfLeagueViewModel: ObservableObject {
 
     func getEvents(by leagueID: String) {
         Task {
-            events = .loading
-            let res = try await lookupEventsPastLeagueUseCase.execute(leagueID: leagueID)
-            try? await Task.sleep(nanoseconds: 500_000_000)
-            events = .success(data: res)
+            do {
+                eventsStatus = .loading
+                let res = try await lookupEventsPastLeagueUseCase.execute(leagueID: leagueID)
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                eventsStatus = .success(data: res)
+            } catch {
+                eventsStatus = .failure(error: error.localizedDescription)
+            }
+            
         }
     }
     
     func resetAll() {
-        self.events = .idle
+        self.eventsStatus = .idle
     }
+    
+    func updateItem(from oldItem: Event, with newItem: Event) {
+        self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
+            oldEvent.idEvent == oldItem.idEvent
+        }, with: newItem)
+    }
+    
 }

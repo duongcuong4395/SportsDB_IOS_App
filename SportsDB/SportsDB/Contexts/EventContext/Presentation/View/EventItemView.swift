@@ -26,7 +26,7 @@ struct EventItemView<OptionView: View>: View {
                 Sport2vs2EventItemView(isVisible: $isVisible, delay: delay, event: event, optionView: optionView, tapOnTeam: tapOnTeam)
             case .oneVsOne, .teamVsTeams, .doubles, .freeForAll, .multiFormat:
                 SportSingleEventItemView(event: event, optionView: optionView, eventTapped: eventTapped)
-                EmptyView()
+                //EmptyView()
             case .none:
                 EmptyView()
             case .some(.oneVsMany):

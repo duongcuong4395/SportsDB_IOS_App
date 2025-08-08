@@ -30,6 +30,8 @@ struct Event: Equatable, Identifiable {
     var tweet1, tweet2, tweet3: String?
     var video: String?
     var status, postponed, locked: String?
+    
+    var like: Bool = false
 }
 
 

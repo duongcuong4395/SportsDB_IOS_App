@@ -83,6 +83,7 @@ extension ModelsStatus where T: RangeReplaceableCollection {
         switch self {
         case .success(var data):
             if let index = data.firstIndex(where: predicate) {
+                print("=== item Update", index, newElement)
                 data.remove(at: index)
                 data.insert(newElement, at: index)
             }

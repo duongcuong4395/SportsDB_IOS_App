@@ -10,7 +10,7 @@ import SwiftUI
 struct EventOptionsView: View, ItemDelegate {
     
     var event: Event
-    var onAction: (EventAction, Event) -> Void   // ✅ only ONE closure needed
+    var onAction: (EventAction, Event) -> Void
     
     var body: some View {
         HStack(spacing: 30) {

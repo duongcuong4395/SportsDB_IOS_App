@@ -50,47 +50,7 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
 
 
 
-struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewDelegate {
-    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
-    
-    @EnvironmentObject var teamListVM: TeamListViewModel
-    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
-    @EnvironmentObject var playerListVM: PlayerListViewModel
-    @EnvironmentObject var trophyListVM: TrophyListViewModel
-    @EnvironmentObject var sportRouter: SportRouter
-    @EnvironmentObject var eventListVM: EventListViewModel
-    
-    @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
-    
-    @State var numbRetry: Int = 0
-    
-    let onRetry: () -> Void
-    
-    var body: some View {
-        
-        switch eventsRecentOfLeagueVM.events {
-        case .idle:
-            EmptyView()
-        case .loading:
-            Text("Progressing...")
-        case .success(data: let models):
-            ListEventView(
-                events: models,
-                optionEventView: getEventOptionsView,
-                tapOnTeam: tapOnTeam,
-                eventTapped: { event in })
-        case .failure(error: let error):
-            Text("Please return in a few minutes.")
-                .font(.caption2.italic())
-                .onAppear{
-                    numbRetry += 1
-                    guard numbRetry <= 3 else { return }
-                    onRetry()
-                }
-        }
-        
-    }
-}
+
 
 
 protocol EventOptionsViewDelegate {}
@@ -101,6 +61,7 @@ extension EventOptionsViewDelegate {
             switch action {
             case .toggleFavorite:
                 print("=== event:toggleFavorite:", event.eventName ?? "")
+                event
             case .toggleNotify:
                 print("=== event:toggleNotify:", event.eventName ?? "")
             case .openPlayVideo:

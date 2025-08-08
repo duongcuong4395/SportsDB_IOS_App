@@ -65,7 +65,6 @@ struct ListEventView<OptionEventView: View>: View {
                 }
             }
         }
-        
         .onAppear{
             withAnimation {
                 if showModels.count != events.count {
