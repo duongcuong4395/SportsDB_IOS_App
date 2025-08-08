@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelegate {
+struct BuildEventsForSpecific : View {
     @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     
     @EnvironmentObject var teamListVM: TeamListViewModel
@@ -72,31 +72,7 @@ struct BuildEventsForSpecific : View, SelectTeamDelegate, EventOptionsViewDelega
 
 
 
-protocol EventOptionsViewDelegate {}
-extension EventOptionsViewDelegate {
-    @ViewBuilder
-    func getEventOptionsView(event: Event) -> some View {
-        EventOptionsView(event: event) { action, event in
-            switch action {
-            case .toggleFavorite:
-                print("=== event:toggleFavorite:", event.eventName ?? "")
-                event
-            case .toggleNotify:
-                print("=== event:toggleNotify:", event.eventName ?? "")
-            case .openPlayVideo:
-                print("=== event:openPlayVideo:", event.eventName ?? "")
-            case .viewDetail:
-                print("=== event:viewDetail:", event.eventName ?? "")
-            case .pushFireBase:
-                print("=== event:pushFireBase:", event.eventName ?? "")
-            case .selected:
-                print("=== event:selected:", event.eventName ?? "")
-            case .drawOnMap:
-                print("=== event:drawOnMap:", event.eventName ?? "")
-            }
-        }
-    }
-}
+
 
 
 

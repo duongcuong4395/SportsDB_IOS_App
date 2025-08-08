@@ -53,3 +53,128 @@ extension ItemBuilder {
             }
     }
 }
+
+
+// MARK: Old version
+
+protocol EventOptionsViewDelegate {}
+extension EventOptionsViewDelegate {
+    @ViewBuilder
+    func getEventOptionsView(event: Event) -> some View {
+        EventOptionsView(event: event) { action, event in
+            switch action {
+            case .toggleFavorite:
+                print("=== event:toggleFavorite:", event.eventName ?? "")
+                event
+            case .toggleNotify:
+                print("=== event:toggleNotify:", event.eventName ?? "")
+            case .openPlayVideo:
+                print("=== event:openPlayVideo:", event.eventName ?? "")
+            case .viewDetail:
+                print("=== event:viewDetail:", event.eventName ?? "")
+            case .pushFireBase:
+                print("=== event:pushFireBase:", event.eventName ?? "")
+            case .selected:
+                print("=== event:selected:", event.eventName ?? "")
+            case .drawOnMap:
+                print("=== event:drawOnMap:", event.eventName ?? "")
+            }
+        }
+    }
+}
+
+
+protocol SelectTeamDelegate {
+    var teamListVM: TeamListViewModel { get }
+    var teamDetailVM: TeamDetailViewModel { get }
+    var playerListVM: PlayerListViewModel { get }
+    
+    
+    var trophyListVM: TrophyListViewModel { get }
+    
+    var sportRouter: SportRouter { get }
+    
+    var eventListVM: EventListViewModel { get }
+    var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel { get }
+    
+}
+
+extension SelectTeamDelegate {
+    @MainActor
+    func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
+        Task {
+            await resetWhenTapTeam()
+            
+        }
+        
+        withAnimation {
+            
+            let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
+            let homeTeam = String(homeVSAwayTeam?[0] ?? "")
+            let awayTeam = String(homeVSAwayTeam?[1] ?? "")
+            let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
+            let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
+            sportRouter.navigateToTeamDetail(by: teamID)
+            selectTeam(by: team)
+            
+        }
+    }
+    
+    @MainActor
+    func resetWhenTapTeam() async {
+        withAnimation(.easeInOut(duration: 0.5)) {
+            //teamDetailVM.teamSelected = nil
+            trophyListVM.resetTrophies()
+            playerListVM.resetPlayersByLookUpAllForaTeam()
+            teamDetailVM.resetEquipment()
+            //eventListVM.resetEventsOfTeamForNextAndPrevious()
+        }
+        return
+    }
+}
+
+extension SelectTeamDelegate {
+    @MainActor
+    func selectTeam(by team: String) {
+        Task {
+            await teamListVM.searchTeams(teamName: team)
+            guard teamListVM.teamsBySearch.count > 0 else { return }
+            teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+            guard let team = teamDetailVM.teamSelected else { return }
+            
+            eventsOfTeamByScheduleVM.selectTeam(by: team)
+            
+            
+            await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
+            
+            await teamDetailVM.lookupEquipment(teamID: team.idTeam ?? "")
+            
+            getPlayersAndTrophies(by: team)
+            
+        }
+    }
+    
+    @MainActor
+    func getPlayersAndTrophies(by team: Team) {
+        Task {
+            let(players, trophies) = try await team.fetchPlayersAndTrophies()
+            trophyListVM.setTrophyGroup(by: trophies)
+            getMorePlayer(players: players)
+        }
+    }
+    
+    @MainActor
+    func getMorePlayer(players: [Player]) {
+        let cleanedPlayers = players.filter { otherName in
+            !playerListVM.playersByLookUpAllForaTeam.contains { fullName in
+                let fulName = (fullName.player ?? "").replacingOccurrences(of: "-", with: " ")
+                
+                return fulName.lowercased().contains(otherName.player?.lowercased() ?? "")
+            }
+        }
+        
+        DispatchQueueManager.share.runOnMain {
+            playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
+        }
+    }
+}
