@@ -19,26 +19,20 @@ struct BuildEventsForSpecific : View {
     
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     
+    @EnvironmentObject var eventLocalDataListVM: EventLocalDataListViewModel
+    
     @State var numbRetry: Int = 0
     var onRetry: () -> Void
     
     var body: some View {
         switch eventsInSpecificInSeasonVM.eventsStatus {
         case .success(data: _):
-            
             ListEventGenericView(
                 events: eventsInSpecificInSeasonVM.events
                 , itemBuilder: ItemBuilderForEventsOfPastLeague()
                 , onEvent: { event in
                     handle(event)
                 })
-            /*
-            ListEventView(
-                events: eventsInSpecificInSeasonVM.events,
-                optionEventView: getEventOptionsView,
-                tapOnTeam: tapOnTeam,
-                eventTapped: { event in })
-        */
         case .loading:
             ProgressView()
         case .idle:
@@ -58,11 +52,43 @@ struct BuildEventsForSpecific : View {
     func handle(_ event: ItemEvent<Event>) {
         switch event {
         case .toggleLike(for: let event) :
-            print("=== toggle like event:", event.eventName ?? "")
-            var newEvent = event
-            newEvent.like.toggle()
-            eventsInSpecificInSeasonVM.updateItem(from: event, with: newEvent)
+            onToggleLikeEvent(event)
+        case .onApear(for: let event):
+            onApearEvent(event)
         default: return
+        }
+    }
+    
+    func onApearEvent(_ event: Event) {
+        let isEventExists =  eventLocalDataListVM.isEventExists(idEvent: event.idEvent, eventName: event.eventName)
+        print("=== event is Exist Local data", isEventExists, event.eventName ?? "")
+        guard let eventData = isEventExists.event else { return }
+        
+        var newEvent = event
+        newEvent.like = eventData.like
+        eventsInSpecificInSeasonVM.updateItem(from: event, with: newEvent)
+    }
+    
+    func onToggleLikeEvent(_ event: Event) {
+        let isEventExists =  eventLocalDataListVM.isEventExists(idEvent: event.idEvent, eventName: event.eventName)
+        
+        guard let eventData = isEventExists.event else {
+            Task {
+                print("=== add event to local data", event.eventName ?? "", event.like)
+                var newEvent = event
+                newEvent.like = true
+                eventsInSpecificInSeasonVM.updateItem(from: event, with: newEvent)
+                await eventLocalDataListVM.addEvent(event: newEvent.toEventLocalData())
+            }
+            return }
+        eventData.like.toggle()
+        
+        var newEvent = event
+        newEvent.like = eventData.like
+        eventsInSpecificInSeasonVM.updateItem(from: event, with: newEvent)
+        
+        Task {
+            try SwiftDataContainer.shared.context.save()
         }
     }
 }

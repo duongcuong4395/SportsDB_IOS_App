@@ -47,34 +47,9 @@ struct EventsOfTeamByScheduleView<OptionEventView: View>: View {
                 
             }
         case .idle:
-            VStack {
-                ForEach((1...5).reversed(), id: \.self) { _ in
-                    EventItemView(isVisible: .constant(false),
-                                  delay: 0.5,
-                                  event: eventListVM.getEventExample(),
-                                  optionView: optionEventView,
-                                  tapOnTeam: { event, kind in },
-                                  eventTapped: { event in })
-                    .redacted(reason: .placeholder)
-                    .shimmering()
-                }
-            }
-            .transition(.opacity)
-            
+            EmptyView()
         case .loading:
-            VStack {
-                ForEach((1...5).reversed(), id: \.self) { _ in
-                    EventItemView(isVisible: .constant(false),
-                                  delay: 0.5,
-                                  event: eventListVM.getEventExample(),
-                                  optionView: optionEventView,
-                                  tapOnTeam: { event, kind in },
-                                  eventTapped: { event in })
-                    .redacted(reason: .placeholder)
-                    .shimmering()
-                }
-            }
-            .transition(.opacity)
+            EventLoadingView()
         case .failure(error: _):
             Text("Please return in a few minutes.")
                 .font(.caption2.italic())

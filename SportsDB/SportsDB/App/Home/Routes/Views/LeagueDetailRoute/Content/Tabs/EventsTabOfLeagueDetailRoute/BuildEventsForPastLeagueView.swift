@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct BuildEventsForPastLeagueView: View, SelectTeamDelegate, EventOptionsViewDelegate {
+struct BuildEventsForPastLeagueView: View{
     @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     
     @EnvironmentObject var teamListVM: TeamListViewModel

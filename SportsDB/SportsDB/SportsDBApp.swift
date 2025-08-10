@@ -9,21 +9,31 @@ import SwiftUI
 
 @main
 struct SportsDBApp: App {
+    private let container = SwiftDataContainer.shared
+    
     var body: some Scene {
         WindowGroup {
-            // ContentView()
-            // DemoResizableHeaderScrollView()
-            // AutoScrollingTabView()
-            // DemoStickyHeader()
-            
-            // LiquidGlassExamples()
-            // LiquidGlassDemoApp()
-            
-            
-            //DemoFlexibleMorphingButtonView()
-            // DemoMorphingView()
-            
             SportDBView()
         }
+        //.modelContainer(MainDB.shared)
+        .modelContainer(container.container)
     }
 }
+
+//
+  //
+
+
+
+    // ContentView()
+    // DemoResizableHeaderScrollView()
+    // AutoScrollingTabView()
+    // DemoStickyHeader()
+    
+    // LiquidGlassExamples()
+    // LiquidGlassDemoApp()
+    
+    
+    //DemoFlexibleMorphingButtonView()
+    // DemoMorphingView()
+    

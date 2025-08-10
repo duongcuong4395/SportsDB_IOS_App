@@ -32,6 +32,57 @@ struct Event: Equatable, Identifiable {
     var status, postponed, locked: String?
     
     var like: Bool = false
+    var hasNotification: Bool = false
 }
 
+
+import SwiftData
+
+extension Event{
+    func toEventLocalData() -> EventLocalData {
+        EventLocalData(
+            idEvent: idEvent
+            , idAPIfootball: idAPIfootball
+            , eventName: eventName
+            , eventAlternate: eventAlternate
+            , filename: filename
+            , sportName: sportName
+            , idLeague: idLeague
+            , leagueName: leagueName
+            , leagueBadge: leagueBadge
+            , season: season
+            , descriptionEN: descriptionEN
+            , homeTeam: homeTeam
+            , awayTeam: awayTeam
+            , homeScore: homeScore
+            , round: round
+            , awayScore: awayScore
+            , spectators: spectators
+            , official: official
+            , timestamp: timestamp
+            , dateEvent: dateEvent
+            , dateEventLocal: dateEventLocal
+            , time: time
+            , timeLocal: timeLocal
+            , group: group
+            , idHomeTeam: idHomeTeam
+            , homeTeamBadge: homeTeamBadge
+            , idAwayTeam: idAwayTeam
+            , awayTeamBadge: awayTeamBadge
+            , score: score
+            , scoreVotes: scoreVotes
+            , result: result
+            , idVenue: idVenue
+            , venue: venue
+            , country: country
+            , city: city
+            , poster: poster
+            , square: square
+            , fanart: fanart
+            , thumb: thumb
+            , banner: banner
+            , map: map, tweet1: tweet1, tweet2: tweet2, tweet3: tweet3, video: video, status: status
+            , postponed: postponed, locked: locked, like: like, hasNotification: hasNotification)
+    }
+}
 

@@ -53,6 +53,7 @@ struct ListEventGenericView<Builder: ItemBuilder>: View where Builder.T == Event
                     withAnimation {
                         showModels[index] = true
                     }
+                    onEvent(.onApear(for: event))
                 }
                 .onDisappear{
                     guard showModels[index] == true else { return }

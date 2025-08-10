@@ -102,25 +102,6 @@ extension EventListViewModel {
     }
 }
 
-extension EventListViewModel {
-    
-    
-    func getEventExample() -> Event {
-        if let jsonEventDTOData = eventExampleJson.data(using: .utf8) {
-            do {
-                let decoder = JSONDecoder()
-                let eventDTO = try decoder.decode(EventDTO.self, from: jsonEventDTOData)
-                let domainModel = eventDTO.toDomain()
-                return domainModel
-            } catch {
-                print("❌ JSON decode failed: \(error)")
-            }
-        }
-        
-        return Event()
-    }
-    
-}
 
 
 

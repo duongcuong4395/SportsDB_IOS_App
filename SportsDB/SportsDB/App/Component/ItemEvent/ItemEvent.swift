@@ -14,6 +14,7 @@ enum ItemEvent<T: Equatable> {
     case tapped(for: T)
     case tapOnTeam(for: T, with: KindTeam)
     case openVideo(for: T)
+    case onApear(for: T)
 }
 
 enum IconItemType: String {

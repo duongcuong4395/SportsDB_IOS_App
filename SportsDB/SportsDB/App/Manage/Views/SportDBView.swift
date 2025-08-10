@@ -42,6 +42,8 @@ struct SportDBView: View {
             //getEventsOfTeamByScheduleUseCase: GetEventsOfTeamByScheduleUseCase(repository: EventAPIService())
         )
     
+    @StateObject var eventLocalDataListVM: EventLocalDataListViewModel
+    
     // MARK: List Events
     @StateObject private var eventsInSpecificInSeasonVM = EventsInSpecificInSeasonViewModel(
         lookupEventsInSpecificUseCase: LookupEventsInSpecificUseCase(repository: EventAPIService()))
@@ -65,6 +67,12 @@ struct SportDBView: View {
     @StateObject private var chatVM = ChatViewModel()
 
     @Namespace var animation
+    
+    init() {
+        self._eventLocalDataListVM = StateObject(wrappedValue: EventLocalDataListViewModel(
+            context: SwiftDataContainer.shared.context
+            , useCase: DefaultEventLocalDataUseCase(repository: SwiftDataEventRepository(context: SwiftDataContainer.shared.context))))
+    }
     
     var body: some View {
         GenericNavigationStack(
@@ -136,6 +144,8 @@ struct SportDBView: View {
         .environmentObject(sportRouter)
         
         .environmentObject(chatVM)
+        
+        .environmentObject(eventLocalDataListVM)
         
         .onAppear(perform: onAppear)
     }
