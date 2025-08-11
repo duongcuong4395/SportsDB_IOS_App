@@ -26,11 +26,6 @@ struct EventsTabOfLeagueDetailRouteView: View {
                     EventsGenericView(eventsViewModel: eventsRecentOfLeagueVM, onRetry: {
                         eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
                     })
-                    /*
-                    BuildEventsForPastLeagueView(onRetry: {
-                        eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
-                    })
-                     */
                     
                     TitleComponentView(title: "Seasons")
                     BuildSeasonForLeagueView(leagueID: league.idLeague ?? "")
@@ -56,12 +51,10 @@ struct EventsTabOfLeagueDetailRouteView: View {
                         BuildEventsForEachRoundInControl(leagueID: league.idLeague ?? "")
                         
                         EventsGenericView(eventsViewModel: eventsPerRoundInSeasonVM, onRetry: { })
-                        //BuildEventsForEachRoundView(onRetry: {  })
                             .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
                         
                         TitleComponentView(title: "Events Specific")
                         EventsGenericView(eventsViewModel: eventsInSpecificInSeasonVM, onRetry: { })
-                        //BuildEventsForSpecific(onRetry: {  })
                             .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
                     }
                 }
@@ -69,5 +62,80 @@ struct EventsTabOfLeagueDetailRouteView: View {
             .padding(.vertical)
             
         }
+    }
+}
+
+// MARK: BuildSeasonForLeagueView
+struct BuildSeasonForLeagueView: View {
+    
+    @EnvironmentObject var eventListVM: EventListViewModel
+    @EnvironmentObject var leagueListVM: LeagueListViewModel
+    @EnvironmentObject var seasonListVM: SeasonListViewModel
+    
+    @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
+    @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
+    
+    let leagueID: String
+    
+    var body: some View {
+        SeasonForLeagueView(
+            tappedSeason: { season in
+                withAnimation(.spring()) {
+                    guard seasonListVM.seasonSelected != season else { return }
+                    seasonListVM.setSeason(by: season) { season in
+                        guard let season = season else { return }
+                        
+                        eventListVM.setCurrentRound(by: 1) { round in
+                            eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
+                        }
+                    }
+                    
+                    leagueListVM.resetLeaguesTable()
+                    
+                    Task {
+                        await leagueListVM.lookupLeagueTable(
+                            leagueID: leagueID,
+                            season: seasonListVM.seasonSelected?.season ?? "")
+                        
+                        
+                        await eventsInSpecificInSeasonVM.getEvents(
+                            leagueID: leagueID,
+                            season: seasonListVM.seasonSelected?.season ?? "")
+                    }
+                }
+                
+            })
+    }
+}
+
+// MARK: BuildEventsForEachRoundInControl
+struct BuildEventsForEachRoundInControl: View {
+    var leagueID: String
+    
+    @EnvironmentObject var eventListVM: EventListViewModel
+    @EnvironmentObject var seasonListVM: SeasonListViewModel
+    
+    @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
+    
+    var body: some View {
+        PreviousAndNextRounrEventView(
+            currentRound: eventListVM.currentRound,
+            hasNextRound: eventListVM.hasNextRound,
+            nextRoundTapped: {
+                withAnimation(.spring()) {
+                    eventListVM.setCurrentRound(by: eventListVM.currentRound + 1) { round in
+                        eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: seasonListVM.seasonSelected?.season ?? "")
+                    }
+                }
+            },
+            previousRoundTapped: {
+                withAnimation(.spring()) {
+                    eventListVM.setCurrentRound(by: eventListVM.currentRound - 1) { round in
+                        eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: seasonListVM.seasonSelected?.season ?? "")
+                    }
+                }
+                
+                
+            })
     }
 }

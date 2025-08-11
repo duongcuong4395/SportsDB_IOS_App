@@ -11,7 +11,7 @@ enum SportRoute: Hashable {
     case ListCountry
     case ListLeague(by: String, and: String)
     case LeagueDetail(by: String)
-    case TeamDetail(by: String)
+    case TeamDetail
 }
 
 // MARK: - Specific Routers
@@ -24,12 +24,12 @@ class SportRouter: BaseRouter<SportRoute> {
         push(.LeagueDetail(by: leagueID))
     }
     
-    func navigateToTeamDetail(by teamID: String) {
-        push(.TeamDetail(by: teamID))
+    func navigateToTeamDetail() {
+        push(.TeamDetail)
     }
     
-    func navigateToReplaceTeamDetail(by teamID: String) {
-        replace(with: .TeamDetail(by: teamID))
+    func navigateToReplaceTeamDetail() {
+        replace(with: .TeamDetail)
     }
     
     
@@ -46,7 +46,7 @@ class SportRouter: BaseRouter<SportRoute> {
         return isCurrentRoute(.LeagueDetail(by: leagueID))
     }
     
-    func isAtTeamDetail(teamID: String) -> Bool {
-        return isCurrentRoute(.TeamDetail(by: teamID))
+    func isAtTeamDetail() -> Bool {
+        return isCurrentRoute(.TeamDetail)
     }
 }

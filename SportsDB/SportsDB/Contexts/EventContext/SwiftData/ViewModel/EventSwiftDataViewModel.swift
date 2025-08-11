@@ -10,6 +10,10 @@ import Foundation
 import Combine
 import SwiftData
 
+enum SortOption {
+    case newest, oldest
+}
+
 @MainActor
 class EventSwiftDataViewModel: ObservableObject {
     @Published private(set) var events: [EventSwiftData] = []

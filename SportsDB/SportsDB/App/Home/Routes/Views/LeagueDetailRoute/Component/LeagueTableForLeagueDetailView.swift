@@ -39,7 +39,7 @@ struct LeagueTableForLeagueDetailView: View, SelectTeamDelegate {
                         playerListVM.resetPlayersByLookUpAllForaTeam()
                     }
                     selectTeam(by: leagueTable.teamName ?? "")
-                    sportRouter.navigateToTeamDetail(by: leagueTable.idTeam ?? "")
+                    sportRouter.navigateToTeamDetail()
                 })
         case .failure(_):
             Text("Please return in a few minutes")

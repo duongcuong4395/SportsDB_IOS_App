@@ -24,9 +24,10 @@ struct ListTeamForLeagueDetailView: View, SelectTeamDelegate {
     var body: some View {
         switch teamListVM.teamsStatus {
         case .idle:
-            IdleStateView(kindName: "teams", onLoadTapped: {})
+            EmptyView()
         case .loading:
-            LoadingStateView(kindName: "teams")
+            Text("Loading Teams...")
+            ProgressView()
         case .success(_):
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: AppUtility.columns) {
@@ -46,7 +47,7 @@ struct ListTeamForLeagueDetailView: View, SelectTeamDelegate {
                             
                             guard let team = teamDetailVM.teamSelected else { return }
                             
-                            sportRouter.navigateToTeamDetail(by: team.idTeam ?? "")
+                            sportRouter.navigateToTeamDetail()
                         }
                     )
                 }

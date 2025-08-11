@@ -85,19 +85,7 @@ struct SportDBView: View {
          router: sportRouter
          , rootContent: {
              ListCountryRouteView(animation: animation)
-                 .background{
-                     // Background gradient
-                     LinearGradient(
-                         colors: [
-                             Color.blue.opacity(0.3),
-                             Color.purple.opacity(0.3),
-                             Color.pink.opacity(0.3)
-                         ],
-                         startPoint: .topLeading,
-                         endPoint: .bottomTrailing
-                     )
-                     .ignoresSafeArea()
-                 }
+                 .backgroundGradient()
          }
          , destination:
              sportDestination
@@ -107,24 +95,7 @@ struct SportDBView: View {
         }
         .overlay(alignment: .bottomLeading, content: {
             SelectSportView(tappedSport: { sport in
-                sportRouter.popToRoot()
-                
-                leagueListVM.resetAll()
-                leagueDetailVM.resetAll()
-                
-                teamListVM.resetAll()
-                teamDetailVM.resetAll()
-                
-                seasonListVM.resetAll()
-                
-                eventListVM.resetAll()
-                eventsInSpecificInSeasonVM.resetAll()
-                eventsRecentOfLeagueVM.resetAll()
-                eventsPerRoundInSeasonVM.resetAll()
-                eventsOfTeamByScheduleVM.resetAll()
-                
-                playerListVM.resetAll()
-                trophyListVM.resetAll()
+                onTapSport()
             })
             .padding(.horizontal, 5)
         })
@@ -160,6 +131,27 @@ struct SportDBView: View {
         chatVM.initChat()
         
     }
+    
+    func onTapSport() {
+        sportRouter.popToRoot()
+        
+        leagueListVM.resetAll()
+        leagueDetailVM.resetAll()
+        
+        teamListVM.resetAll()
+        teamDetailVM.resetAll()
+        
+        seasonListVM.resetAll()
+        
+        eventListVM.resetAll()
+        eventsInSpecificInSeasonVM.resetAll()
+        eventsRecentOfLeagueVM.resetAll()
+        eventsPerRoundInSeasonVM.resetAll()
+        eventsOfTeamByScheduleVM.resetAll()
+        
+        playerListVM.resetAll()
+        trophyListVM.resetAll()
+    }
 }
 
 
@@ -177,7 +169,7 @@ private extension SportDBView {
             case .LeagueDetail(by: _):
                 LeagueDetailRouteView()
                     .navigationBarHidden(true)
-            case .TeamDetail(by: _):
+            case .TeamDetail:
                 VStack {
                     if let team = teamDetailVM.teamSelected {
                         TeamDetailRouteView(team: team)
@@ -188,7 +180,13 @@ private extension SportDBView {
                 
             }
         }
-        .background{
+        .backgroundGradient()
+    }
+}
+
+extension View {
+    func backgroundGradient() -> some View {
+        self.background{
             // Background gradient
             LinearGradient(
                 colors: [
@@ -200,12 +198,7 @@ private extension SportDBView {
                 endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
-            
-            // Particle background
-            //ParticleGlass()
-                //.ignoresSafeArea()
         }
-        
     }
 }
 
@@ -233,92 +226,6 @@ extension SportDBView {
         }
     }
 }
-
-
-
-struct ErrorStateView: View {
-    let error: String
-    let onRetry: () -> Void
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 60))
-                .foregroundColor(.red)
-            
-            VStack(spacing: 8) {
-                Text("Something went wrong")
-                    .font(.headline)
-                
-                Text(error)
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-            
-            Button("Try Again") {
-                onRetry()
-            }
-            .buttonStyle(.borderedProminent)
-        }
-        .padding(40)
-    }
-}
-
-struct LoadingStateView: View {
-    var kindName: String
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            ProgressView()
-                .scaleEffect(1.2)
-            
-            Text("Loading \(kindName)...")
-                .font(.headline)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct IdleStateView: View {
-    
-    var kindName: String
-    let onLoadTapped: () -> Void
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "globe.americas.fill")
-                .font(.system(size: 80))
-                .foregroundColor(.blue)
-            
-            VStack(spacing: 8) {
-                Text("Welcome to \(kindName)")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                
-                Text("Discover \(kindName) around the world")
-                    .font(.body)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-            }
-            
-            Button("Load \(kindName)") {
-                onLoadTapped()
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-        }
-        .padding(40)
-    }
-}
-
-
-
-
-
-
-
 
 struct TextFieldSearchView: View {
     //@EnvironmentObject var appVM: appv
@@ -354,12 +261,5 @@ struct TextFieldSearchView: View {
         //.avoidKeyboard()
         .padding(.vertical, 3)
         .liquidGlassBlur()
-        /*
-        .background(
-            .ultraThinMaterial,
-            in: RoundedRectangle(cornerRadius: 10, style: .continuous)
-        )
-         */
-        //.edgesIgnoringSafeArea(.bottom)
     }
 }

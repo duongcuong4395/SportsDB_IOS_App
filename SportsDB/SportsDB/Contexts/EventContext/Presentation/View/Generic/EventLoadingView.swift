@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct EventLoadingView: View {
     var body: some View {
         VStack {
@@ -24,3 +25,4 @@ struct EventLoadingView: View {
         .transition(.opacity)
     }
 }
+

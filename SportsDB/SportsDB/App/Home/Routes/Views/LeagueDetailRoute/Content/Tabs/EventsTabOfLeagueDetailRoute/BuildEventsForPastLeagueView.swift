@@ -11,7 +11,6 @@ import SwiftUI
 protocol EventsViewModel: ObservableObject {
     var eventsStatus: ModelsStatus<[Event]> { get set }
     var events: [Event] { get }
-    //func updateEvent(from oldItem: Event, with newItem: Event)
 }
 
 extension EventsViewModel {
@@ -19,6 +18,10 @@ extension EventsViewModel {
         self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
             oldEvent.idEvent == oldItem.idEvent
         }, with: newItem)
+    }
+    
+    func resetAll() {
+        self.eventsStatus = .idle
     }
     
 }
@@ -79,21 +82,8 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
         }
     }
     
-    func onTapOnTeam(for event: Event, with kindTeam: KindTeam) {
-        print("=== event.team", event.eventName ?? "", kindTeam)
-        tapOnTeam(by: event, for: kindTeam)
-        
-        /*
-        Task {
-            await resetWhenTapTeam()
-            await tapOnTeamForReplace(by: event, for: kindTeam)
-        }
-         */
-    }
-    
     func onApearEvent(_ event: Event) {
         let isEventExists =  eventSwiftDataVM.isEventExists(idEvent: event.idEvent, eventName: event.eventName)
-        print("=== event is Exist Local data", isEventExists, event.eventName ?? "")
         guard let eventData = isEventExists.event else { return }
         
         var newEvent = event
@@ -106,7 +96,6 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
         
         guard let eventData = isEventExists.event else {
             Task {
-                print("=== add event to local data", event.eventName ?? "", event.like)
                 var newEvent = event
                 newEvent.like = true
                 eventsViewModel.updateEvent(from: event, with: newEvent)
@@ -127,24 +116,8 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
 
 extension EventsGenericView {
     
-    func tapOnTeamForReplace(by event: Event, for kindTeam: KindTeam) async {
-        
-        withAnimation {
-            
-            print("=== tapOnHomeTeam.event", event.eventName ?? "", event.homeTeam ?? "", event.idHomeTeam ?? "")
-            let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
-            let homeTeam = String(homeVSAwayTeam?[0] ?? "")
-            let awayTeam = String(homeVSAwayTeam?[1] ?? "")
-            let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-            //let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
-            
-            selectTeam(by: team)
-            return
-        }
-    }
-    
     @MainActor
-    func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
+    func onTapOnTeam(for event: Event, with kindTeam: KindTeam) {
         Task {
             await resetWhenTapTeam()
         }
@@ -156,8 +129,8 @@ extension EventsGenericView {
             let awayTeam = String(homeVSAwayTeam?[1] ?? "")
             let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
             let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
-            if !sportRouter.isAtTeamDetail(teamID: teamID) {
-                sportRouter.navigateToTeamDetail(by: teamID)
+            if !sportRouter.isAtTeamDetail() {
+                sportRouter.navigateToTeamDetail()
             }
             selectTeam(by: team)
             

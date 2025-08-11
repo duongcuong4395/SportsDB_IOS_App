@@ -22,15 +22,5 @@ struct TeamDetailRouteView: View {
             TeamDetailRouteContentView(team: team)
         }
         .backgroundOfRouteView(with: team.fanart1 ?? "")
-        /*
-        .background(
-            KFImage(URL(string: team.fanart1 ?? ""))
-                .placeholder { progress in
-                    ProgressView()
-                }
-                .opacity(0.1)
-                .ignoresSafeArea(.all)
-        )
-        */
     }
 }

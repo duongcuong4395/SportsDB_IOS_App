@@ -37,9 +37,11 @@ class EventsPerRoundInSeasonViewModel: EventsViewModel {
         }
     }
     
+    /*
     func resetAll() {
         self.eventsStatus = .idle
     }
+    */
     
     /*
     func updateEvent(from oldItem: Event, with newItem: Event) {

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ListEventOfTeamDetailRouteView: View {
+    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     var team: Team
     @Binding var isVisibleViews: (
         forEvents: Bool,
@@ -15,11 +16,30 @@ struct ListEventOfTeamDetailRouteView: View {
     )
 
     var body: some View {
+        VStack {
+            TitleComponentView(title: "Up coming")
+            EventsGenericView(eventsViewModel: eventsOfTeamByScheduleVM.eventsOfTeamByUpcomingVM
+                , onRetry: { })
+            
+            
+            TitleComponentView(title: "Result")
+            EventsGenericView(
+                eventsViewModel: eventsOfTeamByScheduleVM.eventsOfTeamByResultsVM
+                , onRetry: { })
+        }
+        .onAppear{
+            isVisibleViews.forEvents = true
+        }
+        .slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
+        .padding(.vertical)
+        
+        /*
         BuildEventsOfTeamByScheduleView(team: team)
             .onAppear{
                 isVisibleViews.forEvents = true
             }
             .slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
             .padding(.vertical)
+         */
     }
 }

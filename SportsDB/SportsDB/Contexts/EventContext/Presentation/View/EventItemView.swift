@@ -13,9 +13,6 @@ struct EventItemView<OptionView: View>: View {
     
     var event: Event
     var optionView: (Event) -> OptionView
-    //var homeTeamTapped: (Event) -> Void
-    //var awayTeamTapped: (Event) -> Void
-    
     var tapOnTeam: (Event, KindTeam) -> Void
     var eventTapped: (Event) -> Void
     

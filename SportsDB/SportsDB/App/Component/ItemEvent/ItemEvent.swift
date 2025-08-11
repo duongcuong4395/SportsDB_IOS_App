@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum KindTeam {
+    case AwayTeam
+    case HomeTeam
+}
+
 enum ItemEvent<T: Equatable> {
     case toggleLike(for: T)
     case viewDetail(for: T)
@@ -113,8 +118,8 @@ extension SelectTeamDelegate {
             let homeTeam = String(homeVSAwayTeam?[0] ?? "")
             let awayTeam = String(homeVSAwayTeam?[1] ?? "")
             let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-            let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
-            sportRouter.navigateToTeamDetail(by: teamID)
+            //let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
+            sportRouter.navigateToTeamDetail()
             selectTeam(by: team)
             
         }
