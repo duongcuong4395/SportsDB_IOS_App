@@ -9,18 +9,28 @@ import SwiftUI
 
 struct EventsTabOfLeagueDetailRouteView: View {
     var league: League
-    @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
+    
     @EnvironmentObject var seasonListVM: SeasonListViewModel
     @EnvironmentObject var leagueListVM: LeagueListViewModel
+    
+    // MARK: ViewModel for event
+    @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
+    @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
+    @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
     
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
                 VStack{
                     TitleComponentView(title: "Recent Events")
+                    EventsGenericView(eventsViewModel: eventsRecentOfLeagueVM, onRetry: {
+                        eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
+                    })
+                    /*
                     BuildEventsForPastLeagueView(onRetry: {
                         eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
                     })
+                     */
                     
                     TitleComponentView(title: "Seasons")
                     BuildSeasonForLeagueView(leagueID: league.idLeague ?? "")
@@ -45,11 +55,13 @@ struct EventsTabOfLeagueDetailRouteView: View {
                         TitleComponentView(title: "Events")
                         BuildEventsForEachRoundInControl(leagueID: league.idLeague ?? "")
                         
-                        BuildEventsForEachRoundView(onRetry: {  })
+                        EventsGenericView(eventsViewModel: eventsPerRoundInSeasonVM, onRetry: { })
+                        //BuildEventsForEachRoundView(onRetry: {  })
                             .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
                         
                         TitleComponentView(title: "Events Specific")
-                        BuildEventsForSpecific(onRetry: {  })
+                        EventsGenericView(eventsViewModel: eventsInSpecificInSeasonVM, onRetry: { })
+                        //BuildEventsForSpecific(onRetry: {  })
                             .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
                     }
                 }

@@ -31,4 +31,22 @@ class SportRouter: BaseRouter<SportRoute> {
     func navigateToReplaceTeamDetail(by teamID: String) {
         replace(with: .TeamDetail(by: teamID))
     }
+    
+    
+    // Convenience methods để check current route
+    var isAtListCountry: Bool {
+        return isCurrentRoute(.ListCountry)
+    }
+    
+    func isAtListLeague(countryName: String, sportName: String) -> Bool {
+        return isCurrentRoute(.ListLeague(by: countryName, and: sportName))
+    }
+    
+    func isAtLeagueDetail(leagueID: String) -> Bool {
+        return isCurrentRoute(.LeagueDetail(by: leagueID))
+    }
+    
+    func isAtTeamDetail(teamID: String) -> Bool {
+        return isCurrentRoute(.TeamDetail(by: teamID))
+    }
 }

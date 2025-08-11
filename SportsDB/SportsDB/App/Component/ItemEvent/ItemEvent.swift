@@ -105,7 +105,6 @@ extension SelectTeamDelegate {
     func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
         Task {
             await resetWhenTapTeam()
-            
         }
         
         withAnimation {
@@ -132,9 +131,7 @@ extension SelectTeamDelegate {
         }
         return
     }
-}
-
-extension SelectTeamDelegate {
+    
     @MainActor
     func selectTeam(by team: String) {
         Task {

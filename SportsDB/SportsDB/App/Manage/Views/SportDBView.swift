@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SwiftData
+
 
 // MARK: - Simplified ContentView
 struct SportDBView: View {
@@ -42,7 +44,10 @@ struct SportDBView: View {
             //getEventsOfTeamByScheduleUseCase: GetEventsOfTeamByScheduleUseCase(repository: EventAPIService())
         )
     
-    @StateObject var eventLocalDataListVM: EventLocalDataListViewModel
+    
+    // MARK: Event Swift Data
+    @StateObject var eventSwiftDataVM: EventSwiftDataViewModel
+    
     
     // MARK: List Events
     @StateObject private var eventsInSpecificInSeasonVM = EventsInSpecificInSeasonViewModel(
@@ -69,9 +74,10 @@ struct SportDBView: View {
     @Namespace var animation
     
     init() {
-        self._eventLocalDataListVM = StateObject(wrappedValue: EventLocalDataListViewModel(
-            context: SwiftDataContainer.shared.context
-            , useCase: DefaultEventLocalDataUseCase(repository: SwiftDataEventRepository(context: SwiftDataContainer.shared.context))))
+        
+        let repo = EventSwiftDataRepository(context: ModelContext(MainDB.shared))
+        let useCase = EventSwiftDataUseCase(repository: repo)
+        self._eventSwiftDataVM = StateObject(wrappedValue: EventSwiftDataViewModel(context: ModelContext(MainDB.shared), useCase: useCase))
     }
     
     var body: some View {
@@ -91,16 +97,14 @@ struct SportDBView: View {
                          endPoint: .bottomTrailing
                      )
                      .ignoresSafeArea()
-                     
-                     // Particle background
-                     //ParticleGlass()
-                         //.ignoresSafeArea()
                  }
-                 
          }
          , destination:
              sportDestination
         )
+        .overlay(alignment: .bottomTrailing) {
+            NetworkView()
+        }
         .overlay(alignment: .bottomLeading, content: {
             SelectSportView(tappedSport: { sport in
                 sportRouter.popToRoot()
@@ -124,6 +128,7 @@ struct SportDBView: View {
             })
             .padding(.horizontal, 5)
         })
+        
         .environmentObject(sportVM)
         .environmentObject(countryListVM)
         .environmentObject(leagueListVM)
@@ -145,7 +150,8 @@ struct SportDBView: View {
         
         .environmentObject(chatVM)
         
-        .environmentObject(eventLocalDataListVM)
+        .environmentObject(eventSwiftDataVM)
+        
         
         .onAppear(perform: onAppear)
     }

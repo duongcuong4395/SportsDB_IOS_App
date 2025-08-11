@@ -34,7 +34,7 @@ class EventSwiftDataViewModel: ObservableObject {
         }
     }
 
-    func toggleLikeEvent(_ event: EventLocalData) async {
+    func toggleLikeEvent(_ event: EventSwiftData) async {
         do {
             event.like = !event.like
             try context.save()
@@ -44,7 +44,7 @@ class EventSwiftDataViewModel: ObservableObject {
         }
     }
     
-    func toggleNotificationEvent(_ event: EventLocalData) {
+    func toggleNotificationEvent(_ event: EventSwiftData) {
         do {
             event.hasNotification = !event.hasNotification
             try context.save()

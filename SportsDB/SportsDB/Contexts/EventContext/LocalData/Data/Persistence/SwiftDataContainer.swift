@@ -8,6 +8,7 @@
 import SwiftData
 import Foundation
 
+/*
 @MainActor
 final class SwiftDataContainer {
     static let shared = SwiftDataContainer()
@@ -41,3 +42,4 @@ final class SwiftDataContainer {
         self.context = container.mainContext
     }
 }
+*/

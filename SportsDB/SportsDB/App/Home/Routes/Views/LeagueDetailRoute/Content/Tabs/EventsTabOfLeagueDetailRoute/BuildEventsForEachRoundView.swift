@@ -39,7 +39,10 @@ struct BuildEventsForEachRoundInControl: View {
     }
 }
 
-struct BuildEventsForEachRoundView: View, SelectTeamDelegate, EventOptionsViewDelegate {
+// , SelectTeamDelegate, EventOptionsViewDelegate
+
+/*
+struct BuildEventsForEachRoundView: View{
     @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     
     @EnvironmentObject var teamListVM: TeamListViewModel
@@ -84,3 +87,4 @@ struct BuildEventsForEachRoundView: View, SelectTeamDelegate, EventOptionsViewDe
         }
     }
 }
+*/

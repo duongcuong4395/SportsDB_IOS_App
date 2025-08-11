@@ -39,8 +39,8 @@ struct Event: Equatable, Identifiable {
 import SwiftData
 
 extension Event{
-    func toEventLocalData() -> EventLocalData {
-        EventLocalData(
+    func toEventSwiftData() -> EventSwiftData {
+        EventSwiftData(
             idEvent: idEvent
             , idAPIfootball: idAPIfootball
             , eventName: eventName

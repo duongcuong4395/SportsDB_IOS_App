@@ -8,7 +8,9 @@
 import SwiftUI
 
 @MainActor
-class EventsInSpecificInSeasonViewModel: ObservableObject {
+class EventsInSpecificInSeasonViewModel: EventsViewModel {
+    
+    //@Published private(set) var eventsStatus: ModelsStatus<[Event]> = .idle
     @Published var eventsStatus: ModelsStatus<[Event]> = .idle
     
     var events: [Event] {
@@ -40,9 +42,11 @@ class EventsInSpecificInSeasonViewModel: ObservableObject {
         self.eventsStatus = .idle
     }
     
-    func updateItem(from oldItem: Event, with newItem: Event) {
+    /*
+    func updateEvent(from oldItem: Event, with newItem: Event) {
         self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
             oldEvent.idEvent == oldItem.idEvent
         }, with: newItem)
     }
+    */
 }

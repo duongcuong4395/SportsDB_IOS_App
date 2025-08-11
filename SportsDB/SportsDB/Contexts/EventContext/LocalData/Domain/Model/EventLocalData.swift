@@ -8,6 +8,8 @@ import SwiftUI
 import CoreData
 import SwiftData
 
+
+/*
 @Model
 final class EventLocalData {
     
@@ -117,3 +119,4 @@ final class EventLocalData {
         self.hasNotification = hasNotification
     }
 }
+*/

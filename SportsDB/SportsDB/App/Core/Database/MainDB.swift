@@ -12,13 +12,30 @@ enum MainDB {
     static let shared: ModelContainer = {
         let schema = Schema([EventSwiftData.self])
         
+        /*
         let url = FileManager.default
             .urls(for: .applicationSupportDirectory, in: .userDomainMask)
             .first!
             .appendingPathComponent("MainDB.sqlite")
+        */
+        
+        //let config = ModelConfiguration("MainDB", isStoredInMemoryOnly: false)
         
         
-        let config = ModelConfiguration("MainDB", isStoredInMemoryOnly: false)
+        // Lấy đường dẫn lưu file
+        let storeURL = FileManager.default
+            .urls(for: .applicationSupportDirectory, in: .userDomainMask)
+            .first!
+            .appendingPathComponent("MainDB.store")
+
+        // Tạo config với URL
+        let configuration = ModelConfiguration(
+            "MainDB",
+             //isStoredInMemoryOnly: false, // = true => khi app hoặc process bị kill/tắ app, toàn bộ dữ liệu biến mất.
+            url: storeURL
+        )
+
+        
         /*
         ModelConfiguration(
             schema: schema,
@@ -30,7 +47,7 @@ enum MainDB {
         */
         
         do {
-            return try ModelContainer(for: schema, configurations: [config])
+            return try ModelContainer(for: schema, configurations: [configuration])
         } catch {
             fatalError("⚠️ Failed to initialize ModelContainer: \(error)")
         }

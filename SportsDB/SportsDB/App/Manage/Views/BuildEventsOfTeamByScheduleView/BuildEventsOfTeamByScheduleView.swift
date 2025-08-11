@@ -33,7 +33,6 @@ struct BuildEventsOfTeamByScheduleView: View, EventOptionsViewDelegate, SelectTe
                     await resetWhenTapTeam()
                     await tapOnTeamForReplace(by: event, for: kindTeam)
                 }
-                
             },
             eventTapped: { event in })
     }

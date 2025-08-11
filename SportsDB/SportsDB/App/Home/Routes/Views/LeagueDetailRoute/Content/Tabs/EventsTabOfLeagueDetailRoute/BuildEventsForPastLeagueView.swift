@@ -7,67 +7,216 @@
 
 import SwiftUI
 
-struct BuildEventsForPastLeagueView: View{
+@MainActor
+protocol EventsViewModel: ObservableObject {
+    var eventsStatus: ModelsStatus<[Event]> { get set }
+    var events: [Event] { get }
+    //func updateEvent(from oldItem: Event, with newItem: Event)
+}
+
+extension EventsViewModel {
+    func updateEvent(from oldItem: Event, with newItem: Event) {
+        self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
+            oldEvent.idEvent == oldItem.idEvent
+        }, with: newItem)
+    }
+    
+}
+
+struct EventsGenericView<ViewModel: EventsViewModel>: View {
+    
+    @EnvironmentObject var trophyListVM: TrophyListViewModel
+    @EnvironmentObject var playerListVM: PlayerListViewModel
+    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
+    @EnvironmentObject var teamListVM: TeamListViewModel
     @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     
-    @EnvironmentObject var teamListVM: TeamListViewModel
-    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
-    @EnvironmentObject var playerListVM: PlayerListViewModel
-    @EnvironmentObject var trophyListVM: TrophyListViewModel
-    @EnvironmentObject var sportRouter: SportRouter
-    @EnvironmentObject var eventListVM: EventListViewModel
     
-    @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
+    @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
+    @EnvironmentObject var sportRouter: SportRouter
+    @ObservedObject var eventsViewModel: ViewModel
     
     @State var numbRetry: Int = 0
-    
-    let onRetry: () -> Void
+    var onRetry: () -> Void
     
     var body: some View {
-        
-        switch eventsRecentOfLeagueVM.eventsStatus {
-        case .idle:
-            EmptyView()
-        case .loading:
-            Text("Progressing...")
-        case .success(data: _):
-            
-            ListEventGenericView(
-                events: eventsRecentOfLeagueVM.events
-                , itemBuilder: ItemBuilderForEventsOfPastLeague()
-                , onEvent: { event in
-                    handle(event)
-                })
-            /*
-            ListEventView(
-                events: eventsRecentOfLeagueVM.events,
-                optionEventView: getEventOptionsView,
-                tapOnTeam: tapOnTeam,
-                eventTapped: { event in
-                    
-                })
-            */
-            
-        case .failure(error: _):
-            Text("Please return in a few minutes.")
-                .font(.caption2.italic())
-                .onAppear{
-                    numbRetry += 1
-                    guard numbRetry <= 3 else { return }
-                    onRetry()
-                }
+        VStack {
+            switch eventsViewModel.eventsStatus {
+            case .success(data: _):
+                ListEventGenericView(
+                    events: eventsViewModel.events
+                    , itemBuilder: ItemBuilderForEventsOfPastLeague()
+                    , onEvent: { event in
+                        handle(event)
+                    })
+            case .loading:
+                ProgressView()
+            case .idle:
+                EmptyView()
+            case .failure(error: _):
+                Text("Please return in a few minutes.")
+                    .font(.caption2.italic())
+                    .onAppear {
+                        numbRetry += 1
+                        guard numbRetry <= 3 else { numbRetry = 0 ; return }
+                        onRetry()
+                    }
+            }
         }
         
+            
     }
     
     func handle(_ event: ItemEvent<Event>) {
         switch event {
         case .toggleLike(for: let event) :
-            print("=== toggle like event:", event.eventName ?? "")
-            var newEvent = event
-            newEvent.like.toggle()
-            eventsRecentOfLeagueVM.updateItem(from: event, with: newEvent)
+            onToggleLikeEvent(event)
+        case .onApear(for: let event):
+            onApearEvent(event)
+        case .tapOnTeam(for: let event, with: let kindTeam):
+            onTapOnTeam(for: event, with: kindTeam)
         default: return
+        }
+    }
+    
+    func onTapOnTeam(for event: Event, with kindTeam: KindTeam) {
+        print("=== event.team", event.eventName ?? "", kindTeam)
+        tapOnTeam(by: event, for: kindTeam)
+        
+        /*
+        Task {
+            await resetWhenTapTeam()
+            await tapOnTeamForReplace(by: event, for: kindTeam)
+        }
+         */
+    }
+    
+    func onApearEvent(_ event: Event) {
+        let isEventExists =  eventSwiftDataVM.isEventExists(idEvent: event.idEvent, eventName: event.eventName)
+        print("=== event is Exist Local data", isEventExists, event.eventName ?? "")
+        guard let eventData = isEventExists.event else { return }
+        
+        var newEvent = event
+        newEvent.like = eventData.like
+        eventsViewModel.updateEvent(from: event, with: newEvent)
+    }
+    
+    func onToggleLikeEvent(_ event: Event) {
+        let isEventExists =  eventSwiftDataVM.isEventExists(idEvent: event.idEvent, eventName: event.eventName)
+        
+        guard let eventData = isEventExists.event else {
+            Task {
+                print("=== add event to local data", event.eventName ?? "", event.like)
+                var newEvent = event
+                newEvent.like = true
+                eventsViewModel.updateEvent(from: event, with: newEvent)
+                await eventSwiftDataVM.addEvent(event: newEvent.toEventSwiftData())
+            }
+            return }
+        eventData.like.toggle()
+        
+        var newEvent = event
+        newEvent.like = eventData.like
+        eventsViewModel.updateEvent(from: event, with: newEvent)
+        
+        Task {
+            try MainDB.shared.mainContext.save()
+        }
+    }
+}
+
+extension EventsGenericView {
+    
+    func tapOnTeamForReplace(by event: Event, for kindTeam: KindTeam) async {
+        
+        withAnimation {
+            
+            print("=== tapOnHomeTeam.event", event.eventName ?? "", event.homeTeam ?? "", event.idHomeTeam ?? "")
+            let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
+            let homeTeam = String(homeVSAwayTeam?[0] ?? "")
+            let awayTeam = String(homeVSAwayTeam?[1] ?? "")
+            let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
+            //let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
+            
+            selectTeam(by: team)
+            return
+        }
+    }
+    
+    @MainActor
+    func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
+        Task {
+            await resetWhenTapTeam()
+        }
+        
+        withAnimation {
+            
+            let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
+            let homeTeam = String(homeVSAwayTeam?[0] ?? "")
+            let awayTeam = String(homeVSAwayTeam?[1] ?? "")
+            let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
+            let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
+            if !sportRouter.isAtTeamDetail(teamID: teamID) {
+                sportRouter.navigateToTeamDetail(by: teamID)
+            }
+            selectTeam(by: team)
+            
+        }
+    }
+    
+    @MainActor
+    func resetWhenTapTeam() async {
+        withAnimation(.easeInOut(duration: 0.5)) {
+            //teamDetailVM.teamSelected = nil
+            trophyListVM.resetTrophies()
+            playerListVM.resetPlayersByLookUpAllForaTeam()
+            teamDetailVM.resetEquipment()
+            //eventListVM.resetEventsOfTeamForNextAndPrevious()
+        }
+        return
+    }
+    
+    @MainActor
+    func selectTeam(by team: String) {
+        Task {
+            await teamListVM.searchTeams(teamName: team)
+            guard teamListVM.teamsBySearch.count > 0 else { return }
+            teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+            guard let team = teamDetailVM.teamSelected else { return }
+            
+            eventsOfTeamByScheduleVM.selectTeam(by: team)
+            
+            
+            await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
+            
+            await teamDetailVM.lookupEquipment(teamID: team.idTeam ?? "")
+            
+            getPlayersAndTrophies(by: team)
+            
+        }
+    }
+    
+    @MainActor
+    func getPlayersAndTrophies(by team: Team) {
+        Task {
+            let(players, trophies) = try await team.fetchPlayersAndTrophies()
+            trophyListVM.setTrophyGroup(by: trophies)
+            getMorePlayer(players: players)
+        }
+    }
+    
+    @MainActor
+    func getMorePlayer(players: [Player]) {
+        let cleanedPlayers = players.filter { otherName in
+            !playerListVM.playersByLookUpAllForaTeam.contains { fullName in
+                let fulName = (fullName.player ?? "").replacingOccurrences(of: "-", with: " ")
+                
+                return fulName.lowercased().contains(otherName.player?.lowercased() ?? "")
+            }
+        }
+        
+        DispatchQueueManager.share.runOnMain {
+            playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
         }
     }
 }

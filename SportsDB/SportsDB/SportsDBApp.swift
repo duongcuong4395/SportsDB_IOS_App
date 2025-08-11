@@ -9,14 +9,15 @@ import SwiftUI
 
 @main
 struct SportsDBApp: App {
-    private let container = SwiftDataContainer.shared
+    //private let container = SwiftDataContainer.shared
     
     var body: some Scene {
         WindowGroup {
             SportDBView()
         }
-        //.modelContainer(MainDB.shared)
-        .modelContainer(container.container)
+        .modelContainer(MainDB.shared)
+        .environmentObject(NetworkManager.shared)
+        //.modelContainer(container.container)
     }
 }
 
