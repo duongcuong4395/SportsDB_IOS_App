@@ -25,7 +25,7 @@ struct SelectSportView : View {
                 , showFullScreenCover: $showFullScreenCover) {
                     HStack(spacing: 5) {
                         sportVM.sportSelected.getIcon()
-                            .font(.title3)
+                            //.font(.title3)
                             .frame(width: 30, height: 30)
                         Text(sportVM.sportSelected.displayName)
                             .font(.caption)
@@ -40,8 +40,6 @@ struct SelectSportView : View {
                             .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
                     }
                     .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    
-                    
                 } content: {
                     VStack {
                         ListSportView(sportSelected: sportVM.sportSelected, animation: animation, touchSport: { sport in

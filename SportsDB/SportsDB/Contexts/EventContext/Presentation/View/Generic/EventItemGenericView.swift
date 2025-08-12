@@ -100,7 +100,7 @@ struct EventItemGenericForSingleView<Builder: ItemBuilder>: View where Builder.T
                 HStack {
                     Text(AppUtility.formatDate(from: event.timestamp, to: "dd/MM") ?? "")
                     Text(event.round ?? "")
-                    Text(AppUtility.formatDate(from: event.timestamp, to: "hh:mm") ?? "")
+                    Text(AppUtility.formatDate(from: event.timestamp, to: "HH:mm") ?? "")
                 }
                 .font(.caption2)
                 .padding(5)
@@ -186,7 +186,7 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                         
                     Text(event.round ?? "")
                         .font(.caption2.bold())
-                    Text(AppUtility.formatDate(from: event.timestamp, to: "hh:mm") ?? "")
+                    Text(AppUtility.formatDate(from: event.timestamp, to: "HH:mm") ?? "")
                         .font(.caption2.bold())
                 }
                 .padding(5)
@@ -298,5 +298,13 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
             .padding(0)
             .padding(.vertical, 5)
         }
+        /*
+        .background {
+            KFImage(URL(string: event.square ?? ""))
+                .resizable()
+                .scaledToFill()
+                .opacity(0.5)
+        }
+        */
     }
 }

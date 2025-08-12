@@ -74,7 +74,6 @@ struct SportDBView: View {
     @Namespace var animation
     
     init() {
-        
         let repo = EventSwiftDataRepository(context: ModelContext(MainDB.shared))
         let useCase = EventSwiftDataUseCase(repository: repo)
         self._eventSwiftDataVM = StateObject(wrappedValue: EventSwiftDataViewModel(context: ModelContext(MainDB.shared), useCase: useCase))
@@ -94,10 +93,14 @@ struct SportDBView: View {
             NetworkView()
         }
         .overlay(alignment: .bottomLeading, content: {
-            SelectSportView(tappedSport: { sport in
-                onTapSport()
-            })
-            .padding(.horizontal, 5)
+            HStack(spacing: 10) {
+                SelectSportView(tappedSport: { sport in
+                    onTapSport()
+                })
+                .padding(.horizontal, 5)
+                
+                NavigationToNotificationView()
+            }
         })
         
         .environmentObject(sportVM)
@@ -116,41 +119,17 @@ struct SportDBView: View {
         .environmentObject(eventsRecentOfLeagueVM)
         .environmentObject(eventsPerRoundInSeasonVM)
         .environmentObject(eventsOfTeamByScheduleVM)
-        
         .environmentObject(sportRouter)
-        
         .environmentObject(chatVM)
-        
         .environmentObject(eventSwiftDataVM)
-        
-        
         .onAppear(perform: onAppear)
-    }
-    
-    private func onAppear() {
-        chatVM.initChat()
         
-    }
-    
-    func onTapSport() {
-        sportRouter.popToRoot()
-        
-        leagueListVM.resetAll()
-        leagueDetailVM.resetAll()
-        
-        teamListVM.resetAll()
-        teamDetailVM.resetAll()
-        
-        seasonListVM.resetAll()
-        
-        eventListVM.resetAll()
-        eventsInSpecificInSeasonVM.resetAll()
-        eventsRecentOfLeagueVM.resetAll()
-        eventsPerRoundInSeasonVM.resetAll()
-        eventsOfTeamByScheduleVM.resetAll()
-        
-        playerListVM.resetAll()
-        trophyListVM.resetAll()
+        .onReceive(NotificationCenter.default.publisher(for: .navigateToEventDetail)) { output in
+            sportRouter.navigateToNotification()
+            if let idEvent = output.userInfo?["idEvent"] as? String {
+                print("🚀 Navigate to event with idEvent:", idEvent)
+            }
+        }
     }
 }
 
@@ -178,9 +157,39 @@ private extension SportDBView {
                 .padding(0)
                 .navigationBarHidden(true)
                 
+            case .Notification:
+                NotificationRouteView()
+                    .navigationBarHidden(true)
             }
         }
         .backgroundGradient()
+    }
+}
+
+private extension SportDBView {
+    private func onAppear() {
+        chatVM.initChat()
+    }
+    
+    func onTapSport() {
+        sportRouter.popToRoot()
+        
+        leagueListVM.resetAll()
+        leagueDetailVM.resetAll()
+        
+        teamListVM.resetAll()
+        teamDetailVM.resetAll()
+        
+        seasonListVM.resetAll()
+        
+        eventListVM.resetAll()
+        eventsInSpecificInSeasonVM.resetAll()
+        eventsRecentOfLeagueVM.resetAll()
+        eventsPerRoundInSeasonVM.resetAll()
+        eventsOfTeamByScheduleVM.resetAll()
+        
+        playerListVM.resetAll()
+        trophyListVM.resetAll()
     }
 }
 
@@ -261,5 +270,34 @@ struct TextFieldSearchView: View {
         //.avoidKeyboard()
         .padding(.vertical, 3)
         .liquidGlassBlur()
+    }
+}
+
+
+struct NavigationToNotificationView: View {
+    @EnvironmentObject var sportRouter: SportRouter
+    
+    var body: some View {
+        HStack(spacing: 5) {
+            Image(systemName: "bell")
+                .font(.title3)
+                .frame(width: 30, height: 30)
+            Text("Notification")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .lineLimit(1)
+            
+        }
+        .padding(5)
+        .background{
+            Color.clear
+                .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
+        }
+        .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .onTapGesture {
+            if !sportRouter.isAtNotification {
+                sportRouter.navigateToNotification()
+            }
+        }
     }
 }

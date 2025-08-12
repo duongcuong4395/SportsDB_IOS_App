@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// ObservableObject
 @MainActor
 class EventsPerRoundInSeasonViewModel: EventsViewModel {
     @Published var eventsStatus: ModelsStatus<[Event]> = .idle
@@ -37,17 +36,4 @@ class EventsPerRoundInSeasonViewModel: EventsViewModel {
         }
     }
     
-    /*
-    func resetAll() {
-        self.eventsStatus = .idle
-    }
-    */
-    
-    /*
-    func updateEvent(from oldItem: Event, with newItem: Event) {
-        self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
-            oldEvent.idEvent == oldItem.idEvent
-        }, with: newItem)
-    }
-     */
 }

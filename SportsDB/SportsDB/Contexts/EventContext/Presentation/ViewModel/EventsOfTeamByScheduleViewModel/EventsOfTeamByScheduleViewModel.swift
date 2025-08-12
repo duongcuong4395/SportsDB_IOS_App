@@ -9,9 +9,6 @@ import SwiftUI
 
 @MainActor
 class EventsOfTeamByScheduleViewModel: ObservableObject {
-    //@Published var eventsForPrevious: ModelsStatus<[Event]> = .idle
-    //@Published var eventsForNext: ModelsStatus<[Event]> = .idle
-    
     @Published var eventsOfTeamByUpcomingVM: EventsOfTeamByUpcomingViewModel
     @Published var eventsOfTeamByResultsVM: EventsOfTeamByResultsViewModel
     
@@ -28,24 +25,11 @@ class EventsOfTeamByScheduleViewModel: ObservableObject {
     func selectTeam(by team: Team) {
         eventsOfTeamByUpcomingVM.getEventsUpcoming(by: team)
         eventsOfTeamByResultsVM.getEventsResults(by: team)
-        
-        /*
-        Task {
-            let resForPrevious = try await self.getEventsOfTeamByScheduleUseCase.execute(of: team.idTeam ?? "", by: .Previous)
-            
-            let resForNext = try await self.getEventsOfTeamByScheduleUseCase.execute(of: team.idTeam ?? "", by: .Next)
-            try await Task.sleep(nanoseconds: 500_000_000)
-            eventsForNext = .success(data: resForNext)
-            eventsForPrevious = .success(data: resForPrevious)
-        }
-         */
     }
     
     func resetAll() {
         eventsOfTeamByUpcomingVM.resetAll()
         eventsOfTeamByResultsVM.resetAll()
-        //eventsForPrevious = .idle
-        //eventsForNext = .idle
     }
 }
 

@@ -48,16 +48,6 @@ class EventSwiftDataViewModel: ObservableObject {
         }
     }
     
-    func toggleNotificationEvent(_ event: EventSwiftData) {
-        do {
-            event.hasNotification = !event.hasNotification
-            try context.save()
-        } catch {
-            
-        }
-    }
-    
-    
     func addEvent(event: EventSwiftData) async {
         do {
             try await useCase.createEvent(event: event)

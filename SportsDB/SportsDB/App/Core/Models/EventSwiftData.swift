@@ -9,6 +9,12 @@ import SwiftUI
 import CoreData
 import SwiftData
 
+enum NotificationStatus: String{
+    case idle = "idle"
+    case creeated = "creeated"
+    case hasRead = "hasRead"
+}
+
 @Model class EventSwiftData  {
     
     var idEvent: String?
@@ -61,10 +67,10 @@ import SwiftData
     var locked: String?
     
     var like: Bool
-    var hasNotification: Bool
+    var notificationStatus: String //= NotificationStatus.idle.rawValue
     init(idEvent: String?, idAPIfootball: String?, eventName: String?, eventAlternate: String?, filename: String?, sportName: String?, idLeague: String?, leagueName: String?, leagueBadge: String?, season: String?, descriptionEN: String?, homeTeam: String?, awayTeam: String?, homeScore: String?, round: String?, awayScore: String?, spectators: String?, official: String?, timestamp: String?, dateEvent: String?, dateEventLocal: String?, time: String?, timeLocal: String?, group: String?, idHomeTeam: String?, homeTeamBadge: String?, idAwayTeam: String?, awayTeamBadge: String?, score: String?, scoreVotes: String?, result: String?, idVenue: String?, venue: String?, country: String?, city: String?, poster: String?, square: String?, fanart: String?, thumb: String?, banner: String?, map: String?, tweet1: String?, tweet2: String?, tweet3: String?, video: String?, status: String?, postponed: String?, locked: String?
          , like: Bool
-         , hasNotification: Bool) {
+         , notificationStatus: String) {
         self.idEvent = idEvent
         self.idAPIfootball = idAPIfootball
         self.eventName = eventName
@@ -114,6 +120,6 @@ import SwiftData
         self.postponed = postponed
         self.locked = locked
         self.like = like
-        self.hasNotification = hasNotification
+        self.notificationStatus = notificationStatus
     }
 }

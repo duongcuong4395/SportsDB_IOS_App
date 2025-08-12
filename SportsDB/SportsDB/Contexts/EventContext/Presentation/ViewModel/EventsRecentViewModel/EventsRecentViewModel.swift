@@ -9,9 +9,6 @@ import SwiftUI
 
 @MainActor
 class EventsRecentOfLeagueViewModel: EventsViewModel {
-    
-    
-    //@Published private(set) var eventsStatus: ModelsStatus<[Event]> = .idle
     @Published var eventsStatus: ModelsStatus<[Event]> = .idle
     
     var events: [Event] {
@@ -41,17 +38,4 @@ class EventsRecentOfLeagueViewModel: EventsViewModel {
             
         }
     }
-    
-    /*
-     
-     func resetAll() {
-         self.eventsStatus = .idle
-     }
-     
-    func updateEvent(from oldItem: Event, with newItem: Event) {
-        self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
-            oldEvent.idEvent == oldItem.idEvent
-        }, with: newItem)
-    }
-     */
 }

@@ -21,16 +21,7 @@ enum CompetitionFormat: String, Codable {
 import Kingfisher
 
 enum SportType: String, Codable, CaseIterable, TabItem {
-    @MainActor
-    func getIcon() -> AnyView {
-        AnyView(KFImage(URL(string: getImageUrl()))
-            .placeholder({ progress in
-                //LoadingIndicator(animation: .circleBars, size: .small, speed: .normal)
-                ProgressView()
-            })
-            .resizable()
-            .scaledToFill())
-    }
+    
     
     
     case Motorsport = "Motorsport"
@@ -73,6 +64,17 @@ enum SportType: String, Codable, CaseIterable, TabItem {
 
 
 extension SportType{
+    @MainActor
+    func getIcon() -> AnyView {
+        AnyView(KFImage(URL(string: getImageUrl()))
+            .placeholder({ progress in
+                //LoadingIndicator(animation: .circleBars, size: .small, speed: .normal)
+                ProgressView()
+            })
+            .resizable()
+            .scaledToFill())
+    }
+    
     func getImageUrl(with selected: Bool = false) -> String {
         let baseURL = "https://www.thesportsdb.com/images/icons/sports/"
         var imageName = ""

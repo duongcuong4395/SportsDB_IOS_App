@@ -62,7 +62,7 @@ extension ItemBuilder {
 
 
 // MARK: Old version
-
+/*
 protocol EventOptionsViewDelegate {}
 extension EventOptionsViewDelegate {
     @ViewBuilder
@@ -88,7 +88,7 @@ extension EventOptionsViewDelegate {
         }
     }
 }
-
+*/
 
 protocol SelectTeamDelegate {
     var teamListVM: TeamListViewModel { get }
