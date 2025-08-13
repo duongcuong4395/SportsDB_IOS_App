@@ -43,8 +43,11 @@ class AIManageViewModel: ObservableObject {
     
     func getKey() async -> AISwiftData? {
         return await performOperation {
-            self.aiSwiftData = await useCase.getData(by: AIUtility.key)
-            return self.aiSwiftData
+            let res = await useCase.getData(by: AIUtility.key)
+            DispatchQueue.main.sync {
+                self.aiSwiftData = res
+            }
+            return res
         } ?? nil
     }
     
@@ -102,12 +105,16 @@ class AIManageViewModel: ObservableObject {
     // MARK: - Private Methods
     
     private func performOperation<T>(_ operation: () async throws -> T) async -> T? {
-        isLoading = true
-        error = nil
+        DispatchQueue.main.sync {
+            isLoading = true
+            error = nil
+        }
         
         do {
             let result = try await operation()
-            isLoading = false
+            DispatchQueue.main.sync {
+                isLoading = false
+            } 
             return result
         } catch {
             self.error = error

@@ -143,6 +143,7 @@ struct NetworkNotConnectView: View {
         VStack(spacing: 12) {
             
             Spacer()
+            Text("Not connect Internet")
             HStack {
                 Spacer()
                 Text("Connection: \(network.connectionType.rawValue)")

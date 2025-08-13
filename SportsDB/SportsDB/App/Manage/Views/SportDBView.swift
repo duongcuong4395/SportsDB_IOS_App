@@ -114,17 +114,17 @@ struct SportDBView: View {
         })
         .overlay(content: {
             if !NetworkManager.shared.isConnected {
-                
+                NetworkNotConnectView()
+                    .ignoresSafeArea()
+                    .background{
+                        Color.clear
+                            .liquidGlass(intensity: 0.8)
+                            .ignoresSafeArea()
+                            
+                    }
             }
             
-            NetworkNotConnectView()
-                .ignoresSafeArea()
-                .background{
-                    Color.clear
-                        .liquidGlass(intensity: 0.8)
-                        .ignoresSafeArea()
-                        
-                }
+            
         })
         .overlay(content: {
             DialogView()
