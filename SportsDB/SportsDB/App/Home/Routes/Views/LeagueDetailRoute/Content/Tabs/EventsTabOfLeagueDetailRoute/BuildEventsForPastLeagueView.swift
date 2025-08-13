@@ -38,6 +38,9 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
     @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
     @EnvironmentObject var sportRouter: SportRouter
     
+    @EnvironmentObject var aiManageVM: AIManageViewModel
+    @EnvironmentObject var appVM: AppViewModel
+    
     // MARK: - Properties
     @ObservedObject var eventsViewModel: ViewModel
     @State var numbRetry: Int = 0
@@ -98,6 +101,13 @@ extension EventsGenericView {
             onTapOnTeam(for: event, with: kindTeam)
         case .toggleNotify(for: let event):
             toggleNotification(event)
+        case .viewDetail(for: let event):
+            print("=== event detail")
+            if aiManageVM.aiSwiftData == nil {
+                appVM.showDialogView(with: "AI Key", and: AnyView(GeminiAddKeyView()))
+            } else {
+                print("=== analisys:", event.eventName ?? "")
+            }
         default: return
         }
     }

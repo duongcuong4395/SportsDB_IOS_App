@@ -11,43 +11,45 @@ import SwiftData
 
 // MARK: - Simplified ContentView
 struct SportDBView: View {
+    @StateObject var appVM = AppViewModel()
+    
     // MARK: - Router
-        @StateObject private var sportRouter = SportRouter()
+    @StateObject private var sportRouter = SportRouter()
 
-        // MARK: - ViewModels
-        @StateObject private var sportVM = SportViewModel()
-        @StateObject private var countryListVM = CountryListViewModel(
-            useCase: GetAllCountriesUseCase(repository: CountryAPIService())
-        )
-        @StateObject private var leagueListVM = LeagueListViewModel(
-            getLeaguesUseCase: GetLeaguesUseCase(repository: LeagueAPIService()),
-            lookupLeagueUseCase: LookupLeagueUseCase(repository: LeagueAPIService()),
-            lookupLeagueTableUseCase: LookupLeagueTableUseCase(repository: LeagueAPIService())
-        )
-        @StateObject private var leagueDetailVM = LeagueDetailViewModel()
-        @StateObject private var seasonListVM = SeasonListViewModel(
-            getListSeasonsUseCase: GetListSeasonsUseCase(repository: SeasonAPIService())
-        )
-        @StateObject private var teamListVM = TeamListViewModel(
-            getListTeamsUseCase: GetListTeamsUseCase(repository: TeamAPIService()),
-            searchTeamsUseCase: SearchTeamsUseCase(repository: TeamAPIService())
-        )
-        @StateObject private var teamDetailVM = TeamDetailViewModel(
-            lookupEquipmentUseCase: LookupEquipmentUseCase(repository: TeamAPIService())
-        )
-        @StateObject private var eventListVM = EventListViewModel(
-            searchEventsUseCase: SearchEventsUseCase(repository: EventAPIService()),
-            lookupEventUseCase: LookupEventUseCase(repository: EventAPIService())
-            //lookupListEventsUseCase: LookupListEventsUseCase(repository: EventAPIService()),
-            //lookupEventsInSpecificUseCase: LookupEventsInSpecificUseCase(repository: EventAPIService()),
-            //lookupEventsPastLeagueUseCase: LookupEventsPastLeagueUseCase(repository: EventAPIService()),
-            //getEventsOfTeamByScheduleUseCase: GetEventsOfTeamByScheduleUseCase(repository: EventAPIService())
-        )
+    // MARK: - ViewModels
+    @StateObject private var sportVM = SportViewModel()
+    @StateObject private var countryListVM = CountryListViewModel(
+        useCase: GetAllCountriesUseCase(repository: CountryAPIService())
+    )
+    @StateObject private var leagueListVM = LeagueListViewModel(
+        getLeaguesUseCase: GetLeaguesUseCase(repository: LeagueAPIService()),
+        lookupLeagueUseCase: LookupLeagueUseCase(repository: LeagueAPIService()),
+        lookupLeagueTableUseCase: LookupLeagueTableUseCase(repository: LeagueAPIService())
+    )
+    @StateObject private var leagueDetailVM = LeagueDetailViewModel()
+    @StateObject private var seasonListVM = SeasonListViewModel(
+        getListSeasonsUseCase: GetListSeasonsUseCase(repository: SeasonAPIService())
+    )
+    @StateObject private var teamListVM = TeamListViewModel(
+        getListTeamsUseCase: GetListTeamsUseCase(repository: TeamAPIService()),
+        searchTeamsUseCase: SearchTeamsUseCase(repository: TeamAPIService())
+    )
+    @StateObject private var teamDetailVM = TeamDetailViewModel(
+        lookupEquipmentUseCase: LookupEquipmentUseCase(repository: TeamAPIService())
+    )
+    @StateObject private var eventListVM = EventListViewModel(
+        searchEventsUseCase: SearchEventsUseCase(repository: EventAPIService()),
+        lookupEventUseCase: LookupEventUseCase(repository: EventAPIService())
+        //lookupListEventsUseCase: LookupListEventsUseCase(repository: EventAPIService()),
+        //lookupEventsInSpecificUseCase: LookupEventsInSpecificUseCase(repository: EventAPIService()),
+        //lookupEventsPastLeagueUseCase: LookupEventsPastLeagueUseCase(repository: EventAPIService()),
+        //getEventsOfTeamByScheduleUseCase: GetEventsOfTeamByScheduleUseCase(repository: EventAPIService())
+    )
     
     
     // MARK: Event Swift Data
     @StateObject var eventSwiftDataVM: EventSwiftDataViewModel
-    
+    @StateObject var aiManageVM: AIManageViewModel
     
     // MARK: List Events
     @StateObject private var eventsInSpecificInSeasonVM = EventsInSpecificInSeasonViewModel(
@@ -76,7 +78,15 @@ struct SportDBView: View {
     init() {
         let repo = EventSwiftDataRepository(context: ModelContext(MainDB.shared))
         let useCase = EventSwiftDataUseCase(repository: repo)
-        self._eventSwiftDataVM = StateObject(wrappedValue: EventSwiftDataViewModel(context: ModelContext(MainDB.shared), useCase: useCase))
+        self._eventSwiftDataVM = StateObject(wrappedValue: EventSwiftDataViewModel(
+            context: ModelContext(MainDB.shared)
+            , useCase: useCase))
+        
+        let repoAI = AISwiftDataRepository(context: ModelContext(MainDB.shared))
+        let useCaseAI = AIManageUseCase(repository: repoAI)
+        self._aiManageVM = StateObject(wrappedValue: AIManageViewModel(
+            context: ModelContext(MainDB.shared)
+            , useCase: useCaseAI))
     }
     
     var body: some View {
@@ -89,9 +99,6 @@ struct SportDBView: View {
          , destination:
              sportDestination
         )
-        .overlay(alignment: .bottomTrailing) {
-            NetworkView()
-        }
         .overlay(alignment: .bottomLeading, content: {
             HStack(spacing: 10) {
                 SelectSportView(tappedSport: { sport in
@@ -105,8 +112,27 @@ struct SportDBView: View {
                 NavigationToLikedView()
             }
         })
-        
+        .overlay(content: {
+            if !NetworkManager.shared.isConnected {
+                
+            }
+            
+            NetworkNotConnectView()
+                .ignoresSafeArea()
+                .background{
+                    Color.clear
+                        .liquidGlass(intensity: 0.8)
+                        .ignoresSafeArea()
+                        
+                }
+        })
+        .overlay(content: {
+            DialogView()
+                .environmentObject(aiManageVM)
+        })
+        .environmentObject(appVM)
         .environmentObject(sportVM)
+        
         .environmentObject(countryListVM)
         
         .environmentObject(leagueListVM)
@@ -128,7 +154,10 @@ struct SportDBView: View {
         
         .environmentObject(sportRouter)
         .environmentObject(chatVM)
+        
         .environmentObject(eventSwiftDataVM)
+        .environmentObject(aiManageVM)
+        
         .onAppear(perform: onAppear)
         
         .onReceive(NotificationCenter.default.publisher(for: .navigateToEventDetail)) { output in
@@ -220,6 +249,106 @@ extension View {
                 endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
+        }
+    }
+}
+
+
+struct DialogView: View {
+    @EnvironmentObject var appVM: AppViewModel
+    var body: some View {
+        if appVM.showDialog {
+            ZStack {
+                
+                CustomDialogView(title: appVM.titleDialog, buttonTitle: appVM.titleButonAction, action: {
+                    withAnimation{
+                        appVM.showDialog = false
+                    }
+                }, content: appVM.bodyDialog)
+                .overlay {
+                    Color(.black)
+                        .opacity(0.1)
+                        .ignoresSafeArea(.all)
+                        .onTapGesture {
+                            withAnimation {
+                                appVM.showDialog.toggle()
+                            }
+                            
+                        }
+                }
+            }
+            .zIndex(9)
+        }
+    }
+}
+
+struct CustomDialogView: View {
+    
+    //@Binding var isActive: Bool
+    @EnvironmentObject var appVM : AppViewModel
+    
+    let title: String
+    let buttonTitle: String
+    let action: () -> ()
+    var content: AnyView
+    
+    @State private var offset: CGFloat = 1000
+    
+    var body: some View {
+        ZStack {
+            
+            VStack {
+                //Spacer()
+                VStack {
+                    Text(title)
+                        .font(.system(size: 18))
+                        .bold()
+                    Divider()
+                    content
+                }
+                .fixedSize(horizontal: false, vertical: true)
+                .padding()
+                
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .background(.ultraThinMaterial,
+                    in: RoundedRectangle(cornerRadius: 10, style: .continuous)
+                )
+                .overlay {
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                action()
+                            }, label: {
+                                Image(systemName: "xmark")
+                                    .font(.title3)
+                                    .fontWeight(.medium)
+                            })
+                            .tint(.black)
+                        }
+                        
+                        
+                        Spacer()
+                    }
+                    .padding()
+                    
+                }
+                .shadow(radius: 20)
+                .padding(30)
+                .padding(.bottom, 50)
+                .offset(x: 0, y: offset)
+                .onAppear{
+                    withAnimation(.spring()) {
+                        offset = 0
+                    }
+                }
+            }
+        }
+    }
+    
+    func close() {
+        withAnimation(.spring()) {
+            self.offset = 1000
         }
     }
 }

@@ -133,3 +133,34 @@ struct NetworkView: View {
         .padding()
     }
 }
+
+
+
+struct NetworkNotConnectView: View {
+    @EnvironmentObject var network: NetworkManager
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            
+            Spacer()
+            HStack {
+                Spacer()
+                Text("Connection: \(network.connectionType.rawValue)")
+                    .foregroundColor(network.isConnected ? .green : .red)
+                Spacer()
+            }
+            
+            Spacer()
+              
+            /*
+            + Text("(\(network.quality.rawValue))")
+                .foregroundColor(network.quality == .strong ? .green :
+                                 network.quality == .medium ? .orange :
+                                 network.quality == .weak ? .red : .gray)
+            */
+            
+        }
+        
+        
+    }
+}

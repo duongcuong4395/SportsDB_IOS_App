@@ -10,7 +10,7 @@ import Foundation
 
 enum MainDB {
     static let shared: ModelContainer = {
-        let schema = Schema([EventSwiftData.self])
+        let schema = Schema([EventSwiftData.self, AISwiftData.self])
         
         /*
         let url = FileManager.default
