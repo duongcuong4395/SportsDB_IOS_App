@@ -83,7 +83,7 @@ struct SportDBView: View {
         GenericNavigationStack(
          router: sportRouter
          , rootContent: {
-             ListCountryRouteView(animation: animation)
+             ListCountryRouteView()
                  .backgroundGradient()
          }
          , destination:
@@ -148,9 +148,9 @@ private extension SportDBView {
         VStack {
             switch route {
             case .ListCountry:
-                ListCountryRouteView(animation: animation)
+                ListCountryRouteView()
             case .ListLeague(by: let country, and: let sport):
-                ListLeagueRouteView(country: country, sport: sport, animation: animation)
+                ListLeagueRouteView(country: country, sport: sport)
                     .navigationBarHidden(true)
             case .LeagueDetail(by: _):
                 LeagueDetailRouteView()

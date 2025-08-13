@@ -16,7 +16,7 @@ struct ListCountryRouteView: View {
     @EnvironmentObject var countryListVM: CountryListViewModel
     
     var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]
-    var animation: Namespace.ID
+    //var animation: Namespace.ID
     
     @State var countryFilter : [Country] = []
     
@@ -42,7 +42,7 @@ struct ListCountryRouteView: View {
             }
             ScrollView(showsIndicators: false) {
                 LazyVGrid(columns: columns) {
-                    CountriesView(countries: countryFilter, tappedCountry: tapped, animation: animation)
+                    CountriesView(countries: countryFilter, tappedCountry: tapped)
                 }
             }
         }

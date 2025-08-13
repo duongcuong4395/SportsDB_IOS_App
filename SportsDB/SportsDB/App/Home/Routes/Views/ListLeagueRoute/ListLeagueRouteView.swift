@@ -21,8 +21,8 @@ struct ListLeagueRouteView: View {
     let country: String
     let sport: String
     
-    @State var isSticky: Bool = false
-    var animation: Namespace.ID
+    //@State var isSticky: Bool = false
+    //var animation: Namespace.ID
     
     var body: some View {
         VStack {

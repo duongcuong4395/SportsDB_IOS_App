@@ -12,7 +12,7 @@ struct CountriesView: View {
     var countries: [Country]
     
     var tappedCountry: (Country) -> Void
-    var animation: Namespace.ID
+    
     
     var body: some View {
         ForEach(countries, id: \.name) { country in
@@ -20,7 +20,6 @@ struct CountriesView: View {
                 .padding(0)
                 //.rotateOnAppear(angle: -60, duration: 0.5, axis: .y)
                 .modifier(RotateOnAppearModifier_New(angle: -60, duration: 1, direction: .leftToRight))
-                .matchedGeometryEffect(id: "country_\(country.name)", in: animation)
                 .onTapGesture {
                     tappedCountry(country)
                 }
