@@ -12,11 +12,17 @@ protocol EventSwiftDataUseCaseProtocol {
     func getAllEvents() async throws -> [EventSwiftData]
     func createEvent(event: EventSwiftData) async throws
     func removeEvent(_ event: EventSwiftData) async throws
-    func isEventExists(idEvent: String?, eventName: String?) -> (isExists: Bool, event: EventSwiftData?)
+    func getEvent(by idEvent: String?, or eventName: String?) async -> EventSwiftData?
     func filter(by searchText: String, with sortOption: SortOption) async throws -> [EventSwiftData]
+    
+    func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData
 }
 
 final class EventSwiftDataUseCase: EventSwiftDataUseCaseProtocol {
+    func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData {
+        try await repository.toggleLike(event)
+    }
+    
     
     
     private let repository: EventSwiftDataRepositoryProtocol
@@ -41,8 +47,9 @@ final class EventSwiftDataUseCase: EventSwiftDataUseCaseProtocol {
         try await repository.deleteEvent(event)
     }
     
-    func isEventExists(idEvent: String?, eventName: String?) -> (isExists: Bool, event: EventSwiftData?) {
-        repository.isEventExists(idEvent: idEvent, eventName: eventName)
+    func getEvent(by idEvent: String?, or eventName: String?) async -> EventSwiftData? {
+        return await repository.getEvent(by: idEvent, or: eventName)
+        
     }
     
     

@@ -98,27 +98,34 @@ struct SportDBView: View {
                     onTapSport()
                 })
                 .padding(.horizontal, 5)
+                .padding(.top, 5)
                 
                 NavigationToNotificationView()
+                
+                NavigationToLikedView()
             }
         })
         
         .environmentObject(sportVM)
         .environmentObject(countryListVM)
+        
         .environmentObject(leagueListVM)
         .environmentObject(leagueDetailVM)
+        
         .environmentObject(seasonListVM)
+        
         .environmentObject(teamListVM)
         .environmentObject(teamDetailVM)
         
         .environmentObject(playerListVM)
         .environmentObject(trophyListVM)
-        .environmentObject(eventListVM)
         
+        .environmentObject(eventListVM)
         .environmentObject(eventsInSpecificInSeasonVM)
         .environmentObject(eventsRecentOfLeagueVM)
         .environmentObject(eventsPerRoundInSeasonVM)
         .environmentObject(eventsOfTeamByScheduleVM)
+        
         .environmentObject(sportRouter)
         .environmentObject(chatVM)
         .environmentObject(eventSwiftDataVM)
@@ -160,6 +167,9 @@ private extension SportDBView {
             case .Notification:
                 NotificationRouteView()
                     .navigationBarHidden(true)
+            case .Like:
+                LikeRouteView()
+                    .navigationBarHidden(true)
             }
         }
         .backgroundGradient()
@@ -169,6 +179,9 @@ private extension SportDBView {
 private extension SportDBView {
     private func onAppear() {
         chatVM.initChat()
+        Task {
+            await eventSwiftDataVM.loadEvents()
+        }
     }
     
     func onTapSport() {
@@ -275,17 +288,18 @@ struct TextFieldSearchView: View {
 
 
 struct NavigationToNotificationView: View {
+    @EnvironmentObject var notificationListVM: NotificationListViewModel
     @EnvironmentObject var sportRouter: SportRouter
     
     var body: some View {
         HStack(spacing: 5) {
-            Image(systemName: "bell")
+            Image(systemName: notificationListVM.notifications.count > 0 ? "bell.fill" : "bell")
                 .font(.title3)
-                .frame(width: 30, height: 30)
+                .frame(width: 25, height: 25)
             Text("Notification")
                 .font(.caption)
                 .fontWeight(.semibold)
-                .lineLimit(1)
+                //.lineLimit(1)
             
         }
         .padding(5)
@@ -299,5 +313,50 @@ struct NavigationToNotificationView: View {
                 sportRouter.navigateToNotification()
             }
         }
+        .padding(.top, 5)
+        .overlay(alignment: .topTrailing) {
+            Color.clear
+                .customBadge(notificationListVM.notifications.count)
+        }
+    }
+}
+
+
+struct NavigationToLikedView: View {
+    @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
+    @EnvironmentObject var sportRouter: SportRouter
+    
+    var body: some View {
+        VStack {
+            HStack(spacing: 5) {
+                Image(systemName: getNumberEventsLiked() > 0 ? "heart.fill" : "heart")
+                    .font(.title3)
+                    .frame(width: 25, height: 25)
+                    
+                Text("Favotire")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+            }
+            .padding(5)
+            .background{
+                Color.clear
+                    .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
+            }
+            .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .onTapGesture {
+                if !sportRouter.isAtLike {
+                    sportRouter.navigateToLike()
+                }
+            }
+        }
+        .padding(.top, 5)
+        .overlay(alignment: .topTrailing) {
+            Color.clear
+                .customBadge(getNumberEventsLiked())
+        }
+    }
+    
+    func getNumberEventsLiked() -> Int {
+        return eventSwiftDataVM.getEventsLiked().count
     }
 }

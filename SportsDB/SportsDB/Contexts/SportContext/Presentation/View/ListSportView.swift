@@ -26,7 +26,7 @@ struct SelectSportView : View {
                     HStack(spacing: 5) {
                         sportVM.sportSelected.getIcon()
                             //.font(.title3)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 25, height: 25)
                         Text(sportVM.sportSelected.displayName)
                             .font(.caption)
                             .fontWeight(.semibold)
@@ -40,6 +40,7 @@ struct SelectSportView : View {
                             .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
                     }
                     .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    
                 } content: {
                     VStack {
                         ListSportView(sportSelected: sportVM.sportSelected, animation: animation, touchSport: { sport in

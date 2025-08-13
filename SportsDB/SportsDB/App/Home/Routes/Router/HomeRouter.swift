@@ -13,6 +13,7 @@ enum SportRoute: Hashable {
     case LeagueDetail(by: String)
     case TeamDetail
     case Notification
+    case Like
 }
 
 // MARK: - Specific Routers
@@ -37,7 +38,18 @@ class SportRouter: BaseRouter<SportRoute> {
         push(.Notification)
     }
     
+    func navigateToLike() {
+        push(.Like)
+    }
+    
+    
+    
     // Convenience methods để check current route
+    
+    var isAtLike: Bool {
+        return isCurrentRoute(.Like)
+    }
+    
     var isAtNotification: Bool {
         return isCurrentRoute(.Notification)
     }

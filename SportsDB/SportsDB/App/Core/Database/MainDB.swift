@@ -40,6 +40,7 @@ enum MainDB {
         }
         */
         
+        
         // Tạo config với URL
         let configuration = ModelConfiguration(
             "MainDB",

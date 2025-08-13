@@ -19,15 +19,15 @@ struct NotificationRouteView: View {
             // MARK: Header
             HStack(spacing: 10) {
                 Button(action: {
-                    //leagueListVM.resetAll()
                     sportRouter.pop()
                 }, label: {
                     Image(systemName: "chevron.left")
                         .font(.title2)
                 })
                 HStack(spacing: 5) {
-                    Image(systemName: "bell")
+                    Image(systemName: notificationListVM.notifications.count > 0 ? "bell.fill" : "bell")
                         .font(.title3)
+                        
                     Text("Notification")
                         .font(.title3.bold())
                 }
@@ -58,8 +58,13 @@ struct NotificationRouteView: View {
                                     .font(.caption2)
                             }
                             .onTapGesture {
-                                let event = eventSwiftDataVM.isEventExists(idEvent: noti.userInfo["idEvent"] ?? "", eventName: noti.userInfo["eventName"] ?? "")
-                                print("=== event.noti.data", event.event?.eventName, event.event?.notificationStatus)
+                                /*
+                                Task {
+                                    let event = await eventSwiftDataVM.getEvent(by: noti.userInfo["idEvent"] ?? "", or: noti.userInfo["eventName"] ?? "")
+                                    print("=== event.noti.data", event?.eventName, event.notificationStatus)
+                                }
+                                */
+                                
                             }
                             Spacer()
                             
@@ -71,6 +76,9 @@ struct NotificationRouteView: View {
                                     
                                     Task {
                                         await notificationListVM.removeNotification(id: noti.id)
+                                        await notificationListVM.loadNotifications()
+                                        
+                                        
                                     }
                                     
                                 }
