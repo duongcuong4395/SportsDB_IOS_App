@@ -24,7 +24,6 @@ extension EventsViewModel {
     func resetAll() {
         self.eventsStatus = .idle
     }
-    
 }
 
 struct EventsGenericView<ViewModel: EventsViewModel>: View {
@@ -58,8 +57,10 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
             }
         }
     }
-    
-    // MARK: - View Components
+}
+
+// MARK: - View Components
+extension EventsGenericView {
     private var eventsList: some View {
         ListEventGenericView(
             events: eventsViewModel.events
@@ -91,22 +92,15 @@ extension EventsGenericView {
         switch event {
         case .toggleLike(for: let event) :
             onToggleLikeEvent(event)
-            //Task { await handleToggleLike(event) }
         case .onApear(for: let event):
             onApearEvent(event)
-            //Task { await handleEventAppear(event) }
         case .tapOnTeam(for: let event, with: let kindTeam):
             onTapOnTeam(for: event, with: kindTeam)
         case .toggleNotify(for: let event):
             toggleNotification(event)
-            //Task { await handleToggleNotification(event) }
         default: return
         }
     }
-    
-    
-    
-    
     
      func onToggleLikeEvent(_ event: Event) {
          toggleLikeEvent(event)
@@ -146,135 +140,8 @@ extension EventsGenericView {
     func toggleNotification(_ event: Event) {
         Task {
             let newEvent = await notificationListVM.toggleNotification(event)
-            
             _ = try await eventSwiftDataVM.setNotification(newEvent, by: newEvent.notificationStatus)
             eventsViewModel.updateEvent(from: event, with: newEvent)
-        }
-        
-        /*
-        Task {
-            let notification = await notificationListVM.getNotification(for: event.idEvent ?? "")
-            guard let notification = notification else {
-                guard let noti = event.asNotificationItem else { return }
-                _ = await notificationListVM.addNotification(noti)
-                
-                var newEvent = event
-                newEvent.notificationStatus = .creeated
-                _ = try await eventSwiftDataVM.setNotification(newEvent, by: .creeated)
-                eventsViewModel.updateEvent(from: event, with: newEvent)
-                
-                return
-            }
-            
-            await notificationListVM.removeNotification(id: notification.id)
-            var newEvent = event
-            newEvent.notificationStatus = .idle
-            
-            _ = try await eventSwiftDataVM.setNotification(newEvent, by: .idle)
-            eventsViewModel.updateEvent(from: event, with: newEvent)
-        }
-        */
-    }
-    
-}
-
-// MARK: handleToggleNotification
-extension EventsGenericView {
-    private func handleToggleNotification(_ event: Event) async {
-        let existingEvent = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName)
-        let notification = await notificationListVM.getNotification(for: event.idEvent ?? "")
-        
-        if notification == nil {
-            await addNotification(for: event, existingEvent: existingEvent)
-        } else {
-            await removeNotification(for: event, existingEvent: existingEvent)
-        }
-    }
-    
-    private func addNotification(for event: Event, existingEvent: EventSwiftData?) async {
-        guard let notificationItem = event.asNotificationItem else { return }
-        
-        _ = await notificationListVM.addNotification(notificationItem)
-        
-        var updatedEvent = event
-        updatedEvent.notificationStatus = .creeated
-        eventsViewModel.updateEvent(from: event, with: updatedEvent)
-        
-        await updateOrCreateEventData(updatedEvent, existingEvent: existingEvent, status: .creeated)
-    }
-    
-    private func removeNotification(for event: Event, existingEvent: EventSwiftData?) async {
-        await notificationListVM.removeNotification(id: event.idEvent ?? "")
-        
-        var updatedEvent = event
-        updatedEvent.notificationStatus = .idle
-        eventsViewModel.updateEvent(from: event, with: updatedEvent)
-        
-        await updateOrCreateEventData(updatedEvent, existingEvent: existingEvent, status: .idle)
-    }
-    
-    private func updateOrCreateEventData(_ event: Event, existingEvent: EventSwiftData?, status: NotificationStatus) async {
-        if let existingEvent = existingEvent {
-            existingEvent.notificationStatus = status.rawValue
-            do {
-                try MainDB.shared.mainContext.save()
-            } catch {
-                print("❌ Failed to save notification status: \(error)")
-            }
-        } else {
-            let success = await eventSwiftDataVM.addEvent(event: event.toEventSwiftData(with: status))
-            if !success {
-                print("❌ Failed to create new event data")
-            }
-        }
-    }
-}
-
-// MARK: handleEventAppear
-extension EventsGenericView {
-    private func handleEventAppear(_ event: Event) async {
-        await withTaskGroup(of: Void.self) { group in
-            group.addTask { await self.updateNotificationStatus(for: event) }
-            group.addTask { await self.updateLikeStatus(for: event) }
-        }
-    }
-    
-    private func updateLikeStatus(for event: Event) async {
-        guard let eventData = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName) else {
-            return
-        }
-        
-        var updatedEvent = event
-        updatedEvent.like = eventData.like
-        eventsViewModel.updateEvent(from: event, with: updatedEvent)
-    }
-    
-    private func updateNotificationStatus(for event: Event) async {
-        let hasNotification = notificationListVM.hasNotification(for: event.idEvent ?? "")
-        var updatedEvent = event
-        updatedEvent.notificationStatus = hasNotification ? .creeated : .idle
-        eventsViewModel.updateEvent(from: event, with: updatedEvent)
-    }
-}
-
-// MARK: handleToggleLike
-extension EventsGenericView {
-    private func handleToggleLike(_ event: Event) async {
-        let existingEvent = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName)
-            
-        if let existingEvent = existingEvent {
-            Task {
-                let eventDataUpdate = try await eventSwiftDataVM.toggleLike(existingEvent)
-                var updatedEvent = event
-                updatedEvent.like = eventDataUpdate.like
-                eventsViewModel.updateEvent(from: event, with: updatedEvent)
-            }
-            
-        } else {
-            var newEvent = event
-            newEvent.like = true
-            eventsViewModel.updateEvent(from: event, with: newEvent)
-            let _ = await eventSwiftDataVM.addEvent(event: newEvent.toEventSwiftData(with: .idle))
         }
     }
 }
@@ -288,7 +155,6 @@ extension EventsGenericView {
         }
         
         withAnimation {
-            
             let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
             let homeTeam = String(homeVSAwayTeam?[0] ?? "")
             let awayTeam = String(homeVSAwayTeam?[1] ?? "")
