@@ -155,8 +155,6 @@ final class EventSwiftDataRepository: EventSwiftDataRepositoryProtocol {
     
     func filter(by searchText: String, with sortOption: SortOption) async throws -> [EventSwiftData] {
         do {
-            
-            
             var descriptor = SortDescriptor(\EventSwiftData.eventName, order: .reverse)
             if sortOption == .oldest {
                 descriptor = SortDescriptor(\EventSwiftData.eventName, order: .forward)

@@ -114,28 +114,10 @@ extension EventsGenericView {
      
     func toggleLikeEvent(_ event: Event) {
         Task {
-            let isEventExists = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName)
-            
-            guard let eventData = isEventExists else {
-                Task {
-                    var newEvent = event
-                    newEvent.like = true
-                    eventsViewModel.updateEvent(from: event, with: newEvent)
-                    let _ = await eventSwiftDataVM.addEvent(event: newEvent.toEventSwiftData(with: .idle))
-                }
-                return }
-            
-            let eventDataUpdate = try await eventSwiftDataVM.toggleLike(eventData)
-            
-            var newEvent = event
-            newEvent.like = eventDataUpdate.like
+            let newEvent = try await eventSwiftDataVM.setLike(event)
             eventsViewModel.updateEvent(from: event, with: newEvent)
-            
-            
         }
-        
     }
-    
     
     func onApearEvent(_ event: Event) {
         hasNotification(event) { event in
@@ -146,16 +128,11 @@ extension EventsGenericView {
     func hasLike(_ event: Event) {
         Task {
             let isEventExists = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName)
-            guard let eventData = isEventExists else {
-                
-                return }
-            
-            print("=== event data:", event.eventName, eventData.like)
+            guard let eventData = isEventExists else { return }
             var newEvent = event
             newEvent.like = eventData.like
             eventsViewModel.updateEvent(from: event, with: newEvent)
         }
-        
     }
     
     func hasNotification(_ event: Event, completion: @escaping (Event) -> Void) {
@@ -168,51 +145,35 @@ extension EventsGenericView {
     
     func toggleNotification(_ event: Event) {
         Task {
-            let isEventSwiftDataExists = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName)
+            let newEvent = await notificationListVM.toggleNotification(event)
             
+            _ = try await eventSwiftDataVM.setNotification(newEvent, by: newEvent.notificationStatus)
+            eventsViewModel.updateEvent(from: event, with: newEvent)
+        }
+        
+        /*
+        Task {
             let notification = await notificationListVM.getNotification(for: event.idEvent ?? "")
             guard let notification = notification else {
                 guard let noti = event.asNotificationItem else { return }
-                let _ = await notificationListVM.addNotification(noti)
-                print("=== noti.add",  event.eventName ?? "")
+                _ = await notificationListVM.addNotification(noti)
+                
                 var newEvent = event
                 newEvent.notificationStatus = .creeated
-                try await eventSwiftDataVM.setNotification(newEvent, by: .creeated)
+                _ = try await eventSwiftDataVM.setNotification(newEvent, by: .creeated)
                 eventsViewModel.updateEvent(from: event, with: newEvent)
                 
-                
-                /*
-                // FOR SwiftData
-                guard let eventSwiftData = isEventSwiftDataExists else {
-                    Task {
-                        await eventSwiftDataVM.addEvent(event: newEvent.toEventSwiftData(with: .creeated))
-                    }
-                    return }
-                eventSwiftData.notificationStatus = NotificationStatus.creeated.rawValue
-                try MainDB.shared.mainContext.save()
-                */
                 return
             }
             
-            print("=== noti.remove",  event.eventName ?? "")
             await notificationListVM.removeNotification(id: notification.id)
             var newEvent = event
             newEvent.notificationStatus = .idle
             
-            try await eventSwiftDataVM.setNotification(newEvent, by: .idle)
+            _ = try await eventSwiftDataVM.setNotification(newEvent, by: .idle)
             eventsViewModel.updateEvent(from: event, with: newEvent)
-            
-            /*
-            // FOR SwiftData
-            guard let eventSwiftData = isEventSwiftDataExists else {
-                Task {
-                    await eventSwiftDataVM.addEvent(event: newEvent.toEventSwiftData(with: .idle))
-                }
-                return }
-            eventSwiftData.notificationStatus = NotificationStatus.idle.rawValue
-            try MainDB.shared.mainContext.save()
-            */
         }
+        */
     }
     
 }
@@ -234,7 +195,6 @@ extension EventsGenericView {
         guard let notificationItem = event.asNotificationItem else { return }
         
         _ = await notificationListVM.addNotification(notificationItem)
-        //guard success else { return }
         
         var updatedEvent = event
         updatedEvent.notificationStatus = .creeated

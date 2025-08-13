@@ -64,6 +64,22 @@ final class NotificationListViewModel: ObservableObject {
          */
     }
     
+    func toggleNotification(_ event: Event) async -> Event {
+        var newEvent = event
+        let notification = await getNotification(for: event.idEvent ?? "")
+        guard let notification = notification else {
+            guard let noti = event.asNotificationItem else { return newEvent }
+            _ = await addNotification(noti)
+
+            newEvent.notificationStatus = .creeated
+            return newEvent
+        }
+        
+        await removeNotification(id: notification.id)
+        newEvent.notificationStatus = .idle
+        return newEvent
+    }
+    
     func addNotification(_ item: NotificationItem) async -> Bool {
         guard await ensurePermission() else { return false }
         DispatchQueue.main.async {
