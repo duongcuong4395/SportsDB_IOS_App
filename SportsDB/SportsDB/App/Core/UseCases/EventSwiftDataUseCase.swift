@@ -16,9 +16,14 @@ protocol EventSwiftDataUseCaseProtocol {
     func filter(by searchText: String, with sortOption: SortOption) async throws -> [EventSwiftData]
     
     func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData
+    func setNotification(_ event: EventSwiftData, by status: NotificationStatus) async throws
 }
 
 final class EventSwiftDataUseCase: EventSwiftDataUseCaseProtocol {
+    func setNotification(_ event: EventSwiftData, by status: NotificationStatus) async throws {
+        try await repository.setNotification(event, by: status)
+    }
+    
     func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData {
         try await repository.toggleLike(event)
     }

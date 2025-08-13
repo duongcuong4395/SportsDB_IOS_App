@@ -95,12 +95,18 @@ protocol EventSwiftDataRepositoryProtocol {
     func filter(by searchText: String, with sortOption: SortOption) async throws -> [EventSwiftData]
     
     func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData
+    func setNotification(_ event: EventSwiftData, by status: NotificationStatus) async throws
     
     func getEvent(by idEvent: String?, or eventName: String?) async -> EventSwiftData?
     func saveEvent() throws
 }
 
 final class EventSwiftDataRepository: EventSwiftDataRepositoryProtocol {
+    func setNotification(_ event: EventSwiftData, by status: NotificationStatus) async throws {
+        event.notificationStatus = status.rawValue
+        try context.save()
+    }
+    
     func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData {
         event.like = !event.like
         try context.save()

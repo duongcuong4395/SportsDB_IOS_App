@@ -85,11 +85,11 @@ final class NotificationListViewModel: ObservableObject {
         }
         
         notificationManager.cancelNotification(id: id)
-        
+        await loadNotifications()
         
         /*
         NotificationManager.shared.cancelNotification(id: id)
-        await loadNotifications()
+        
          */
     }
     

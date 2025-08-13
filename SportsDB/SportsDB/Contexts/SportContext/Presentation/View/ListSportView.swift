@@ -15,8 +15,6 @@ struct SelectSportView : View {
     @State var showExpandedContent: Bool = false
     @State var showFullScreenCover: Bool = false
     
-    @Namespace var animation
-    
     var body: some View {
         VStack {
             MorphingButton(
@@ -25,15 +23,11 @@ struct SelectSportView : View {
                 , showFullScreenCover: $showFullScreenCover) {
                     HStack(spacing: 5) {
                         sportVM.sportSelected.getIcon()
-                            //.font(.title3)
                             .frame(width: 25, height: 25)
                         Text(sportVM.sportSelected.displayName)
                             .font(.caption)
                             .fontWeight(.semibold)
-                            .lineLimit(1)
-                        
                     }
-                    .matchedGeometryEffect(id: "sport_\(sportVM.sportSelected.displayName)", in: animation)
                     .padding(5)
                     .background{
                         Color.clear
@@ -43,7 +37,7 @@ struct SelectSportView : View {
                     
                 } content: {
                     VStack {
-                        ListSportView(sportSelected: sportVM.sportSelected, animation: animation, touchSport: { sport in
+                        ListSportView(sportSelected: sportVM.sportSelected, touchSport: { sport in
                             withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
                                 //if sportVM.sportSelected == sport { return }
                                 showFullScreenCover = false
@@ -103,7 +97,6 @@ struct SelectSportView : View {
 
 struct ListSportView: View {
     var sportSelected: SportType
-    var animation: Namespace.ID
     var touchSport: (SportType) -> Void
     var body: some View {
         VStack {
@@ -120,7 +113,7 @@ struct ListSportView: View {
                                     .fontWeight(.semibold)
                                     .lineLimit(1)
                             }
-                            .matchedGeometryEffect(id: "sport_\(sport.displayName)", in: animation)
+                            
                             .onTapGesture {
                                 touchSport(sport)
                             }

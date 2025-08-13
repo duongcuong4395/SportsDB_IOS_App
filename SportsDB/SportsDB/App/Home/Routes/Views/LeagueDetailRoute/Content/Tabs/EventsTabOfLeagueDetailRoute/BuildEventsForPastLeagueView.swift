@@ -126,9 +126,7 @@ extension EventsGenericView {
                 return }
             
             let eventDataUpdate = try await eventSwiftDataVM.toggleLike(eventData)
-            //eventData.like.toggle()
             
-            //try MainDB.shared.mainContext.save()
             var newEvent = event
             newEvent.like = eventDataUpdate.like
             eventsViewModel.updateEvent(from: event, with: newEvent)
@@ -168,7 +166,6 @@ extension EventsGenericView {
         completion(newEvent)
     }
     
-    
     func toggleNotification(_ event: Event) {
         Task {
             let isEventSwiftDataExists = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName)
@@ -180,8 +177,11 @@ extension EventsGenericView {
                 print("=== noti.add",  event.eventName ?? "")
                 var newEvent = event
                 newEvent.notificationStatus = .creeated
+                try await eventSwiftDataVM.setNotification(newEvent, by: .creeated)
                 eventsViewModel.updateEvent(from: event, with: newEvent)
                 
+                
+                /*
                 // FOR SwiftData
                 guard let eventSwiftData = isEventSwiftDataExists else {
                     Task {
@@ -190,6 +190,7 @@ extension EventsGenericView {
                     return }
                 eventSwiftData.notificationStatus = NotificationStatus.creeated.rawValue
                 try MainDB.shared.mainContext.save()
+                */
                 return
             }
             
@@ -197,8 +198,11 @@ extension EventsGenericView {
             await notificationListVM.removeNotification(id: notification.id)
             var newEvent = event
             newEvent.notificationStatus = .idle
+            
+            try await eventSwiftDataVM.setNotification(newEvent, by: .idle)
             eventsViewModel.updateEvent(from: event, with: newEvent)
             
+            /*
             // FOR SwiftData
             guard let eventSwiftData = isEventSwiftDataExists else {
                 Task {
@@ -207,6 +211,7 @@ extension EventsGenericView {
                 return }
             eventSwiftData.notificationStatus = NotificationStatus.idle.rawValue
             try MainDB.shared.mainContext.save()
+            */
         }
     }
     

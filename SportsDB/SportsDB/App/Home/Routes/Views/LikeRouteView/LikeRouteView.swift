@@ -43,7 +43,11 @@ struct LikeRouteView: View {
             
             ScrollView(showsIndicators: false) {
                 ForEach(events, id: \.idEvent) { event in
-                    getEvent(event)
+                    LazyVStack {
+                        getEvent(event)
+                    }
+                    .padding(.horizontal, 10)
+                    
                 }
             }
         }

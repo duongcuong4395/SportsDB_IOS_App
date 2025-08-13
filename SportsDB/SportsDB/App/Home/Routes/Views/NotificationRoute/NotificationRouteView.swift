@@ -37,6 +37,7 @@ struct NotificationRouteView: View {
                 Spacer()
             }
             .backgroundOfRouteHeaderView(with: 70)
+            
             ScrollView(showsIndicators: false) {
                 LazyVStack {
                     ForEach(notificationListVM.notifications, id: \.id) { noti in

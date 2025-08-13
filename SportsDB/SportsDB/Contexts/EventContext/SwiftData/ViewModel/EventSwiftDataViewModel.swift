@@ -77,28 +77,21 @@ class EventSwiftDataViewModel: ObservableObject {
         return newEvent
     }
     
-    /*
-    func toggleLikeEvent(_ event: EventSwiftData) async -> Bool {
+    func setNotification(_ event: Event, by status: NotificationStatus) async throws -> Bool {
         return await performOperation {
-            print("=== toggleLikeEvent:",event.eventName , event.like)
-            event.like.toggle()
-            try context.save()
+            let isEventSwiftDataExists = await getEvent(by: event.idEvent, or: event.eventName)
             
-            print("✅ Toggled like for event: \(event.eventName ?? "Unknown")")
-            await loadEvents()
+            guard let eventSwiftData = isEventSwiftDataExists else {
+                Task {
+                    _ = await addEvent(event: event.toEventSwiftData(with: status))
+                    return
+                }
+                return false }
+            
+            try await useCase.setNotification(eventSwiftData, by: status)
             return true
         } ?? false
-        /*
-        do {
-            event.like = !event.like
-            try context.save()
-            await loadEvents()
-        } catch {
-            print("⚠️ Failed to update book:", error)
-        }
-        */
     }
-    */
     
     func addEvent(event: EventSwiftData) async -> Bool {
         return await performOperation {
@@ -107,14 +100,6 @@ class EventSwiftDataViewModel: ObservableObject {
             print("✅ Added event: \(event.eventName ?? "Unknown")")
             return true
         } ?? false
-        /*
-        do {
-            try await useCase.createEvent(event: event)
-            await loadEvents()
-        } catch {
-            print("⚠️ Failed to add event:", error)
-        }
-        */
     }
 
     func deleteEvent(_ event: EventSwiftData) async -> Bool {
@@ -124,14 +109,6 @@ class EventSwiftDataViewModel: ObservableObject {
             print("✅ Deleted event: \(event.eventName ?? "Unknown")")
             return true
         } ?? false
-        /*
-        do {
-            try await useCase.removeEvent(event)
-            await loadEvents()
-        } catch {
-            print("⚠️ Failed to delete event:", error)
-        }
-        */
     }
     
     func applyFilter() async {
@@ -139,13 +116,6 @@ class EventSwiftDataViewModel: ObservableObject {
             let filteredEvents = try await useCase.filter(by: searchText, with: sortOption)
             events = filteredEvents
         }
-        /*
-        do {
-            events = try await useCase.filter(by: searchText, with: sortOption)
-        } catch {
-            print("⚠️ Filter failed:", error)
-        }
-        */
     }
     
     func getEvent(by idEvent: String?, or eventName: String?) async -> EventSwiftData? {
