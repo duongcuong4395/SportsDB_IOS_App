@@ -74,18 +74,21 @@ class EventSwiftDataViewModel: ObservableObject {
     func setLike(_ event: Event) async throws -> Event {
         
         let isEventExists = await getEvent(by: event.idEvent, or: event.eventName)
-        var newEvent = event
-        guard let eventData = isEventExists else {
+        
+        if let  eventData = isEventExists {
+            let eventDataUpdate = try await toggleLike(eventData)
+            var newEvent = event
+            newEvent.like = eventDataUpdate.like
+            return newEvent
+        } else {
             Task {
+                var newEvent = event
                 newEvent.like = true
                 _ = await addEvent(event: newEvent.toEventSwiftData(with: .idle))
+                return newEvent
             }
-            return newEvent }
-        
-        let eventDataUpdate = try await toggleLike(eventData)
-        
-        newEvent.like = eventDataUpdate.like
-        return newEvent
+        }
+        return event
     }
     
     func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData {

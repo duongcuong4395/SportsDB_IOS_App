@@ -125,7 +125,9 @@ extension EventsGenericView {
     func toggleLikeEvent(_ event: Event) {
         Task {
             let newEvent = try await eventSwiftDataVM.setLike(event)
-            eventsViewModel.updateEvent(from: event, with: newEvent)
+            DispatchQueue.main.async {
+                eventsViewModel.updateEvent(from: event, with: newEvent)
+            }
         }
     }
     

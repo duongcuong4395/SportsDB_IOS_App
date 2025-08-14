@@ -18,7 +18,7 @@ struct ListEventGenericView<Builder: ItemBuilder>: View where Builder.T == Event
     var onEvent: (ItemEvent<Event>) -> Void
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 10) {
             if events.count > 3 {
                 ScrollView(showsIndicators: false) {
                     listEventView
@@ -38,7 +38,7 @@ struct ListEventGenericView<Builder: ItemBuilder>: View where Builder.T == Event
     }
     
     var listEventView: some View {
-        LazyVStack(spacing: 20) {
+        LazyVStack(spacing: 10) {
             ForEach(Array(events.enumerated()), id: \.element.idEvent) { index, event in
                 EventItemGenericView(
                     event: event
@@ -181,13 +181,16 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
             // MARK: - Date Time
             HStack {
                 HStack {
-                    Text(AppUtility.formatDate(from: event.timestamp, to: "dd/MM") ?? "")
-                        .font(.caption2.bold())
-                        
                     Text(event.round ?? "")
                         .font(.caption2.bold())
-                    Text(AppUtility.formatDate(from: event.timestamp, to: "HH:mm") ?? "")
-                        .font(.caption2.bold())
+                    VStack {
+                        Text(AppUtility.formatDate(from: event.timestamp, to: "dd/MM") ?? "")
+                            .font(.caption2.bold())
+                            
+                        
+                        Text(AppUtility.formatDate(from: event.timestamp, to: "HH:mm") ?? "")
+                            .font(.caption2.bold())
+                    }
                 }
                 .padding(5)
                 .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 5, style: .continuous))

@@ -52,7 +52,7 @@ extension ItemBuilder {
     @ViewBuilder
     func buildItemButton(with image: IconItemType, action: @escaping () -> Void) -> some View {
         Image(systemName: image.rawValue)
-            .font(.caption)
+            .font(.title3)
             .padding(6)
             .onTapGesture {
                 action()
