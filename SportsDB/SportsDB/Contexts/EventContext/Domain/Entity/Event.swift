@@ -33,7 +33,18 @@ struct Event: Equatable, Identifiable {
     
     var like: Bool = false
     var notificationStatus: NotificationStatus = .creeated
+    
+    var promptEvent2vs2Analysis: String { """
+Bạn là một chuyên gia thể thao với hơn 30 năm kinh nghiệm trong lĩnh vực phân tích và dự đoán kết quả các trận đấu của môn thể thao \(sportName ?? ""). Với sự am hiểu sâu sắc về các team (\(homeTeam ?? "") , \(awayTeam ?? "")), cầu thủ, chiến thuật thi đấu và xu hướng của giải đấu, hãy sử dụng kiến thức phong phú của bạn để tiến hành phân tích chi tiết về sự kiện thể thao \(eventName ?? "") trong khuôn khổ Giải đấu \(leagueName ?? "").
+
+Sự kiện này sẽ diễn ra vào thời điểm \(timestamp ?? "") tại địa điểm \(venue ?? ""). Bạn hãy xem xét các yếu tố ảnh hưởng như phong độ hiện tại của các đội, thống kê lịch sử đối đầu, điều kiện thời tiết, cũng như các chấn thương có thể xảy ra với cầu thủ.
+
+Bên cạnh đó, hãy đưa ra dự đoán kết quả cuối cùng của trận đấu trong vòng \(round ?? "") của mùa giải \(season ?? "") này. Phân tích của bạn sẽ rất có giá trị đối với những người hâm mộ và các nhà đầu tư trong lĩnh vực cá cược thể thao.
+"""}
+    
 }
+
+
 
 
 import SwiftData

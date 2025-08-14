@@ -18,7 +18,7 @@ struct ListEventGenericView<Builder: ItemBuilder>: View where Builder.T == Event
     var onEvent: (ItemEvent<Event>) -> Void
     
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             if events.count > 3 {
                 ScrollView(showsIndicators: false) {
                     listEventView
@@ -38,7 +38,7 @@ struct ListEventGenericView<Builder: ItemBuilder>: View where Builder.T == Event
     }
     
     var listEventView: some View {
-        LazyVStack {
+        LazyVStack(spacing: 20) {
             ForEach(Array(events.enumerated()), id: \.element.idEvent) { index, event in
                 EventItemGenericView(
                     event: event
@@ -247,15 +247,28 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                 HStack {
                     if ((event.homeScore?.isEmpty) == nil) || event.homeScore == "" {
                         Text("VS")
-                            .font(.system(size: 14, weight: .bold, design: .monospaced))
+                            .font(.system(size: 16, weight: .bold, design: .monospaced))
+                            .padding(5)
+                            .liquidGlass(intensity: 0.5)
                             
                     } else {
                         Text("\(event.homeScore ?? "") - \(event.awayScore ?? "")")
-                            .font(.callout)
-                            .font(.system(size: 14, weight: .bold, design: .default))
+                            //.font(.callout)
+                            //.font(.system(size: 14, weight: .bold, design: .default))
+                            .font(.system(size: 16, weight: .bold, design: .monospaced))
+                            .padding(5)
+                            .liquidGlass(intensity: 0.5)
                     }
                 }
                 .frame(width: 70)
+                .background{
+                    KFImage(URL(string: event.leagueBadge ?? ""))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 65)
+                        .opacity(0.3)
+                        .padding(.bottom, 10)
+                }
                 
                 Spacer()
                 
@@ -297,6 +310,7 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
             }
             .padding(0)
             .padding(.vertical, 5)
+            
         }
         /*
         .background {

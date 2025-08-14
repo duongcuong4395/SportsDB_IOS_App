@@ -42,6 +42,7 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
     @EnvironmentObject var appVM: AppViewModel
     
     // MARK: - Properties
+    @Environment(\.openURL) var openURL
     @ObservedObject var eventsViewModel: ViewModel
     @State var numbRetry: Int = 0
     var onRetry: () -> Void
@@ -109,6 +110,10 @@ extension EventsGenericView {
                 print("=== analisys:", event.eventName ?? "")
                 appVM.showDialogView(with: "Event Analysis", and: AnyView(EventAIAnalysisView(event: event)))
             }
+        case .openVideo(for: let event):
+            let link = "\(event.video ?? "")"
+            print("=== link: ", link)
+            openURL(URL(string: link)!)
         default: return
         }
     }
@@ -250,7 +255,7 @@ struct EventAIAnalysisView: View {
         VStack {
             KFImage(URL(string: event.thumb ?? ""))
                 .resizable()
-                .scaledToFill()
+                .scaledToFit()
                 .frame(height: 100)
             if loading {
                 VStack(alignment: .leading) {
@@ -265,7 +270,7 @@ struct EventAIAnalysisView: View {
                          .frame(width: UIScreen.main.bounds.width/3, height: 10)
                 }
             } else {
-                MarkdownTypewriterView(streamText: $eventAnalysisDetail)
+                MarkdownTypewriterView(streamText: $eventAnalysisDetail, typingSpeed: .veryFast)
                     .padding(0)
             }
         }

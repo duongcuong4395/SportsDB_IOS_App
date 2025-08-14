@@ -8,9 +8,19 @@
 import SwiftUI
 import UIKit
 
+// CÁCH 3: Enum để quản lý các mức tốc độ
+enum TypingSpeed: Double, CaseIterable {
+    case veryFast = 0.005
+    case fast = 0.01
+    case normal = 0.05
+    case slow = 0.1
+    case verySlow = 0.2
+}
+
 // MARK: - Fixed Custom Markdown View với proper auto-scroll
 struct MarkdownTypewriterView: View {
     @Binding var streamText: String
+    var typingSpeed: TypingSpeed = .fast
     @State private var displayedText: String = ""
     @State private var typewriterTimer: Timer?
     @State private var currentIndex: String.Index?
@@ -42,7 +52,7 @@ struct MarkdownTypewriterView: View {
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .id("bottom_anchor")
-                
+
             }
             .onAppear {
                 scrollProxy = proxy
@@ -97,7 +107,8 @@ struct MarkdownTypewriterView: View {
         
         isTypewriting = true
         
-        typewriterTimer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { _ in
+        // dèault typingSpeed = 0.01 giây = hiển thị ~100 ký tự/giây (rất nhanh)
+        typewriterTimer = Timer.scheduledTimer(withTimeInterval: typingSpeed.rawValue, repeats: true) { _ in
             guard let index = currentIndex, index < streamText.endIndex else {
                 isTypewriting = false
                 stopTypewriter()
