@@ -107,6 +107,7 @@ extension EventsGenericView {
                 appVM.showDialogView(with: "AI Key", and: AnyView(GeminiAddKeyView()))
             } else {
                 print("=== analisys:", event.eventName ?? "")
+                appVM.showDialogView(with: "Event Analysis", and: AnyView(EventAIAnalysisView(event: event)))
             }
         default: return
         }
@@ -231,6 +232,78 @@ extension EventsGenericView {
         
         DispatchQueueManager.share.runOnMain {
             playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
+        }
+    }
+}
+
+
+import Kingfisher
+struct EventAIAnalysisView: View {
+    @EnvironmentObject var aiManage: AIManageViewModel
+    var event: Event
+    
+    
+    @State var loading: Bool = false
+    @State var eventAnalysisDetail: String = ""
+    
+    var body: some View {
+        VStack {
+            KFImage(URL(string: event.thumb ?? ""))
+                .resizable()
+                .scaledToFill()
+                .frame(height: 100)
+            if loading {
+                VStack(alignment: .leading) {
+                    ShimmerView()
+                         .cornerRadius(5)
+                         .frame(height: 10)
+                    ShimmerView()
+                         .cornerRadius(5)
+                         .frame(height: 10)
+                    ShimmerView()
+                         .cornerRadius(5)
+                         .frame(width: UIScreen.main.bounds.width/3, height: 10)
+                }
+            } else {
+                MarkdownTypewriterView(streamText: $eventAnalysisDetail)
+                    .padding(0)
+            }
+        }
+        .padding(0)
+        .frame(maxHeight: UIScreen.main.bounds.height / 2)
+        .onAppear{
+            eventAnalysis()
+        }
+    }
+    
+    func eventAnalysis() {
+        self.loading = true
+        
+        let prompt = """
+Bạn là một chuyên gia thể thao với hơn 30 năm kinh nghiệm trong lĩnh vực phân tích và dự đoán kết quả các trận đấu của môn thể thao \(event.sportName ?? ""). Với sự am hiểu sâu sắc về các team (\(event.homeTeam ?? "") , \(event.awayTeam ?? "")), cầu thủ, chiến thuật thi đấu và xu hướng của giải đấu, hãy sử dụng kiến thức phong phú của bạn để tiến hành phân tích chi tiết về sự kiện thể thao \(event.eventName ?? "") trong khuôn khổ Giải đấu \(event.leagueName ?? "").
+
+Sự kiện này sẽ diễn ra vào thời điểm \(event.timestamp ?? "") tại địa điểm \(event.venue ?? ""). Bạn hãy xem xét các yếu tố ảnh hưởng như phong độ hiện tại của các đội, thống kê lịch sử đối đầu, điều kiện thời tiết, cũng như các chấn thương có thể xảy ra với cầu thủ.
+
+Bên cạnh đó, hãy đưa ra dự đoán kết quả cuối cùng của trận đấu trong vòng \(event.round ?? "") của mùa giải \(event.season ?? "") này. Phân tích của bạn sẽ rất có giá trị đối với những người hâm mộ và các nhà đầu tư trong lĩnh vực cá cược thể thao.
+"""
+        
+        print("==== prompt:", prompt)
+        
+        aiManage.GeminiSend(prompt: prompt, and: true) { streamData, status in
+            self.loading = false
+            switch status {
+            case .NotExistsKey:
+                print("=== event.analysis.status", status, streamData)
+            case .ExistsKey:
+                print("=== event.analysis.status", status, streamData)
+            case .SendReqestFail:
+                print("=== event.analysis.status", status, streamData)
+            case .Success:
+                DispatchQueue.main.async {
+                    // Append new stream data to existing detail
+                    self.eventAnalysisDetail += streamData
+                }
+            }
         }
     }
 }

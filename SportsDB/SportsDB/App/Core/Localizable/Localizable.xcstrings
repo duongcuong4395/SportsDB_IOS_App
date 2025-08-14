@@ -1,0 +1,542 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "- %@." : {
+
+    },
+    "(%@)" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@\n(%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@\n(%2$@)"
+          }
+        }
+      }
+    },
+    "%@ - %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$@"
+          }
+        }
+      }
+    },
+    "%@:" : {
+
+    },
+    "%@(%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@(%2$@)"
+          }
+        }
+      }
+    },
+    "%@%%" : {
+
+    },
+    "%lld" : {
+
+    },
+    "•" : {
+
+    },
+    "+" : {
+
+    },
+    "< Previous" : {
+
+    },
+    "👤" : {
+
+    },
+    "Add to Cart & View Cart" : {
+
+    },
+    "Advanced Sticky Header" : {
+
+    },
+    "Animated Liquid Glass" : {
+
+    },
+    "Blur Effect" : {
+
+    },
+    "Button" : {
+
+    },
+    "Buttons" : {
+
+    },
+    "Card" : {
+
+    },
+    "Cards" : {
+
+    },
+    "Cart" : {
+
+    },
+    "change color" : {
+
+    },
+    "Check" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiểm tra"
+          }
+        }
+      }
+    },
+    "Checkout" : {
+
+    },
+    "Clothing" : {
+
+    },
+    "Complete your purchase..." : {
+
+    },
+    "Complex Header" : {
+
+    },
+    "Complex Header Example" : {
+
+    },
+    "Connection: %@" : {
+
+    },
+    "Custom Effects" : {
+
+    },
+    "Custom Glass" : {
+
+    },
+    "Double tap to expand" : {
+
+    },
+    "Dynamic flowing background" : {
+
+    },
+    "Dynamic Header" : {
+
+    },
+    "Edit Profile" : {
+
+    },
+    "Electronics" : {
+
+    },
+    "Enter text" : {
+
+    },
+    "Expanded Content" : {
+
+    },
+    "Favotire" : {
+
+    },
+    "Form Controls" : {
+
+    },
+    "Frosted Glass" : {
+
+    },
+    "Full Screen Header" : {
+
+    },
+    "getKeyByLink" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can get your key at the link"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có thể lấy key của mình tại link"
+          }
+        }
+      }
+    },
+    "Glass Card" : {
+
+    },
+    "Glow" : {
+
+    },
+    "Go Back" : {
+
+    },
+    "Green Content" : {
+
+    },
+    "Green Expanded" : {
+
+    },
+    "Height: %@pt" : {
+
+    },
+    "Ignore Safe Area Example" : {
+
+    },
+    "Ignores safe area" : {
+
+    },
+    "Interactive glass material with depth" : {
+
+    },
+    "Item" : {
+
+    },
+    "Item %lld" : {
+
+    },
+    "keyNotExists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This key does not exist"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khoá này không tồn tại"
+          }
+        }
+      }
+    },
+    "keyNotShare" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You should not share this key with anyone."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn không nên chia sẻ khóa này với bất kỳ ai"
+          }
+        }
+      }
+    },
+    "keyOnlyOnceInApp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This key is only stored secretly (keychain) on your phone"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key này chỉ được lưu trữ bí mật (móc khóa) trên điện thoại của bạn"
+          }
+        }
+      }
+    },
+    "Kit: %@" : {
+
+    },
+    "Liquid Glass Card" : {
+
+    },
+    "Loading Teams..." : {
+
+    },
+    "Long content %lld" : {
+
+    },
+    "Main Content" : {
+
+    },
+    "Morphing Glass" : {
+
+    },
+    "Multiple elements resize" : {
+
+    },
+    "Navigation" : {
+
+    },
+    "Next >" : {
+
+    },
+    "No Effects (Clean)" : {
+
+    },
+    "Not connect Internet" : {
+
+    },
+    "NOTE" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NOTE"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu ý"
+          }
+        }
+      }
+    },
+    "Notification" : {
+
+    },
+    "Order #%lld" : {
+
+    },
+    "Order Detail" : {
+
+    },
+    "Order Details: %@" : {
+
+    },
+    "Order History" : {
+
+    },
+    "Orders" : {
+
+    },
+    "Please return in a few minutes" : {
+
+    },
+    "Please return in a few minutes." : {
+
+    },
+    "Points: %@" : {
+
+    },
+    "Preset Styles" : {
+
+    },
+    "Primary" : {
+
+    },
+    "Proceed to Checkout" : {
+
+    },
+    "Product" : {
+
+    },
+    "Product %lld" : {
+
+    },
+    "Product Details" : {
+
+    },
+    "Product ID: %@" : {
+
+    },
+    "Products in %@" : {
+
+    },
+    "Profile" : {
+
+    },
+    "Progress: %@" : {
+
+    },
+    "Progress: %lld%%" : {
+
+    },
+    "Resizable Header Demo" : {
+
+    },
+    "Round: %lld" : {
+
+    },
+    "Row %lld" : {
+
+    },
+    "Scroll to see header resize" : {
+
+    },
+    "Secondary" : {
+
+    },
+    "Select season to see more about table rank and round events." : {
+
+    },
+    "Settings" : {
+
+    },
+    "Shimmer" : {
+
+    },
+    "Shimmer + Glow" : {
+
+    },
+    "Shimmer Glass" : {
+
+    },
+    "Shop" : {
+
+    },
+    "Shop Categories" : {
+
+    },
+    "Shopping Cart" : {
+
+    },
+    "Short content %lld" : {
+
+    },
+    "Show More" : {
+
+    },
+    "shrunk" : {
+
+    },
+    "Signing: %@" : {
+
+    },
+    "Slider Value: %lld%%" : {
+
+    },
+    "Special Effects" : {
+
+    },
+    "Standard" : {
+
+    },
+    "Sticky Header" : {
+
+    },
+    "Subtle" : {
+
+    },
+    "Tap anywhere on this card for lens effect" : {
+
+    },
+    "This card demonstrates the liquid glass material with subtle animations, transparency effects, and responsive interactions." : {
+
+    },
+    "This is a basic glass card with liquid effect" : {
+
+    },
+    "This is my content" : {
+
+    },
+    "Title_Enter_Key" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Input Key"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhập key"
+          }
+        }
+      }
+    },
+    "Toggle" : {
+
+    },
+    "tryAgain" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try again"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hãy thử lại"
+          }
+        }
+      }
+    },
+    "Universal Example" : {
+
+    },
+    "Universal Header" : {
+
+    },
+    "View Cart" : {
+
+    },
+    "VS" : {
+
+    },
+    "Wage: %@" : {
+
+    },
+    "Watch the subtle shape morphing animation" : {
+
+    },
+    "Win: %@   Loss: %@   Draw: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Win: %1$@   Loss: %2$@   Draw: %3$@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thắng: %@   Thua: %@   Hoà: %@"
+          }
+        }
+      }
+    },
+    "With animated shimmer effect" : {
+
+    },
+    "With Glow Only" : {
+
+    },
+    "With Shimmer Only" : {
+
+    },
+    "Your cart items here..." : {
+
+    }
+  },
+  "version" : "1.0"
+}

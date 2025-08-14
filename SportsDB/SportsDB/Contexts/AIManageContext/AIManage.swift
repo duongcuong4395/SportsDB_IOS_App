@@ -21,7 +21,6 @@ struct GeminiAddKeyView: View {
     @EnvironmentObject var aiManageVM: AIManageViewModel
     
     @EnvironmentObject var appVM: AppViewModel
-    @Environment(\.managedObjectContext) var context
     @State var keyString: String = ""
     
     @State var resultMess: String = ""
@@ -93,11 +92,13 @@ struct GeminiAddKeyView: View {
                         .font(.caption)
                     Spacer()
                 }
+                /*
                 HStack(alignment: .center) {
                     Text("- \(NSLocalizedString("stableNetworkRequires", comment: "")).")
                         .font(.caption)
                     Spacer()
                 }
+                */
             }
         }
         //.foregroundStyleItemView(by: appVM.appMode)
@@ -106,15 +107,18 @@ struct GeminiAddKeyView: View {
     func checkKey() {
         
         DispatchQueueManager.share.runOnMain {
-            aiManageVM.GeminiSend(prompt: "hãy cho tôi text: hello", and: true) { messResult, geminiStatus in
+            aiManageVM.testKeyExists(with: "chỉ cần in ra text: hello", and: keyString) { messResult, geminiStatus in
                 switch geminiStatus {
                 case .NotExistsKey:
                     // Key is not exists
+                    print("=== Key is not exists")
                     return
                 case .ExistsKey:
                     // Key is exists
+                    print("=== Exists Key")
                     return
                 case .SendReqestFail:
+                    print("=== Send Reqest Fail")
                     resultMess = "* \(NSLocalizedString("keyNotExists", comment: ""))."
                     keyString = ""
                 case .Success:

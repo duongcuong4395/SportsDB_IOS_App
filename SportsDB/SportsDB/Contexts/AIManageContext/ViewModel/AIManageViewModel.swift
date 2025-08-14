@@ -226,4 +226,31 @@ extension AIManageViewModel {
           }
         }
     }
+    
+    
+    
+    func testKeyExists(with prompt: String, and keyInput: String, completed: @escaping (String, GeminiStatus) -> Void) {
+        
+        //guard let modelData = aiSwiftData else { return }
+        let modelKey = AIModel(itemKey: AIUtility.key, valueItem: keyInput)
+        
+        let model = self.getModel(with: modelKey)
+        let chat = model.startChat(history: [])
+        
+        Task {
+          do {
+              let response = try await chat.sendMessage(prompt)
+              let _ = try await model.countTokens(prompt)
+              DispatchQueueManager.share.runOnMain {
+                  completed(response.text ?? "Empty", .Success)
+              }
+          } catch {
+              DispatchQueueManager.share.runOnMain {
+                  completed("Data not found", .SendReqestFail)
+              }
+              
+          }
+        }
+    }
+    
 }

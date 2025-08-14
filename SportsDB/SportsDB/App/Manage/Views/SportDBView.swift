@@ -71,7 +71,7 @@ struct SportDBView: View {
         lookupAllPlayersUseCase: LookupAllPlayersUseCase(repository: PlayerAPIService())
     )
     @StateObject private var trophyListVM = TrophyListViewModel()
-    @StateObject private var chatVM = ChatViewModel()
+    
 
     @Namespace var animation
     
@@ -153,7 +153,6 @@ struct SportDBView: View {
         .environmentObject(eventsOfTeamByScheduleVM)
         
         .environmentObject(sportRouter)
-        .environmentObject(chatVM)
         
         .environmentObject(eventSwiftDataVM)
         .environmentObject(aiManageVM)
@@ -207,9 +206,11 @@ private extension SportDBView {
 
 private extension SportDBView {
     private func onAppear() {
-        chatVM.initChat()
+        //chatVM.initChat()
+        
         Task {
             await eventSwiftDataVM.loadEvents()
+            _ = await aiManageVM.getKey()
         }
     }
     
@@ -265,6 +266,7 @@ struct DialogView: View {
                         appVM.showDialog = false
                     }
                 }, content: appVM.bodyDialog)
+                /*
                 .overlay {
                     Color(.black)
                         .opacity(0.1)
@@ -276,6 +278,7 @@ struct DialogView: View {
                             
                         }
                 }
+                */
             }
             .zIndex(9)
         }
