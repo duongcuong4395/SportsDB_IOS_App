@@ -81,14 +81,11 @@ class EventSwiftDataViewModel: ObservableObject {
             newEvent.like = eventDataUpdate.like
             return newEvent
         } else {
-            Task {
-                var newEvent = event
-                newEvent.like = true
-                _ = await addEvent(event: newEvent.toEventSwiftData(with: .idle))
-                return newEvent
-            }
+            var newEvent = event
+            newEvent.like = true
+            _ = await addEvent(event: newEvent.toEventSwiftData(with: .idle))
+            return newEvent
         }
-        return event
     }
     
     func toggleLike(_ event: EventSwiftData) async throws -> EventSwiftData {

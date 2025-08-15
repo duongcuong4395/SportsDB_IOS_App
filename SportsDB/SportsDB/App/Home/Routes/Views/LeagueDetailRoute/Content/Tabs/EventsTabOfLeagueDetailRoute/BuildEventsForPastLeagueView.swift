@@ -12,6 +12,7 @@ import SwiftData
 protocol EventsViewModel: ObservableObject {
     var eventsStatus: ModelsStatus<[Event]> { get set }
     var events: [Event] { get }
+    func updateEvent(from oldItem: Event, with newItem: Event)
 }
 
 extension EventsViewModel {
@@ -118,19 +119,13 @@ extension EventsGenericView {
         }
     }
     
-     func onToggleLikeEvent(_ event: Event) {
-         toggleLikeEvent(event)
-     }
-     
-    func toggleLikeEvent(_ event: Event) {
+    func onToggleLikeEvent(_ event: Event) {
         Task {
             let newEvent = try await eventSwiftDataVM.setLike(event)
-            DispatchQueue.main.async {
-                eventsViewModel.updateEvent(from: event, with: newEvent)
-            }
+            eventsViewModel.updateEvent(from: event, with: newEvent)
         }
     }
-    
+     
     func onApearEvent(_ event: Event) {
         hasNotification(event) { event in
             hasLike(event)
@@ -177,7 +172,7 @@ extension EventsGenericView {
             let homeTeam = String(homeVSAwayTeam?[0] ?? "")
             let awayTeam = String(homeVSAwayTeam?[1] ?? "")
             let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-            let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
+            //let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
             if !sportRouter.isAtTeamDetail() {
                 sportRouter.navigateToTeamDetail()
             }

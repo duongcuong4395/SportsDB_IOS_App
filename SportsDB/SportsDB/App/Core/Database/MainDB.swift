@@ -29,6 +29,7 @@ enum MainDB {
             .appendingPathComponent("MainDB.store")
 
         // Xoá file MainDB.store nếu tồn tại
+        
         /*
         if FileManager.default.fileExists(atPath: storeURL.path) {
             do {
@@ -39,7 +40,6 @@ enum MainDB {
             }
         }
         */
-        
         
         // Tạo config với URL
         let configuration = ModelConfiguration(
