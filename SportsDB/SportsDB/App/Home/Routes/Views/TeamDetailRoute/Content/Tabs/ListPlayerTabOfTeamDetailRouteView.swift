@@ -7,8 +7,8 @@
 import SwiftUI
 
 struct ListPlayerTabOfTeamDetailRouteView: View {
-    var team: Team
+    
     var body: some View {
-        BuildPlayersForTeamDetailView(team: team, progressing: false)
+        BuildPlayersForTeamDetailView(progressing: false)
     }
 }

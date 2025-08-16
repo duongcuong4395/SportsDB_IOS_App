@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct TeamDetailRouteContentView: View {
-    var team: Team
+    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
+    //@Binding var team: Team
     @State var selectedTab: Int = 0
     @EnvironmentObject var playerListVM: PlayerListViewModel
     @State var isVisibleViews: (
@@ -22,15 +23,15 @@ struct TeamDetailRouteContentView: View {
             MenuOfTeamDetailRouteView(selectedTab: $selectedTab)
             
             TabView(selection: $selectedTab) {
-                GeneralTabOfTeamDetailRouteView(team: team)
+                GeneralTabOfTeamDetailRouteView()
                     .liquidGlassForTabView(with: 0)
                     
                 if playerListVM.playersByLookUpAllForaTeam.count > 0 {
-                    ListPlayerTabOfTeamDetailRouteView(team: team)
+                    ListPlayerTabOfTeamDetailRouteView()
                         .liquidGlassForTabView(with: 1)
                 }
                 
-                ListEventOfTeamDetailRouteView(team: team, isVisibleViews: $isVisibleViews)
+                ListEventOfTeamDetailRouteView(isVisibleViews: $isVisibleViews)
                     .liquidGlassForTabView(with: 2)
                 
                 TrophiesTabOfTeamDetailRouteView()

@@ -34,13 +34,15 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
     @EnvironmentObject var playerListVM: PlayerListViewModel
     @EnvironmentObject var teamDetailVM: TeamDetailViewModel
     @EnvironmentObject var teamListVM: TeamListViewModel
-    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
+    //@EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     @EnvironmentObject var notificationListVM: NotificationListViewModel
     @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
     @EnvironmentObject var sportRouter: SportRouter
     
     @EnvironmentObject var aiManageVM: AIManageViewModel
     @EnvironmentObject var appVM: AppViewModel
+    
+    @EnvironmentObject var teamSelectionManager: TeamSelectionManager
     
     // MARK: - Properties
     @Environment(\.openURL) var openURL
@@ -98,17 +100,14 @@ extension EventsGenericView {
         case .toggleLike(for: let event):
             Task { try await handleToggleLikeEvent(event) }
         case .tapOnTeam(for: let event, with: let kindTeam):
+            //Task { try await teamSelectionManager.handleTapOnTeam(by: event, with: kindTeam) }
             Task { try await handleTapOnTeam(by: event, with: kindTeam) }
         case .toggleNotify(for: let event):
             Task { try await handleToggleNotificationEvent(event) }
         case .onApear(for: let event):
             handleEventAppear(event)
         case .viewDetail(for: let event):
-            if aiManageVM.aiSwiftData == nil {
-                appVM.showDialogView("AI Key", by: AnyView(GeminiAddKeyView()))
-            } else {
-                appVM.showDialogView("Event Analysis", by: AnyView(EventAIAnalysisView(event: event)))
-            }
+            handleViewDetailEvent(event)
         case .openVideo(for: let event):
             openURL(URL(string: "\(event.video ?? "")")!)
         default: return
@@ -117,17 +116,18 @@ extension EventsGenericView {
     
 }
 
-// MARK: Handle Tap On team
+// MARK: Handle view Detail Event
 extension EventsGenericView {
-    func handleTapOnTeam(by event: Event, with kindTeam: KindTeam) async throws {
-        resetWhenTapTeam()
-        let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
-        let homeTeam = String(homeVSAwayTeam?[0] ?? "")
-        let awayTeam = String(homeVSAwayTeam?[1] ?? "")
-        let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-        try await selectTeam(by: team)
+    func handleViewDetailEvent(_ event: Event) {
+        if aiManageVM.aiSwiftData == nil {
+            appVM.showDialogView("AI Key", by: AnyView(GeminiAddKeyView()))
+        } else {
+            appVM.showDialogView("Event Analysis", by: AnyView(EventAIAnalysisView(event: event)))
+        }
     }
 }
+
+
 
 // MARK: Handle Toggle Like Event
 extension EventsGenericView {
@@ -174,60 +174,7 @@ extension EventsGenericView {
     }
 }
 
-// MARK: Select team
-extension EventsGenericView {
-    
-    @MainActor
-    func resetWhenTapTeam() {
-        withAnimation(.spring()) {
-            trophyListVM.resetTrophies()
-            playerListVM.resetPlayersByLookUpAllForaTeam()
-            teamDetailVM.resetEquipment()
-        }
-    }
-    
-    @MainActor
-    func selectTeam(by team: String) async throws {
-        await teamListVM.searchTeams(teamName: team)
-        guard teamListVM.teamsBySearch.count > 0 else { return }
-        teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
-        if !sportRouter.isAtTeamDetail() {
-            sportRouter.navigateToTeamDetail()
-        }
-        guard let team = teamDetailVM.teamSelected else { return }
-        
-        eventsOfTeamByScheduleVM.selectTeam(by: team)
-        
-        
-        await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
-        
-        await teamDetailVM.lookupEquipment(teamID: team.idTeam ?? "")
-        
-        try await getPlayersAndTrophies(by: team)
-    }
-    
-    @MainActor
-    func getPlayersAndTrophies(by team: Team) async throws {
-        let(players, trophies) = try await team.fetchPlayersAndTrophies()
-        trophyListVM.setTrophyGroup(by: trophies)
-        getMorePlayer(players: players)
-    }
-    
-    @MainActor
-    func getMorePlayer(players: [Player]) {
-        let cleanedPlayers = players.filter { otherName in
-            !playerListVM.playersByLookUpAllForaTeam.contains { fullName in
-                let fulName = (fullName.player ?? "").replacingOccurrences(of: "-", with: " ")
-                
-                return fulName.lowercased().contains(otherName.player?.lowercased() ?? "")
-            }
-        }
-        
-        DispatchQueueManager.share.runOnMain {
-            playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
-        }
-    }
-}
+
 
 
 import Kingfisher
@@ -279,9 +226,7 @@ Sự kiện này sẽ diễn ra vào thời điểm \(event.timestamp ?? "") t�
 
 Bên cạnh đó, hãy đưa ra dự đoán kết quả cuối cùng của trận đấu trong vòng \(event.round ?? "") của mùa giải \(event.season ?? "") này. Phân tích của bạn sẽ rất có giá trị đối với những người hâm mộ và các nhà đầu tư trong lĩnh vực cá cược thể thao.
 """
-        
-        print("==== prompt:", prompt)
-        
+
         aiManage.GeminiSend(prompt: prompt, and: true) { streamData, status in
             self.loading = false
             switch status {
@@ -380,3 +325,104 @@ struct ItemBuilderForEventsOfPastLeague: ItemBuilder {
     
     
 }
+
+// MARK: Handle Tap On team
+extension EventsGenericView {
+    func handleTapOnTeam(by event: Event, with kindTeam: KindTeam) async throws {
+        
+        
+        let teamName = getTeamName(by: event, with: kindTeam)
+        
+        if let teamSelected = teamDetailVM.teamSelected
+            , teamSelected.teamName == teamName {
+            return
+        }
+        
+        resetWhenTapTeam()
+        try await selectTeam(by: teamName)
+    }
+    
+    func getTeamName(by event: Event, with kindTeam: KindTeam) -> String {
+        let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
+        let homeTeam = String(homeVSAwayTeam?[0] ?? "")
+        let awayTeam = String(homeVSAwayTeam?[1] ?? "")
+        let teamName: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
+        return teamName
+    }
+}
+
+// MARK: Select team
+extension EventsGenericView {
+    
+    @MainActor
+    func resetWhenTapTeam() {
+        teamSelectionManager.resetTeamData()
+        withAnimation(.spring()) {
+            
+            //eventsOfTeamByScheduleVM.resetAll()
+            //trophyListVM.resetTrophies()
+            //playerListVM.resetPlayersByLookUpAllForaTeam()
+            //teamDetailVM.resetEquipment()
+        }
+    }
+    
+    @MainActor
+    func selectTeam(by teamName: String) async throws {
+        if let teamSelected = teamDetailVM.teamSelected {
+            if teamSelected.teamName != teamName {
+                await setTeam(by: teamName)
+            }
+        } else {
+            await setTeam(by: teamName)
+        }
+       
+        guard let team = teamDetailVM.teamSelected else { return }
+        if !sportRouter.isAtTeamDetail() {
+            sportRouter.navigateToTeamDetail()
+        }
+        
+        
+        
+        //async let eventsTask: () = getEventsUpcomingAndResults(by: team)
+        //async let equipmentsTask: () = getEquipments(by: team.idTeam ?? "")
+        async let equipmentsTask: () = teamSelectionManager.fetchEquipments(for: team.idTeam ?? "")
+        //async let playersTask: () = getPlayersAndTrophies(by: team)
+        async let playersTask: () = await teamSelectionManager.fetchPlayersAndTrophies(for: team)
+        async let events: () =  await teamSelectionManager.fetchEvents(for: team)
+        _ = await (playersTask, equipmentsTask, events)
+        
+        
+    }
+    
+    func setTeam(by teamName: String) async {
+        await teamListVM.searchTeams(teamName: teamName)
+        guard teamListVM.teamsBySearch.count > 0 else { return }
+        teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+        return
+    }
+    
+    
+    @MainActor
+    func getPlayersAndTrophies(by team: Team) async {
+        await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
+        let(players, trophies) = await team.fetchPlayersAndTrophies()
+        trophyListVM.setTrophyGroup(by: trophies)
+        getMorePlayer(players: players)
+    }
+    
+    @MainActor
+    func getMorePlayer(players: [Player]) {
+        let cleanedPlayers = players.filter { otherName in
+            !playerListVM.playersByLookUpAllForaTeam.contains { fullName in
+                let fulName = (fullName.player ?? "").replacingOccurrences(of: "-", with: " ")
+                
+                return fulName.lowercased().contains(otherName.player?.lowercased() ?? "")
+            }
+        }
+        
+        DispatchQueueManager.share.runOnMain {
+            playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
+        }
+    }
+}
+

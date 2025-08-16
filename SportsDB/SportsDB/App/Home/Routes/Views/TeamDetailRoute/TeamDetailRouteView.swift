@@ -11,7 +11,7 @@ import GeminiAI
 import GoogleGenerativeAI
 
 struct TeamDetailRouteView: View {
-    var team: Team
+    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
     
     var body: some View {
         VStack {
@@ -19,8 +19,8 @@ struct TeamDetailRouteView: View {
             TeamDetailRouteHeaderView()
             
             // MARK: Content
-            TeamDetailRouteContentView(team: team)
+            TeamDetailRouteContentView()
         }
-        .backgroundOfRouteView(with: team.fanart1 ?? "")
+        .backgroundOfRouteView(with: teamDetailVM.teamSelected?.fanart1 ?? "")
     }
 }

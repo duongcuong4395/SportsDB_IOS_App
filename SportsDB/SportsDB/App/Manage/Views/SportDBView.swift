@@ -47,6 +47,8 @@ struct SportDBView: View {
     )
     
     
+    
+    
     // MARK: Event Swift Data
     @StateObject var eventSwiftDataVM: EventSwiftDataViewModel
     @StateObject var aiManageVM: AIManageViewModel
@@ -72,7 +74,6 @@ struct SportDBView: View {
     )
     @StateObject private var trophyListVM = TrophyListViewModel()
     
-
     @Namespace var animation
     
     init() {
@@ -87,6 +88,7 @@ struct SportDBView: View {
         self._aiManageVM = StateObject(wrappedValue: AIManageViewModel(
             context: ModelContext(MainDB.shared)
             , useCase: useCaseAI))
+        
     }
     
     var body: some View {
@@ -184,11 +186,8 @@ private extension SportDBView {
                 LeagueDetailRouteView()
                     .navigationBarHidden(true)
             case .TeamDetail:
-                VStack {
-                    if let team = teamDetailVM.teamSelected {
-                        TeamDetailRouteView(team: team)
-                    }
-                }
+                
+                TeamDetailRouteView()
                 .padding(0)
                 .navigationBarHidden(true)
                 

@@ -101,17 +101,23 @@ struct Team: Equatable, Identifiable {
 extension Team {
     
     
-    func fetchPlayersAndTrophies() async throws -> ([Player], [TrophyGroup]) {
+    func fetchPlayersAndTrophies() async -> ([Player], [TrophyGroup]) {
         
-        let htmlContent = try await fetchHTML(from: "https://www.thesportsdb.com/team/\(idTeam ?? "")-\(teamName)?a=1#alltrophies")
-        let htmlPlayersAndTrophies = getHTML(of: htmlContent, from: ">Team Members</b>", to: "<b>Fanart<")
+        do {
+            let htmlContent = try await fetchHTML(from: "https://www.thesportsdb.com/team/\(idTeam ?? "")-\(teamName)?a=1#alltrophies")
+            let htmlPlayersAndTrophies = getHTML(of: htmlContent, from: ">Team Members</b>", to: "<b>Fanart<")
+            
+            let trophies = parseTrophies(from: htmlPlayersAndTrophies)
+            print("==== trophies.res", trophies.count)
+            let players = parsePlayers(from: htmlPlayersAndTrophies)
         
-        let trophies = parseTrophies(from: htmlPlayersAndTrophies)
-        print("==== trophies.res", trophies.count)
-        let players = parsePlayers(from: htmlPlayersAndTrophies)
-    
-        let trophyGroups = groupTrophies(trophies)
-        return (players, trophyGroups)
+            let trophyGroups = groupTrophies(trophies)
+            return (players, trophyGroups)
+        } catch {
+            print("=== fetchPlayersAndTrophies.error", error.localizedDescription)
+            return ([], [])
+        }
+        
     }
     
     func groupTrophies(_ trophies: [Trophy]) -> [TrophyGroup] {

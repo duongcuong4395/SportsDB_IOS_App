@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ListEventOfTeamDetailRouteView: View {
     @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
-    var team: Team
+    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
     @Binding var isVisibleViews: (
         forEvents: Bool,
         forEquipment: Bool
@@ -30,7 +30,7 @@ struct ListEventOfTeamDetailRouteView: View {
         .onAppear{
             isVisibleViews.forEvents = true
         }
-        .slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
+        //.slideInEffect(isVisible: $isVisibleViews.forEvents, delay: 0.5, direction: .leftToRight)
         .padding(.vertical)
         
         /*

@@ -11,7 +11,8 @@ import Kingfisher
 
 struct BuildPlayersForTeamDetailView: View {
     @EnvironmentObject var playerListVM: PlayerListViewModel
-    var team: Team
+    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
+    
     var progressing: Bool
     var columns: [GridItem] = [GridItem(), GridItem()]
     
@@ -69,6 +70,7 @@ struct BuildPlayersForTeamDetailView: View {
         withAnimation {
             viewPlayerDetail = false
         }
+        guard let team = teamDetailVM.teamSelected else { return nil }
         
         let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
         if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
@@ -86,6 +88,7 @@ struct BuildPlayersForTeamDetailView: View {
     }
     
     func getRefreshPlayer(player: Player) async  -> PlayerExecuteStatus {
+        guard let team = teamDetailVM.teamSelected else { return .Idle }
         let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
         if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
             print("=== playerF", playerF.player ?? "", playerF.idPlayer ?? "")

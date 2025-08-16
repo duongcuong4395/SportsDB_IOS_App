@@ -36,9 +36,11 @@ struct ListTeamForLeagueDetailView: View, SelectTeamDelegate {
                         badgeImageSizePerTeam: badgeImageSizePerLeague,
                         teamTapped: { team in
                             
-                            resetWhenTapTeam()
-                            teamDetailVM.setTeam(by: team)
-                            selectTeam(by: team.teamName)
+                            Task {
+                                resetWhenTapTeam()
+                                teamDetailVM.setTeam(by: team)
+                                try await selectTeam(by: team.teamName)
+                            }
                         }
                     )
                 }

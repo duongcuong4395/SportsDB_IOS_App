@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-struct LeagueTableForLeagueDetailView: View, SelectTeamDelegate {
+// , SelectTeamDelegate
+struct LeagueTableForLeagueDetailView: View  {
+    /*
     @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
     @EnvironmentObject var teamListVM: TeamListViewModel
     @EnvironmentObject var teamDetailVM: TeamDetailViewModel
@@ -15,8 +17,10 @@ struct LeagueTableForLeagueDetailView: View, SelectTeamDelegate {
     @EnvironmentObject var trophyListVM: TrophyListViewModel
     @EnvironmentObject var sportRouter: SportRouter
     @EnvironmentObject var eventListVM: EventListViewModel
-    
+    */
     @EnvironmentObject var leagueListVM: LeagueListViewModel
+    
+    @EnvironmentObject var teamSelectionManager: TeamSelectionManager
     
     var onRetry: () -> Void
     
@@ -28,27 +32,34 @@ struct LeagueTableForLeagueDetailView: View, SelectTeamDelegate {
             EmptyView()
         case .loading:
             ProgressView()
-        case .success(_):
-            LeagueTableView(
-                leaguesTable: leagueListVM.leaguesTable
-                , showRanks: $leagueListVM.showRanks
-                , tappedTeam: { leagueTable in
-                    
-                    //teamDetailVM.teamSelected = nil
-                    //trophyListVM.resetTrophies()
-                    //playerListVM.resetPlayersByLookUpAllForaTeam()
-                    
-                    resetWhenTapTeam()
-                    selectTeam(by: leagueTable.teamName ?? "")
-                })
+        case .success:
+            leagueTableContent
         case .failure(_):
-            Text("Please return in a few minutes")
-                .font(.caption2)
-                .onAppear{
-                    numbRetry += 1
-                    guard numbRetry <= 3 else { numbRetry = 0 ; return }
-                    onRetry()
-                }
+            errorView
         }
+    }
+    
+    private var leagueTableContent: some View {
+        LeagueTableView(
+            leaguesTable: leagueListVM.leaguesTable
+            , showRanks: $leagueListVM.showRanks
+            , tappedTeam: { leagueTable in
+                Task {
+                    await teamSelectionManager.resetTeamData()
+                    _ = try await teamSelectionManager.selectTeam(by: leagueTable.teamName ?? "")
+                    //resetWhenTapTeam()
+                    //try await selectTeam(by: leagueTable.teamName ?? "")
+                }
+            })
+    }
+    
+    private var errorView: some View {
+        Text("Please return in a few minutes")
+            .font(.caption2)
+            .onAppear{
+                numbRetry += 1
+                guard numbRetry <= 3 else { numbRetry = 0 ; return }
+                onRetry()
+            }
     }
 }

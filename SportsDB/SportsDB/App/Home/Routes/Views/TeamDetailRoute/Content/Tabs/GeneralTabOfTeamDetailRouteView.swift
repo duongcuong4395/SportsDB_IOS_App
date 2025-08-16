@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct GeneralTabOfTeamDetailRouteView: View {
-    var team: Team
+    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
     var body: some View {
-        VStack {
-            ScrollView(showsIndicators: false) {
-                TeamAdsView(team: team)
+        if let team = teamDetailVM.teamSelected {
+            VStack {
+                ScrollView(showsIndicators: false) {
+                    TeamAdsView(team: team)
+                }
             }
+            .padding()
         }
-        .padding()
+        
     }
 }

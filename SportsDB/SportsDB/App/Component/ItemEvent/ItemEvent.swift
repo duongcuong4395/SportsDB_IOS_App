@@ -72,24 +72,26 @@ protocol SelectTeamDelegate {
 }
 
 extension SelectTeamDelegate {
-    @MainActor
-    func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
-        resetWhenTapTeam()
-        withAnimation {
-            let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
-            let homeTeam = String(homeVSAwayTeam?[0] ?? "")
-            let awayTeam = String(homeVSAwayTeam?[1] ?? "")
-            let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-            sportRouter.navigateToTeamDetail()
-            selectTeam(by: team)
-            
+    func handleTapOnTeam(by event: Event, with kindTeam: KindTeam) async throws {
+        let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
+        let homeTeam = String(homeVSAwayTeam?[0] ?? "")
+        let awayTeam = String(homeVSAwayTeam?[1] ?? "")
+        let teamName: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
+        
+        
+        if let teamSelected = await teamDetailVM.teamSelected
+            , teamSelected.teamName == teamName {
+            return
         }
+        
+        await resetWhenTapTeam()
+        try await selectTeam(by: teamName)
     }
     
     @MainActor
     func resetWhenTapTeam() {
-        
         withAnimation(.spring()) {
+            eventsOfTeamByScheduleVM.resetAll()
             trophyListVM.resetTrophies()
             playerListVM.resetPlayersByLookUpAllForaTeam()
             teamDetailVM.resetEquipment()
@@ -97,41 +99,50 @@ extension SelectTeamDelegate {
     }
     
     @MainActor
-    func selectTeam(by team: String) {
-        Task {
-            if teamDetailVM.teamSelected == nil {
-                await teamListVM.searchTeams(teamName: team)
-                guard teamListVM.teamsBySearch.count > 0 else { return }
-                teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+    func selectTeam(by teamName: String) async throws {
+        if let teamSelected = teamDetailVM.teamSelected {
+            if teamSelected.teamName != teamName {
+                await setTeam(by: teamName)
             }
-            
-            //await teamListVM.searchTeams(teamName: team)
-            //guard teamListVM.teamsBySearch.count > 0 else { return }
-            //teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
-            guard let team = teamDetailVM.teamSelected else { return }
-            
-            if !sportRouter.isAtTeamDetail() {
-                sportRouter.navigateToTeamDetail()
-            }
-            
-            eventsOfTeamByScheduleVM.selectTeam(by: team)
-            
-            
-            await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
-            
-            await teamDetailVM.lookupEquipment(teamID: team.idTeam ?? "")
-            
-            getPlayersAndTrophies(by: team)   
+        } else {
+            await setTeam(by: teamName)
         }
+       
+        guard let team = teamDetailVM.teamSelected else { return }
+        if !sportRouter.isAtTeamDetail() {
+            sportRouter.navigateToTeamDetail()
+        }
+        
+        async let eventsTask: () = getEventsUpcomingAndResults(by: team)
+        async let equipmentsTask: () = getEquipments(by: team.idTeam ?? "")
+        async let playersTask: () = getPlayersAndTrophies(by: team)
+        
+        _ = await (eventsTask, equipmentsTask, playersTask)
+    }
+    
+    
+    func setTeam(by teamName: String) async {
+        await teamListVM.searchTeams(teamName: teamName)
+        guard await teamListVM.teamsBySearch.count > 0 else { return }
+        await teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+        return
+    }
+    
+    
+    func getEquipments(by teamID: String?) async {
+        await teamDetailVM.lookupEquipment(teamID: teamID ?? "")
+    }
+    
+    func getEventsUpcomingAndResults(by team: Team) async {
+        await eventsOfTeamByScheduleVM.getEvents(by: team)
     }
     
     @MainActor
-    func getPlayersAndTrophies(by team: Team) {
-        Task {
-            let(players, trophies) = try await team.fetchPlayersAndTrophies()
-            trophyListVM.setTrophyGroup(by: trophies)
-            getMorePlayer(players: players)
-        }
+    func getPlayersAndTrophies(by team: Team) async {
+        let(players, trophies) = await team.fetchPlayersAndTrophies()
+        trophyListVM.setTrophyGroup(by: trophies)
+        await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
+        getMorePlayer(players: players)
     }
     
     @MainActor
