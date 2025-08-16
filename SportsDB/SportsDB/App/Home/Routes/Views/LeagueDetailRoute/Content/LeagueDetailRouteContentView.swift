@@ -13,7 +13,9 @@ struct LeagueDetailRouteContentView: View {
     
     var body: some View {
         VStack(spacing: 5) {
+            
             MenuOfLeagueDetailRouteView(selectedTab: $selectedTab)
+            
             TabView(selection: $selectedTab) {
                 GeneralTabOfLeagueDetailRouteView(league: league)
                     .liquidGlassForTabView(with: 0)

@@ -60,46 +60,12 @@ extension ItemBuilder {
     }
 }
 
-
-// MARK: Old version
-/*
-protocol EventOptionsViewDelegate {}
-extension EventOptionsViewDelegate {
-    @ViewBuilder
-    func getEventOptionsView(event: Event) -> some View {
-        EventOptionsView(event: event) { action, event in
-            switch action {
-            case .toggleFavorite:
-                print("=== event:toggleFavorite:", event.eventName ?? "")
-                event
-            case .toggleNotify:
-                print("=== event:toggleNotify:", event.eventName ?? "")
-            case .openPlayVideo:
-                print("=== event:openPlayVideo:", event.eventName ?? "")
-            case .viewDetail:
-                print("=== event:viewDetail:", event.eventName ?? "")
-            case .pushFireBase:
-                print("=== event:pushFireBase:", event.eventName ?? "")
-            case .selected:
-                print("=== event:selected:", event.eventName ?? "")
-            case .drawOnMap:
-                print("=== event:drawOnMap:", event.eventName ?? "")
-            }
-        }
-    }
-}
-*/
-
 protocol SelectTeamDelegate {
     var teamListVM: TeamListViewModel { get }
     var teamDetailVM: TeamDetailViewModel { get }
     var playerListVM: PlayerListViewModel { get }
-    
-    
     var trophyListVM: TrophyListViewModel { get }
-    
     var sportRouter: SportRouter { get }
-    
     var eventListVM: EventListViewModel { get }
     var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel { get }
     
@@ -108,17 +74,12 @@ protocol SelectTeamDelegate {
 extension SelectTeamDelegate {
     @MainActor
     func tapOnTeam(by event: Event, for kindTeam: KindTeam) {
-        Task {
-            await resetWhenTapTeam()
-        }
-        
+        resetWhenTapTeam()
         withAnimation {
-            
             let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
             let homeTeam = String(homeVSAwayTeam?[0] ?? "")
             let awayTeam = String(homeVSAwayTeam?[1] ?? "")
             let team: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-            //let teamID: String = kindTeam == .AwayTeam ? event.idAwayTeam ?? "" : event.idHomeTeam ?? ""
             sportRouter.navigateToTeamDetail()
             selectTeam(by: team)
             
@@ -126,24 +87,32 @@ extension SelectTeamDelegate {
     }
     
     @MainActor
-    func resetWhenTapTeam() async {
-        withAnimation(.easeInOut(duration: 0.5)) {
-            //teamDetailVM.teamSelected = nil
+    func resetWhenTapTeam() {
+        
+        withAnimation(.spring()) {
             trophyListVM.resetTrophies()
             playerListVM.resetPlayersByLookUpAllForaTeam()
             teamDetailVM.resetEquipment()
-            //eventListVM.resetEventsOfTeamForNextAndPrevious()
         }
-        return
     }
     
     @MainActor
     func selectTeam(by team: String) {
         Task {
-            await teamListVM.searchTeams(teamName: team)
-            guard teamListVM.teamsBySearch.count > 0 else { return }
-            teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+            if teamDetailVM.teamSelected == nil {
+                await teamListVM.searchTeams(teamName: team)
+                guard teamListVM.teamsBySearch.count > 0 else { return }
+                teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
+            }
+            
+            //await teamListVM.searchTeams(teamName: team)
+            //guard teamListVM.teamsBySearch.count > 0 else { return }
+            //teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
             guard let team = teamDetailVM.teamSelected else { return }
+            
+            if !sportRouter.isAtTeamDetail() {
+                sportRouter.navigateToTeamDetail()
+            }
             
             eventsOfTeamByScheduleVM.selectTeam(by: team)
             
@@ -152,8 +121,7 @@ extension SelectTeamDelegate {
             
             await teamDetailVM.lookupEquipment(teamID: team.idTeam ?? "")
             
-            getPlayersAndTrophies(by: team)
-            
+            getPlayersAndTrophies(by: team)   
         }
     }
     

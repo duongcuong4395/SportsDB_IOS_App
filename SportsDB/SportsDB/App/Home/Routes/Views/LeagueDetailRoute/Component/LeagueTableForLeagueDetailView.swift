@@ -33,13 +33,13 @@ struct LeagueTableForLeagueDetailView: View, SelectTeamDelegate {
                 leaguesTable: leagueListVM.leaguesTable
                 , showRanks: $leagueListVM.showRanks
                 , tappedTeam: { leagueTable in
-                    withAnimation {
-                        teamDetailVM.teamSelected = nil
-                        trophyListVM.resetTrophies()
-                        playerListVM.resetPlayersByLookUpAllForaTeam()
-                    }
+                    
+                    //teamDetailVM.teamSelected = nil
+                    //trophyListVM.resetTrophies()
+                    //playerListVM.resetPlayersByLookUpAllForaTeam()
+                    
+                    resetWhenTapTeam()
                     selectTeam(by: leagueTable.teamName ?? "")
-                    sportRouter.navigateToTeamDetail()
                 })
         case .failure(_):
             Text("Please return in a few minutes")

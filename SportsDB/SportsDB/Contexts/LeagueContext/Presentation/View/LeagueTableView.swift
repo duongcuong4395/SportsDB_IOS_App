@@ -62,16 +62,13 @@ struct LeagueTableView: View {
                             delay: Double(index) * 0.1,
                             direction: .leftToRight)
                         .onAppear{
-                            //print("=== leagueListVM.showRanks", showRanks.count)
-                            showRanks[index] = true
+                            withAnimation(.spring()) {
+                                showRanks[index] = true
+                            }
                         }
                     }
                 }
             }
-        }
-        
-        .onAppear{
-            //print("=== leagueListVM.showRanks", showRanks.count)
         }
     }
 }

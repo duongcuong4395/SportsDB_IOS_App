@@ -113,30 +113,30 @@ struct MenuTabIndicatorView: View {
     var menu: any RouteMenu
     let isSelected: Bool
     
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     var body: some View {
         VStack(spacing: 8) {
             // Icon với animation
             Image(systemName: menu.icon)
                 .font(.system(size: isSelected ? 24 : 20, weight: .semibold))
-                .foregroundColor(isSelected ? menu.color : .gray)
+                .foregroundColor(isSelected ? menu.color : (colorScheme == .light ? .gray : .white))
                 .scaleEffect(isSelected ? 1.2 : 1.0)
                 .animation(.spring(response: 0.4, dampingFraction: 0.6), value: isSelected)
             
             // Title
             Text(menu.title)
                 .font(.system(size: isSelected ? 14 : 12, weight: isSelected ? .semibold : .medium))
-                .foregroundColor(isSelected ? menu.color : .gray)
+                .foregroundColor(isSelected ? menu.color : (colorScheme == .light ? .gray : .white))
                 .animation(.easeInOut(duration: 0.3), value: isSelected)
             
             // Animated Indicator Line
-            
             Rectangle()
                 .fill(menu.color)
                 .frame(width: isSelected ? 40 : 0, height: 3)
                 .cornerRadius(1.5)
                 .animation(.spring(response: 0.5, dampingFraction: 0.7), value: isSelected)
-             
+                
         }
         .padding(5)
         //.padding(.vertical, 12)

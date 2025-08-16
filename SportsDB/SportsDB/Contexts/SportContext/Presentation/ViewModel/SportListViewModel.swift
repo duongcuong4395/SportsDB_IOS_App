@@ -23,9 +23,9 @@ class AppViewModel: ObservableObject {
     @Published var loading: Bool = false
     @Published var titleButonAction: String = ""
     
-    func showDialogView(with title: String, and body: AnyView) {
+    func showDialogView(_ title: String, by view: AnyView) {
         self.titleDialog = title
-        self.bodyDialog = body
+        self.bodyDialog = view
         self.showDialog = true
     }
 }

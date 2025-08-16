@@ -36,24 +36,15 @@ struct ListTeamForLeagueDetailView: View, SelectTeamDelegate {
                         badgeImageSizePerTeam: badgeImageSizePerLeague,
                         teamTapped: { team in
                             
-                            withAnimation {
-                                teamDetailVM.teamSelected = nil
-                                trophyListVM.resetTrophies()
-                                playerListVM.resetPlayersByLookUpAllForaTeam()
-                            }
-                            
+                            resetWhenTapTeam()
                             teamDetailVM.setTeam(by: team)
                             selectTeam(by: team.teamName)
-                            
-                            guard let team = teamDetailVM.teamSelected else { return }
-                            
-                            sportRouter.navigateToTeamDetail()
                         }
                     )
                 }
             }
             
-        case .failure(let error):
+        case .failure(_):
             Text("Please return in a few minutes.")
                 .font(.caption2.italic())
                 .onAppear{
