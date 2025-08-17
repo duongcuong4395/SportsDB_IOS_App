@@ -100,8 +100,8 @@ extension EventsGenericView {
         case .toggleLike(for: let event):
             Task { try await handleToggleLikeEvent(event) }
         case .tapOnTeam(for: let event, with: let kindTeam):
-            //Task { try await teamSelectionManager.handleTapOnTeam(by: event, with: kindTeam) }
-            Task { try await handleTapOnTeam(by: event, with: kindTeam) }
+            Task { try await teamSelectionManager.handleTapOnTeam(by: event, with: kindTeam) }
+            //Task { try await handleTapOnTeam(by: event, with: kindTeam) }
         case .toggleNotify(for: let event):
             Task { try await handleToggleNotificationEvent(event) }
         case .onApear(for: let event):
@@ -357,13 +357,14 @@ extension EventsGenericView {
     @MainActor
     func resetWhenTapTeam() {
         teamSelectionManager.resetTeamData()
+        /*
         withAnimation(.spring()) {
-            
             //eventsOfTeamByScheduleVM.resetAll()
             //trophyListVM.resetTrophies()
             //playerListVM.resetPlayersByLookUpAllForaTeam()
             //teamDetailVM.resetEquipment()
         }
+        */
     }
     
     @MainActor
@@ -390,8 +391,6 @@ extension EventsGenericView {
         async let playersTask: () = await teamSelectionManager.fetchPlayersAndTrophies(for: team)
         async let events: () =  await teamSelectionManager.fetchEvents(for: team)
         _ = await (playersTask, equipmentsTask, events)
-        
-        
     }
     
     func setTeam(by teamName: String) async {

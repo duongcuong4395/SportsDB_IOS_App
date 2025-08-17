@@ -122,10 +122,10 @@ class TeamSelectionManager: ObservableObject, TeamSelectionService {
     
     private func fetchAllTeamData(for team: Team) async throws {
         
-        async let equipmentsTask: () = self.fetchEquipments(for: team.idTeam ?? "")
         async let playersTask: () = self.fetchPlayersAndTrophies(for: team)
+        async let equipmentsTask: () = self.fetchEquipments(for: team.idTeam ?? "")
         async let eventsTask: () = self.fetchEvents(for: team)
-        _ = await (equipmentsTask, playersTask, eventsTask)
+        _ = await (playersTask, equipmentsTask, eventsTask)
         /*
         try await withThrowingTaskGroup(of: Void.self) { group in
             group.addTask { await self.fetchEvents(for: team) }
