@@ -50,11 +50,7 @@ func fetchHTML(from urlString: String) async throws -> String {
 
 func getHTML(of htmlContent: String, from domBegin: String, to domEnd: String) -> String {
     guard let rangeTeamMembers = htmlContent.range(of: domBegin),
-          
-          let rangeFanart = htmlContent.range(of: domEnd) else {
-        print("=== fant.error")
-        return ""
-    }
+          let rangeFanart = htmlContent.range(of: domEnd) else { return "" }
     
     let htmlContentBetween = htmlContent[rangeTeamMembers.upperBound..<rangeFanart.lowerBound]
     let resultString = String(htmlContentBetween)

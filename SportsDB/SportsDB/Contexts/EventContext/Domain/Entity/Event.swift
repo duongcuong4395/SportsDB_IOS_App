@@ -106,18 +106,12 @@ extension Event {
     
     var asNotificationItem: NotificationItem? {
         
-        
-        print("=== event.timestamp", timestamp ?? "")
         guard let timestamp = timestamp
-                , let dateString = AppUtility.formatDate(from: timestamp, to: "yyyy-MM-dd'T'HH:mm:ss") else {
-            print("=== event.dateString", AppUtility.formatDate(from: timestamp, to: "yyyy-MM-dd'T'HH:mm:ss") ?? "")
-            return nil }
+                , let dateString = AppUtility.formatDate(from: timestamp, to: "yyyy-MM-dd'T'HH:mm:ss") else { return nil }
         
         let dateNoti = DateFormatter()
         dateNoti.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        guard let date = dateNoti.date(from: dateString) else {
-            print("=== event.date", dateNoti.date(from: dateString) ?? "")
-            return nil }
+        guard let date = dateNoti.date(from: dateString) else { return nil }
         
         return NotificationItem(
             id: idEvent ?? "",// id.uuidString,

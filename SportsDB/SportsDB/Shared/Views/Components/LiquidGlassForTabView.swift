@@ -15,6 +15,13 @@ extension View {
     }
 }
 
+extension View {
+    func liquidGlassForCardView() -> some View {
+        self.liquidGlass(intensity: 0.8)
+            .padding(.horizontal, 5)
+    }
+}
+
 import Kingfisher
 
 extension View {

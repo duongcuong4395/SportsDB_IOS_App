@@ -399,9 +399,7 @@ struct TabResizableHeaderScrollView<Header: View>: View {
                 HStack {
                     ForEach(0..<tabs.count, id: \.self) { index in
                         Button(action: {
-                            // BUG FIX: Simplified tab selection without conflicting animations
                             selectedTab = index
-                            print("=== selectedTab changed to:", selectedTab)
                         }) {
                             Text(tabs[index].title)
                                 .foregroundColor(selectedTab == index ? .primary : .secondary)
@@ -418,7 +416,6 @@ struct TabResizableHeaderScrollView<Header: View>: View {
                 }
                 .padding(.horizontal)
                 .background(Color(UIColor.systemBackground))
-                // BUG FIX: Apply animation at the container level
                 .animation(.easeInOut(duration: 0.3), value: selectedTab)
                 
                 // Tab content

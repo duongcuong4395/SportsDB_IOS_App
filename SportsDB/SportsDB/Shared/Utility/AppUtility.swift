@@ -8,6 +8,33 @@
 import Foundation
 import Alamofire
 
+class TextGen {
+    static func getText(_ texType: TexType, with comment: String = "") -> String {
+        return NSLocalizedString(texType.rawValue, comment: comment)
+    }
+}
+
+enum TexType: String {
+    
+    case promptEvent2vs2Analysis = "promptEvent2vs2Analysis"
+    case placeholderEnterKey = "Title_Enter_Key"
+    
+    case checkAIKey = "Check"
+    case aiNote = "NOTE"
+    case getKeyByLink = "getKeyByLink"
+    case keyOnlyOnceInApp = "keyOnlyOnceInApp"
+    case keyNotShare = "keyNotShare"
+    case keyNotExists = "keyNotExists"
+    case ExistsKey = "ExistsKey"
+    case tryAgain = "tryAgain"
+    
+    func localized(with comment: String = "") -> String {
+        return NSLocalizedString(self.rawValue, comment: comment)
+    }
+}
+
+
+
 class AppUtility {
     static let envDict = Bundle.main.infoDictionary?["LSEnvironment"] as! Dictionary<String, String>
     
@@ -80,7 +107,6 @@ class DateUtility {
     static func calculateDate(from today: Date = Date(), offset: Int, to format: String = "yyyy-MM-dd") -> String {
         let calendar = Calendar.current
         
-        print("date after \(offset)", calendar.date(byAdding: .day, value: offset, to: today)!)
         let validDate = calendar.date(byAdding: .day, value: offset, to: today)!
         
         let outputFormatter = DateFormatter()

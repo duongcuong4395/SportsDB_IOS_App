@@ -1152,15 +1152,6 @@ struct LiquidGlassDemoApp: View {
     }
 }
 
-// MARK: - Preview
-@available(iOS 13.0, *)
-struct LiquidGlassDemoApp_Previews: PreviewProvider {
-    static var previews: some View {
-        LiquidGlassDemoApp()
-            .preferredColorScheme(.dark)
-    }
-}
-
 // MARK: - Usage Examples & Documentation
 /*
  

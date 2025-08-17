@@ -55,20 +55,7 @@ class EventSwiftDataViewModel: ObservableObject {
         await performOperation {
             let loadedEvents = try await useCase.getAllEvents()
             events = loadedEvents
-            print("✅ Loaded \(loadedEvents.count) events")
-            print("=== events:")
-            dump(events.map({ ev in
-                return (ev.idEvent, ev.eventName, ev.like)
-            }))
         }
-        /*
-        do {
-            events = try await useCase.getAllEvents()
-            print("=== eventsData", events.count, events[0].eventName ?? "", events[0].like)
-        } catch {
-            print("⚠️ Failed to load events:", error)
-        }
-         */
     }
     
     func setLike(_ event: Event) async throws -> Event {
@@ -114,7 +101,6 @@ class EventSwiftDataViewModel: ObservableObject {
         return await performOperation {
             try await useCase.createEvent(event: event)
             await loadEvents()
-            print("✅ Added event: \(event.eventName ?? "Unknown")")
             return true
         } ?? false
     }
@@ -123,7 +109,6 @@ class EventSwiftDataViewModel: ObservableObject {
         return await performOperation {
             try await useCase.removeEvent(event)
             await loadEvents()
-            print("✅ Deleted event: \(event.eventName ?? "Unknown")")
             return true
         } ?? false
     }

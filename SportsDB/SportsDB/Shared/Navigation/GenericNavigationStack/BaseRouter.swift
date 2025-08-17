@@ -79,12 +79,4 @@ class BaseRouter<Route: Hashable>: Router, ObservableObject {
         path.append(route)
         routeStack.append(route)
     }
-    
-    func replaceNew(with route: Route) {
-        print("=== count path", path.count)
-        path.append(route)
-        //print("=== count path", path.removeLast(path.count - 1))
-        
-        
-    }
 }

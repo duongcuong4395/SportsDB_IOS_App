@@ -52,7 +52,6 @@ extension TeamListViewModel {
             }
         } catch {
             DispatchQueueManager.share.runOnMain {
-                print("=== getListTeams", error.localizedDescription)
                 self.teamsStatus = .failure(error: error.localizedDescription)
             }
         }
@@ -70,10 +69,7 @@ extension TeamListViewModel {
     }
     
     func getTeam(by text: String) -> Team? {
-        let team = teams.first { team in
-            team.idTeam == text || team.teamName == text
-        }
-        print("=== getTeam:", text, team?.teamName ?? "empty Team Name", team?.idTeam ?? "empty Team id")
+        let team = teams.first { $0.idTeam == text || $0.teamName == text }
         return team
     }
 }

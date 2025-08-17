@@ -75,15 +75,7 @@ struct LikeRouteView: View {
                 Text(event.getDateTime())
                     .font(.caption2)
             }
-            .onTapGesture {
-                /*
-                Task {
-                    let event = await eventSwiftDataVM.getEvent(by: noti.userInfo["idEvent"] ?? "", or: noti.userInfo["eventName"] ?? "")
-                    print("=== event.noti.data", event?.eventName, event.notificationStatus)
-                }
-                */
-                
-            }
+            
             Spacer()
             
             

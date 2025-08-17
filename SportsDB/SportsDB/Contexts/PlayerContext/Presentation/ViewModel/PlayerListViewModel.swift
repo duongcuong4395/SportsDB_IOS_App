@@ -178,9 +178,7 @@ extension PlayerListViewModel {
             }
         }
         do {
-            
             let playersResponse = try await lookupAllPlayersUseCase.execute(teamID: teamID)
-            print("=== playersByLookUpAllForaTeam:", teamID, playersResponse.count)
             DispatchQueueManager.share.runOnMain {
                 self.playersByLookUpAllForaTeam = playersResponse
             }
@@ -188,9 +186,7 @@ extension PlayerListViewModel {
             DispatchQueueManager.share.runOnMain {
                 self.errorMessage = error.localizedDescription
             }
-            
         }
-        
     }
     
     func lookupAllPlayers(by teamID: String) async -> [Player] {

@@ -258,28 +258,11 @@ struct DialogView: View {
     @EnvironmentObject var appVM: AppViewModel
     var body: some View {
         if appVM.showDialog {
-            ZStack {
-                
-                CustomDialogView(title: appVM.titleDialog, buttonTitle: appVM.titleButonAction, action: {
-                    withAnimation{
-                        appVM.showDialog = false
-                    }
-                }, content: appVM.bodyDialog)
-                /*
-                .overlay {
-                    Color(.black)
-                        .opacity(0.1)
-                        .ignoresSafeArea(.all)
-                        .onTapGesture {
-                            withAnimation {
-                                appVM.showDialog.toggle()
-                            }
-                            
-                        }
+            CustomDialogView(title: appVM.titleDialog, buttonTitle: appVM.titleButonAction, action: {
+                withAnimation(.spring()) {
+                    appVM.showDialog = false
                 }
-                */
-            }
-            .zIndex(9)
+            }, content: appVM.bodyDialog)
         }
     }
 }
@@ -298,9 +281,17 @@ struct CustomDialogView: View {
     
     var body: some View {
         ZStack {
+            Color.white.opacity(0.1)
+                .liquidGlass(intensity: 0.7)
+                .onTapGesture {
+                    withAnimation(.spring()) {
+                        appVM.showDialog.toggle()
+                    }
+                }
+                .ignoresSafeArea(.all)
             
             VStack {
-                //Spacer()
+                
                 VStack {
                     Text(title)
                         .font(.system(size: 18))
@@ -310,31 +301,46 @@ struct CustomDialogView: View {
                 }
                 .fixedSize(horizontal: false, vertical: true)
                 .padding()
-                
                 .clipShape(RoundedRectangle(cornerRadius: 20))
+                // MARK: Old background
+                /*
                 .background(.ultraThinMaterial,
                     in: RoundedRectangle(cornerRadius: 10, style: .continuous)
                 )
-                .overlay {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                action()
-                            }, label: {
-                                Image(systemName: "xmark")
-                                    .font(.title3)
-                                    .fontWeight(.medium)
-                            })
-                            .tint(.black)
-                        }
-                        
-                        
-                        Spacer()
-                    }
-                    .padding()
-                    
+                 .overlay {
+                     Button(action: {
+                         action()
+                     }, label: {
+                         Image(systemName: "xmark")
+                             .font(.title3)
+                             .fontWeight(.medium)
+                     })
+                     .tint(.black)
+                 }
+                */
+                // MARK: New background
+                .background{
+                    Color.clear
+                        .liquidGlass(cornerRadius: 25, intensity: 0.1, tintColor: .white, hasShimmer: false, hasGlow: false)
                 }
+                .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                .padding(.top, 15)
+                .overlay(alignment: .topTrailing) {
+                    Image(systemName: "xmark")
+                        .font(.title3)
+                        .padding(5)
+                        .background{
+                            Color.clear
+                                .liquidGlass(cornerRadius: 25, intensity: 0.5, tintColor: .white, hasShimmer: false, hasGlow: false)
+                        }
+                        .onTapGesture {
+                            withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
+                                action()
+                            }
+                        }
+                        .padding(.top, 5)
+                }
+                
                 .shadow(radius: 20)
                 .padding(30)
                 .padding(.bottom, 50)

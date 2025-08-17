@@ -55,20 +55,6 @@ struct SportDBView_New: View {
         .overlay(alignment: .bottomLeading, content: {
             bottomOverlay
         })
-        /*
-        .overlay(content: {
-            if !NetworkManager.shared.isConnected {
-                NetworkNotConnectView()
-                    .ignoresSafeArea()
-                    .background{
-                        Color.clear
-                            .liquidGlass(intensity: 0.8)
-                            .ignoresSafeArea()
-                            
-                    }
-            }
-        })
-        */
         .overlay(content: {
             DialogView()
                 .environmentObject(container.aiManageVM)

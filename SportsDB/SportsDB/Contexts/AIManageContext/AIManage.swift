@@ -32,8 +32,8 @@ struct GeminiAddKeyView: View {
                 Image(systemName: "key")
                     .font(.caption2)
                 Divider()
-                // TextField
-                SecureField(NSLocalizedString("Title_Enter_Key", comment: ""), text: $keyString.max(50))
+                
+                SecureField(TextGen.getText(.placeholderEnterKey), text: $keyString.max(50))
                     Divider()
                 Button(action: {
                     withAnimation {
@@ -43,7 +43,7 @@ struct GeminiAddKeyView: View {
                         }
                     }
                 }, label: {
-                    Text(NSLocalizedString("Check", comment: ""))
+                    Text(TextGen.getText(.checkAIKey))
                         .font(.caption.bold())
                         .foregroundStyle(keyString.count > 0 ? .blue : .brown)
                 })
@@ -69,12 +69,12 @@ struct GeminiAddKeyView: View {
             }
             VStack(spacing: 5) {
                 HStack {
-                    Text(NSLocalizedString("NOTE", comment: "") + ":")
+                    Text(TextGen.getText(.aiNote) + ":")
                         .font(.caption.bold())
                     Spacer()
                 }
                 HStack {
-                    Text("- \(NSLocalizedString("getKeyByLink", comment: "")).")
+                    Text("- \(TextGen.getText(.getKeyByLink)).")
                         .font(.caption)
                     Link(destination: URL(string: "https://aistudio.google.com/app/apikey")!) {
                         Image(systemName: "link.circle.fill")
@@ -83,12 +83,12 @@ struct GeminiAddKeyView: View {
                     Spacer()
                 }
                 HStack(alignment: .center) {
-                    Text("- \(NSLocalizedString("keyOnlyOnceInApp", comment: "")).")
+                    Text("- \(TextGen.getText(.keyOnlyOnceInApp)).")
                         .font(.caption)
                     Spacer()
                 }
                 HStack(alignment: .center) {
-                    Text("- \(NSLocalizedString("keyNotShare", comment: "")).")
+                    Text("- \(TextGen.getText(.keyNotShare)).")
                         .font(.caption)
                     Spacer()
                 }
@@ -110,21 +110,20 @@ struct GeminiAddKeyView: View {
             aiManageVM.testKeyExists(with: "chỉ cần in ra text: hello", and: keyString) { messResult, geminiStatus in
                 switch geminiStatus {
                 case .NotExistsKey:
-                    // Key is not exists
-                    print("=== Key is not exists")
+                    resultMess = "* \(TextGen.getText(.keyNotExists))."
+                    keyString = ""
                     return
                 case .ExistsKey:
-                    // Key is exists
-                    print("=== Exists Key")
+                    resultMess = "* \(TextGen.getText(.ExistsKey))."
+                    keyString = ""
                     return
                 case .SendReqestFail:
-                    print("=== Send Reqest Fail")
-                    resultMess = "* \(NSLocalizedString("keyNotExists", comment: ""))."
+                    resultMess = "* \(TextGen.getText(.keyNotExists))."
                     keyString = ""
                 case .Success:
                     Task {
                         let success = await aiManageVM.mergeKey(with: keyString)
-                        guard success else { resultMess = "* \(NSLocalizedString("tryAgain", comment: ""))"; return }
+                        guard success else { resultMess = "* \(TextGen.getText(.tryAgain))"; return }
                     }
                     resultMess = ""
                     appVM.showDialog = false

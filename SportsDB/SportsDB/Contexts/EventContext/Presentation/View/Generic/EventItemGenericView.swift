@@ -120,9 +120,6 @@ struct EventItemGenericForSingleView<Builder: ItemBuilder>: View where Builder.T
                 Text(event.eventName ?? "")
                     .font(.caption.bold())
                     .lineLimit(2)
-                    .onTapGesture {
-                        print("ScheduleMoto:")
-                    }
                 Spacer()
             }
             .padding(5)
@@ -175,6 +172,7 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
     var itemBuilder: Builder
     var onEvent: (ItemEvent<Event>) -> Void
     
+    @State var showOptionsView: Bool = true
     
     var body: some View {
         VStack(spacing: 0) {
@@ -194,11 +192,23 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                 }
                 .padding(5)
                 .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+                .onTapGesture {
+                    withAnimation(.spring()) {
+                        showOptionsView.toggle()
+                    }
+                }
                 
+                
+                
+                
+                //itemBuilder.buildOptions(for: event, send: onEvent)
                 Spacer()
+                if showOptionsView {
+                    itemBuilder.buildOptions(for: event, send: onEvent)
+                        .padding(.horizontal, 5)
+                        .liquidGlass(intensity: 0.8)
+                }
                 
-                //optionView(event)
-                itemBuilder.buildOptions(for: event, send: onEvent)
             }
             .padding(.horizontal, 50)
             .padding(.trailing, 20)
@@ -252,7 +262,7 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                         Text("VS")
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .padding(5)
-                            .liquidGlass(intensity: 0.5)
+                            //.liquidGlass(intensity: 0.5)
                             
                     } else {
                         Text("\(event.homeScore ?? "") - \(event.awayScore ?? "")")
@@ -260,7 +270,7 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                             //.font(.system(size: 14, weight: .bold, design: .default))
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .padding(5)
-                            .liquidGlass(intensity: 0.5)
+                            //.liquidGlass(intensity: 0.5)
                     }
                 }
                 .frame(width: 70)
@@ -268,7 +278,7 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                     KFImage(URL(string: event.leagueBadge ?? ""))
                         .resizable()
                         .scaledToFit()
-                        .frame(height: 65)
+                        .frame(height: 30)
                         .opacity(0.3)
                         .padding(.bottom, 10)
                 }

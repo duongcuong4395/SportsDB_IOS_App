@@ -37,31 +37,17 @@ final class NotificationListViewModel: ObservableObject {
         }
         
         
-        do {
-            let items = await notificationManager.getPendingNotifications()
-            DispatchQueue.main.async {
-                withAnimation {
-                    self.notifications = items
-                }
-                
+        let items = await notificationManager.getPendingNotifications()
+        DispatchQueue.main.async {
+            withAnimation {
+                self.notifications = items
             }
-            
-            print("✅ Loaded \(items.count) notifications")
-        } catch {
-            self.error = error
-            print("❌ Failed to load notifications: \(error)")
         }
+        
+        
         DispatchQueue.main.async {
             self.isLoading = false
         }
-        
-        /*
-        let items = await NotificationManager.shared.getPendingNotifications()
-        DispatchQueue.main.async {
-            self.notifications = items
-            print("=== notifications", items.count)
-        }
-         */
     }
     
     func toggleNotification(_ event: Event) async -> Event {

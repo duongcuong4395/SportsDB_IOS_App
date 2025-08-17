@@ -31,7 +31,6 @@ struct PlayerDetailByAIView: View {
                 
                 let playersSearch = await playerVM.searchPlayers(by: playerName)
                 if let playerF = playersSearch.first(where: { $0.team ?? ""  == teamName }) {
-                    print("=== playerF", playerF.player ?? "", playerF.idPlayer ?? "")
                     
                     if let id = playerF.idPlayer {
                         let players = await playerVM.lookupPlayer(by: id)

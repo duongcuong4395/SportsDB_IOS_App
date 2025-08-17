@@ -46,7 +46,6 @@ extension HttpRouter {
             let result = try decoder.decode(responseDataType.self, from: data)
             return .Successs(result)
         } catch {
-            print("Decoding", error)
             return .Failure(APIError.DecodingError)
         }
     }
@@ -68,7 +67,6 @@ class APIRequest<Router: HttpRouter> {
                    , parameters: router.parameters
                    , headers: router.headers
         ).responseData { response in
-            //print("Enpoint.response:", response.response?.statusCode)
             let result = self.router.handleResponse(with: response.data, error: response.error)
             completion(result)
         }

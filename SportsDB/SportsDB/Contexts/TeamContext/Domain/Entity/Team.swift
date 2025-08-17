@@ -108,13 +108,11 @@ extension Team {
             let htmlPlayersAndTrophies = getHTML(of: htmlContent, from: ">Team Members</b>", to: "<b>Fanart<")
             
             let trophies = parseTrophies(from: htmlPlayersAndTrophies)
-            print("==== trophies.res", trophies.count)
             let players = parsePlayers(from: htmlPlayersAndTrophies)
         
             let trophyGroups = groupTrophies(trophies)
             return (players, trophyGroups)
         } catch {
-            print("=== fetchPlayersAndTrophies.error", error.localizedDescription)
             return ([], [])
         }
         

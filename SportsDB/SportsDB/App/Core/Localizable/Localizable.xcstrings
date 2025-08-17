@@ -376,6 +376,23 @@
     "Progress: %lld%%" : {
 
     },
+    "promptEvent2vs2Analysis" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You are a sports expert with over 30 years of experience in analyzing and predicting the results of sports matches %@. With a deep understanding of teams (%@ , %@), players, playing tactics and tournament trends, use your rich knowledge to conduct a detailed analysis of the sports event “%@” within the framework of the %@ Tournament.\n\nThis event will take place at %@ at the venue %@. Consider influencing factors such as the current form of the teams, historical statistics of the confrontation, weather conditions, as well as possible injuries to the players.\n\nAlso, make predictions about the final outcome of the match in the %@ round of this %@ season. Your analysis will be valuable to fans and investors in the sports betting industry."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn là một chuyên gia thể thao với hơn 30 năm kinh nghiệm trong lĩnh vực phân tích và dự đoán kết quả các trận đấu của môn thể thao %@. Với sự am hiểu sâu sắc về các team (%@, %@), cầu thủ, chiến thuật thi đấu và xu hướng của giải đấu, hãy sử dụng kiến thức phong phú của bạn để tiến hành phân tích chi tiết về sự kiện thể thao “%@” trong khuôn khổ Giải đấu %@.\n\nSự kiện này sẽ diễn ra vào thời điểm %@ tại địa điểm %@. Bạn hãy xem xét các yếu tố ảnh hưởng như phong độ hiện tại của các đội, thống kê lịch sử đối đầu, điều kiện thời tiết, cũng như các chấn thương có thể xảy ra với cầu thủ.\n\nBên cạnh đó, hãy đưa ra dự đoán kết quả cuối cùng của trận đấu trong vòng %@ của mùa giải %@ này. Phân tích của bạn sẽ rất có giá trị đối với những người hâm mộ và các nhà đầu tư trong lĩnh vực cá cược thể thao."
+          }
+        }
+      }
+    },
     "Resizable Header Demo" : {
 
     },

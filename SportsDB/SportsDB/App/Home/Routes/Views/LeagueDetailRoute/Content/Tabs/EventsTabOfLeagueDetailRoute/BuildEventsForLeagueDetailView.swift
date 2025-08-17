@@ -91,7 +91,6 @@ struct BuildPlayersForTeamDetailView: View {
         guard let team = teamDetailVM.teamSelected else { return .Idle }
         let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
         if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
-            print("=== playerF", playerF.player ?? "", playerF.idPlayer ?? "")
             
             if let id = playerF.idPlayer {
                 let players = await playerListVM.lookupPlayer(by: id)

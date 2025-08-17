@@ -219,18 +219,26 @@ struct EventAIAnalysisView: View {
     func eventAnalysis() {
         self.loading = true
         
-        let prompt = """
-Bạn là một chuyên gia thể thao với hơn 30 năm kinh nghiệm trong lĩnh vực phân tích và dự đoán kết quả các trận đấu của môn thể thao \(event.sportName ?? ""). Với sự am hiểu sâu sắc về các team (\(event.homeTeam ?? "") , \(event.awayTeam ?? "")), cầu thủ, chiến thuật thi đấu và xu hướng của giải đấu, hãy sử dụng kiến thức phong phú của bạn để tiến hành phân tích chi tiết về sự kiện thể thao \(event.eventName ?? "") trong khuôn khổ Giải đấu \(event.leagueName ?? "").
-
-Sự kiện này sẽ diễn ra vào thời điểm \(event.timestamp ?? "") tại địa điểm \(event.venue ?? ""). Bạn hãy xem xét các yếu tố ảnh hưởng như phong độ hiện tại của các đội, thống kê lịch sử đối đầu, điều kiện thời tiết, cũng như các chấn thương có thể xảy ra với cầu thủ.
-
-Bên cạnh đó, hãy đưa ra dự đoán kết quả cuối cùng của trận đấu trong vòng \(event.round ?? "") của mùa giải \(event.season ?? "") này. Phân tích của bạn sẽ rất có giá trị đối với những người hâm mộ và các nhà đầu tư trong lĩnh vực cá cược thể thao.
-"""
+        let prompt = String(format: TextGen.getText(.promptEvent2vs2Analysis)
+               , event.sportName ?? ""
+               , event.homeTeam ?? ""
+               , event.awayTeam ?? ""
+               , event.eventName ?? ""
+               , event.leagueName ?? ""
+               , event.timestamp ?? ""
+               , event.venue ?? ""
+               , event.round ?? ""
+               , event.season ?? ""
+        )
 
         aiManage.GeminiSend(prompt: prompt, and: true) { streamData, status in
             self.loading = false
             switch status {
             case .NotExistsKey:
+                DispatchQueue.main.async {
+                    // Append new stream data to existing detail
+                    self.eventAnalysisDetail += streamData
+                }
                 print("=== event.analysis.status", status, streamData)
             case .ExistsKey:
                 print("=== event.analysis.status", status, streamData)

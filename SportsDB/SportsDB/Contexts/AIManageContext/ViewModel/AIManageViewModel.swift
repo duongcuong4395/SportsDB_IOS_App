@@ -29,7 +29,6 @@ class AIManageViewModel: ObservableObject {
         
         Task {
             _ = await self.getKey()
-            print("=== Ai key:", aiSwiftData?.valueItem ?? "none")
         }
         
     }
@@ -56,7 +55,6 @@ class AIManageViewModel: ObservableObject {
             let newData = AISwiftData(itemKey: AIUtility.key, valueItem: key)
             try await useCase.addData(newData)
             _ = await getKey()
-            print("✅ Added aiData: \(newData.valueItem)")
             return true
         } ?? false
     }
@@ -65,7 +63,6 @@ class AIManageViewModel: ObservableObject {
         return await performOperation {
             try await useCase.updateKey(data, by: newkey)
             _ = await getKey()
-            print("✅ updated aiData: \(newkey)")
             return true
         } ?? false
     }
