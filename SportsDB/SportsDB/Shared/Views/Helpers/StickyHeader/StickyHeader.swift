@@ -43,7 +43,7 @@ struct ExpandedStickyHeaderView: View {
                 }
             }
         }
-        .onChange(of: scrollOffset) { newValue in
+        .onChange(of: scrollOffset) { oldVL, newValue in
             let delta = newValue - previousOffset
             scrollVelocity = delta / 0.016
             previousOffset = newValue

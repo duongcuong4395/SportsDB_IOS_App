@@ -144,7 +144,7 @@ func parseTrophies(from html: String) -> [Trophy] {
         for td in tdElements {
             
             guard
-                let a = try? td.select("a").first(),
+                let _ = try? td.select("a").first(),
                 let img = try? td.select("img").first(),
                 let year = try? td.ownText().trimmingCharacters(in: .whitespacesAndNewlines),
                 let title = try? img.attr("title"),
@@ -173,7 +173,7 @@ func parsePlayers(from html: String) -> [Player] {
             guard
                 let a = try? td.select("a").first(),
                 let img = try? td.select("img[alt=player render]").first(),
-                let h = try? td.ownText().trimmingCharacters(in: .whitespacesAndNewlines),
+                let _ = try? td.ownText().trimmingCharacters(in: .whitespacesAndNewlines),
                 let imageURL = try? img.attr("src"),
                 let pathFullName = try? a.attr("href")
             else { continue }

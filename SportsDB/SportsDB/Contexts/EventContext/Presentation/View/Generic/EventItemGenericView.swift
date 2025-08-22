@@ -262,15 +262,13 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                         Text("VS")
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .padding(5)
-                            //.liquidGlass(intensity: 0.5)
+                            .liquidGlass(intensity: 0.5)
                             
                     } else {
                         Text("\(event.homeScore ?? "") - \(event.awayScore ?? "")")
-                            //.font(.callout)
-                            //.font(.system(size: 14, weight: .bold, design: .default))
                             .font(.system(size: 16, weight: .bold, design: .monospaced))
                             .padding(5)
-                            //.liquidGlass(intensity: 0.5)
+                            .liquidGlass(intensity: 0.5)
                     }
                 }
                 .frame(width: 70)

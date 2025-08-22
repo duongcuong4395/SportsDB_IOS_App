@@ -11,14 +11,15 @@
 struct VenueDTO: Codable {
     var idVenue: String
     var idDupe: String?
-    var venue, venueAlternate, venueSponsor, sport: String
-    var descriptionEN, architect, capacity, cost: String
-    var country, location, timezone, formedYear: String
-    var fanart1, fanart2, fanart3, fanart4: String
+    var venue, venueAlternate, venueSponsor, sport: String?
+    var descriptionEN, architect, capacity, cost: String?
+    var country, location, timezone, formedYear: String?
+    var fanart1, fanart2, fanart3, fanart4: String?
     var thumb: String?
     var logo: String?
-    var map, website, facebook, instagram: String
-    var twitter, youtube, locked: String
+    var map, website, facebook, instagram: String?
+    var twitter, youtube, locked: String?
+    var creativeCommons: String?
     
     enum CodingKeys: String, CodingKey {
         case idVenue
@@ -35,9 +36,10 @@ struct VenueDTO: Codable {
         case map = "strMap", website = "strWebsite"
         case facebook = "strFacebook", instagram = "strInstagram"
         case twitter = "strTwitter", youtube = "strYoutube", locked = "strLocked"
+        case creativeCommons = "strCreativeCommons"
     }
     
     func toDomain() -> Venue {
-        Venue(idVenue: idVenue, venue: venue, venueAlternate: venueAlternate, venueSponsor: venueSponsor, sport: sport, descriptionEN: descriptionEN, architect: architect, capacity: capacity, cost: cost, country: country, location: location, timezone: timezone, formedYear: formedYear, fanart1: fanart1, fanart2: fanart2, fanart3: fanart3, fanart4: fanart4, thumb: thumb, logo: logo, map: map, website: website, facebook: facebook, instagram: instagram, twitter: twitter, youtube: youtube, locked: locked)
+        Venue(idVenue: idVenue, venue: venue, venueAlternate: venueAlternate, venueSponsor: venueSponsor, sport: sport, descriptionEN: descriptionEN, architect: architect, capacity: capacity, cost: cost, country: country, location: location, timezone: timezone, formedYear: formedYear, fanart1: fanart1, fanart2: fanart2, fanart3: fanart3, fanart4: fanart4, thumb: thumb, logo: logo, map: map, website: website, facebook: facebook, instagram: instagram, twitter: twitter, youtube: youtube, locked: locked, creativeCommons: creativeCommons)
     }
 }

@@ -60,7 +60,7 @@ struct EventsTabOfLeagueDetailRouteView: View {
                 }
             }
             .padding(.vertical)
-            
+            .padding(.horizontal, 5)
         }
     }
 }

@@ -51,24 +51,6 @@ class TeamSelectionManager: ObservableObject, TeamSelectionService {
         self.router = router
     }
     
-    /*
-    func handleTapOnTeam(by event: Event, with kindTeam: KindTeam) async throws {
-        let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
-        let homeTeam = String(homeVSAwayTeam?[0] ?? "")
-        let awayTeam = String(homeVSAwayTeam?[1] ?? "")
-        let teamName: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-        
-        
-        if let teamSelected = teamDetailVM.teamSelected
-            , teamSelected.teamName == teamName {
-            return
-        }
-        
-        resetWhenTapTeam()
-        try await selectTeam(by: teamName)
-    }
-    */
-    
     func handleTapOnTeam(by event: Event, with kindTeam: KindTeam) async throws {
         let teamName = extractTeamName(from: event, kindTeam: kindTeam)
         
@@ -126,15 +108,6 @@ class TeamSelectionManager: ObservableObject, TeamSelectionService {
         async let equipmentsTask: () = self.fetchEquipments(for: team.idTeam ?? "")
         async let eventsTask: () = self.fetchEvents(for: team)
         _ = await (playersTask, equipmentsTask, eventsTask)
-        /*
-        try await withThrowingTaskGroup(of: Void.self) { group in
-            group.addTask { await self.fetchEvents(for: team) }
-            group.addTask { await self.fetchEquipments(for: team.idTeam ?? "") }
-            group.addTask { await self.fetchPlayersAndTrophies(for: team) }
-            
-            try await group.waitForAll()
-        }
-         */
     }
     
     func fetchEvents(for team: Team) async {
@@ -184,3 +157,6 @@ enum TeamSelectionError: LocalizedError {
         }
     }
 }
+
+
+

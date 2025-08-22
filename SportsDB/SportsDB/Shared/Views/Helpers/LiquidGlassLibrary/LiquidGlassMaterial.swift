@@ -278,7 +278,7 @@ public struct LiquidGlassNavigationBar<Content: View>: View {
                         .onAppear {
                             scrollOffset = geometry.frame(in: .global).minY
                         }
-                        .onChange(of: geometry.frame(in: .global).minY) { value in
+                        .onChange(of: geometry.frame(in: .global).minY) { oldVL, value in
                             scrollOffset = value
                         }
                 }
@@ -734,7 +734,7 @@ public struct LiquidGlassTextField: View {
                         )
                 )
                 .focused($textFieldFocused)
-                .onChange(of: textFieldFocused) { focused in
+                .onChange(of: textFieldFocused) { oldVL, focused in
                     withAnimation(.easeInOut(duration: 0.2)) {
                         isFocused = focused
                     }

@@ -24,17 +24,26 @@ class VenueListViewModel: ObservableObject {
     }
     
     func lookupVenue(eventID: String) async {
-        isLoading = true
-        defer { isLoading = false }
+        
+        //isLoading = true
+        //defer { isLoading = false }
         
         do {
-            venuesByLookup = try await lookupVenueUseCase.execute(eventID: eventID)
+            let res = try await lookupVenueUseCase.execute(eventID: eventID)
+            DispatchQueue.main.async {
+                self.venuesByLookup = res
+            }
+            
         } catch {
-            errorMessage = error.localizedDescription
+            print("=== lookupVenue:", eventID, error.localizedDescription)
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
+            }
+            
         }
     }
     
-    func searchVenuesUseCase(venueName: String) async {
+    func searchVenues(venueName: String) async {
         isLoading = true
         defer { isLoading = false }
         do{

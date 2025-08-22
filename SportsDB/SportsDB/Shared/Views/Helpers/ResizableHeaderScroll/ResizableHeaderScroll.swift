@@ -204,7 +204,7 @@ struct ResizableHeaderScrollView_New<Header: View, Content: View>: View {
                                         .onAppear {
                                             contentHeight = contentGeometry.size.height
                                         }
-                                        .onChange(of: contentGeometry.size.height) { newHeight in
+                                        .onChange(of: contentGeometry.size.height) { oldVL, newHeight in
                                             contentHeight = newHeight
                                         }
                                 }
@@ -429,7 +429,7 @@ struct TabResizableHeaderScrollView<Header: View>: View {
                                         .onAppear {
                                             updateTabHeight(for: index, height: geometry.size.height)
                                         }
-                                        .onChange(of: geometry.size.height) { newHeight in
+                                        .onChange(of: geometry.size.height) { oldVL, newHeight in
                                             updateTabHeight(for: index, height: newHeight)
                                         }
                                 }

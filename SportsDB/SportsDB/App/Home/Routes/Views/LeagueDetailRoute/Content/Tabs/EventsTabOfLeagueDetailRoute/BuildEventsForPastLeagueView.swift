@@ -22,6 +22,24 @@ extension EventsViewModel {
         }, with: newItem)
     }
     
+    func findEvent(with eventID: String) -> Event? {
+        self.eventsStatus.data?.first(where: { $0.idEvent == eventID })
+    }
+    
+    func toggleLikeOnUI(at eventID: String, by like: Bool) {
+        guard var event = findEvent(with: eventID) else { return }
+        
+        event.like = like
+        updateEvent(from: event, with: event)
+    }
+    
+    func toggleNotificationOnUI(at eventID: String, by status: NotificationStatus) {
+        guard var event = findEvent(with: eventID) else { return }
+        
+        event.notificationStatus = status
+        updateEvent(from: event, with: event)
+    }
+    
     func resetAll() {
         self.eventsStatus = .idle
     }
@@ -43,6 +61,9 @@ struct EventsGenericView<ViewModel: EventsViewModel>: View {
     @EnvironmentObject var appVM: AppViewModel
     
     @EnvironmentObject var teamSelectionManager: TeamSelectionManager
+    
+    @EnvironmentObject var eventToggleLikeManager: EventToggleLikeManager
+    @EnvironmentObject var eventToggleNotificationManager: EventToggleNotificationManager
     
     // MARK: - Properties
     @Environment(\.openURL) var openURL
@@ -101,7 +122,6 @@ extension EventsGenericView {
             Task { try await handleToggleLikeEvent(event) }
         case .tapOnTeam(for: let event, with: let kindTeam):
             Task { try await teamSelectionManager.handleTapOnTeam(by: event, with: kindTeam) }
-            //Task { try await handleTapOnTeam(by: event, with: kindTeam) }
         case .toggleNotify(for: let event):
             Task { try await handleToggleNotificationEvent(event) }
         case .onApear(for: let event):
@@ -133,7 +153,9 @@ extension EventsGenericView {
 extension EventsGenericView {
     func handleToggleLikeEvent(_ event: Event) async throws {
         let newEvent = try await eventSwiftDataVM.setLike(event)
-        eventsViewModel.updateEvent(from: event, with: newEvent)
+        //eventsViewModel.updateEvent(from: event, with: newEvent)
+        
+        eventToggleLikeManager.toggleLikeOnUI(at: event.idEvent ?? "", by: newEvent.like)
     }
 }
 
@@ -142,7 +164,10 @@ extension EventsGenericView {
     func handleToggleNotificationEvent(_ event: Event) async throws {
         let newEvent = await notificationListVM.toggleNotification(event)
         _ = try await eventSwiftDataVM.setNotification(newEvent, by: newEvent.notificationStatus)
-        eventsViewModel.updateEvent(from: event, with: newEvent)
+        
+        eventToggleNotificationManager.toggleNotificationOnUI(at: event.idEvent ?? "", by: newEvent.notificationStatus)
+        
+        //eventsViewModel.updateEvent(from: event, with: newEvent)
     }
 }
 

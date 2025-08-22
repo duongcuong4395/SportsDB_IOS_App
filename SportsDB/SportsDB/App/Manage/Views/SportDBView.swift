@@ -197,6 +197,8 @@ private extension SportDBView {
             case .Like:
                 LikeRouteView()
                     .navigationBarHidden(true)
+            case .EventDetail:
+                EmptyView()
             }
         }
         .backgroundGradient()
@@ -365,7 +367,7 @@ struct CustomDialogView: View {
 extension SportDBView {
     func getPlayersAndTrophies(by team: Team) {
         Task {
-            let(players, trophies) = try await team.fetchPlayersAndTrophies()
+            let(players, trophies) = await team.fetchPlayersAndTrophies()
             trophyListVM.setTrophyGroup(by: trophies)
             getMorePlayer(players: players)
         }
@@ -463,6 +465,10 @@ struct NavigationToLikedView: View {
     @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
     @EnvironmentObject var sportRouter: SportRouter
     
+    // Add state for smooth animation
+        @State private var likedCount: Int = 0
+        @State private var animationTrigger: Bool = false
+    
     var body: some View {
         VStack {
             HStack(spacing: 5) {
@@ -470,6 +476,10 @@ struct NavigationToLikedView: View {
                     .font(.title3)
                     .frame(width: 25, height: 25)
                     
+                    .scaleEffect(animationTrigger ? 1.2 : 1.0)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.6), value: animationTrigger)
+                                        
+                
                 Text("Favotire")
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -490,10 +500,35 @@ struct NavigationToLikedView: View {
         .overlay(alignment: .topTrailing) {
             Color.clear
                 .customBadge(getNumberEventsLiked())
+                //.customBadge(likedCount)
         }
+        
+        .onReceive(eventSwiftDataVM.$events) { events in
+            let newCount = events.filter({ $0.like == true }).count
+            
+            if newCount != likedCount {
+                // Trigger animation when count changes
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    likedCount = newCount
+                }
+                
+                // Heart bounce animation
+                animationTrigger.toggle()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    animationTrigger.toggle()
+                }
+            }
+        }
+        .onAppear {
+            likedCount = eventSwiftDataVM.getEventsLiked().count
+        }
+        
     }
     
     func getNumberEventsLiked() -> Int {
-        return eventSwiftDataVM.getEventsLiked().count
+        withAnimation {
+            return eventSwiftDataVM.getEventsLiked().count
+        }
+        
     }
 }

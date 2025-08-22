@@ -46,6 +46,7 @@ extension HttpRouter {
             let result = try decoder.decode(responseDataType.self, from: data)
             return .Successs(result)
         } catch {
+            print("=== json.error:", error.localizedDescription)
             return .Failure(APIError.DecodingError)
         }
     }

@@ -53,6 +53,13 @@ class AppDependencyContainer: ObservableObject {
         lookupEquipmentUseCase: LookupEquipmentUseCase(repository: teamAPIService)
     )
     
+    lazy var eventDetailVM = EventDetailViewModel(
+        lookupEventResultsUseCase: LookupEventResultsUseCase(repository: EventAPIService())
+        , lookupEventLineupUseCase: LookupEventLineupUseCase(repository: EventAPIService())
+        , lookupEventTimelineUseCase: LookupEventTimelineUseCase(repository: EventAPIService())
+        , lookupEventStatisticsUseCase: LookupEventStatisticsUseCase(repository: EventAPIService())
+        , lookupEventTVBroadcastsUseCase: LookupEventTVBroadcastsUseCase(repository: EventAPIService()))
+    
     lazy var eventListVM = EventListViewModel(
         searchEventsUseCase: SearchEventsUseCase(repository: eventAPIService),
         lookupEventUseCase: LookupEventUseCase(repository: eventAPIService)
@@ -109,4 +116,20 @@ class AppDependencyContainer: ObservableObject {
         eventsOfTeamByScheduleVM: eventsOfTeamByScheduleVM,
         router: sportRouter
     )
+    
+    lazy var notificationListVM = NotificationListViewModel()
+    
+    lazy var eventToggleLikeManager = EventToggleLikeManager(
+        eventListVM: eventListVM
+        , eventsOfTeamByScheduleVM: eventsOfTeamByScheduleVM
+        , eventsInSpecificInSeasonVM: eventsInSpecificInSeasonVM
+        , eventsPerRoundInSeasonVM: eventsPerRoundInSeasonVM
+        , eventsRecentOfLeagueVM: eventsRecentOfLeagueVM)
+    
+    lazy var eventToggleNotificationManager = EventToggleNotificationManager(
+        eventListVM: eventListVM
+        , eventsOfTeamByScheduleVM: eventsOfTeamByScheduleVM
+        , eventsInSpecificInSeasonVM: eventsInSpecificInSeasonVM
+        , eventsPerRoundInSeasonVM: eventsPerRoundInSeasonVM
+        , eventsRecentOfLeagueVM: eventsRecentOfLeagueVM)
 }

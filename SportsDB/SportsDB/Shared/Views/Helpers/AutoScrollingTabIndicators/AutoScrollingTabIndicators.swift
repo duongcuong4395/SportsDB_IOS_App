@@ -44,7 +44,7 @@ struct AutoScrollingTabView: View {
                     }
                     .padding(.horizontal, 20)
                 }
-                .onChange(of: selectedTab) { newValue in
+                .onChange(of: selectedTab) { oldVL, newValue in
                     withAnimation(.easeInOut(duration: 0.5)) {
                         proxy.scrollTo(newValue, anchor: .center)
                     }

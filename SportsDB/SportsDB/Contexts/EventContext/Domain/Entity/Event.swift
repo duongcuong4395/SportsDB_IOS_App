@@ -119,22 +119,38 @@ extension Event {
             body: "\(homeTeam ?? "") vs \(awayTeam ?? "")",
             triggerDate: date,
             userInfo: [
-                "idEvent": idEvent ?? "",
-                "leagueName": leagueName ?? "",
-                "season": season ?? "",
-                "eventName": eventName ?? "",
-                "sportType": sportName ?? "", // hoặc sportType.rawValue
-                "homeTeamName": homeTeam ?? "",
-                "awayTeamName": awayTeam ?? "",
-                "idHomeTeam": idHomeTeam ?? "",
-                "idAwayTeam": idAwayTeam ?? "",
-                "idVenue": idVenue ?? "",
-                "strVenue": venue ?? "",
-                "poster": poster ?? "",
-                "thumb": thumb ?? "",
-                "banner": banner ?? "",
-                "square": square ?? "",
-                "dateTime": AppUtility.formatDate(from: timestamp, to: "dd/MM/yyyy HH:mm") ?? ""
+                "idEvent": idEvent ?? ""
+                , "idAPIfootball": idAPIfootball ?? ""
+                , "eventName": eventName ?? ""
+                , "eventAlternate": eventAlternate ?? ""
+                , "filename": filename ?? ""
+                , "sportName": sportName ?? ""
+                , "idLeague": idLeague ?? ""
+                , "leagueName": leagueName ?? ""
+                , "leagueBadge": leagueBadge ?? ""
+                , "season": season ?? ""
+                , "descriptionEN": descriptionEN ?? ""
+                
+                , "round": round ?? ""
+                , "homeTeam": homeTeam ?? ""
+                , "awayTeam": awayTeam ?? ""
+                
+                , "idHomeTeam": idHomeTeam ?? ""
+                , "homeTeamBadge": homeTeamBadge ?? ""
+                , "idAwayTeam": idAwayTeam ?? ""
+                , "awayTeamBadge": awayTeamBadge ?? ""
+                
+                , "idVenue": idVenue ?? ""
+                , "venue": venue ?? ""
+                , "country": country ?? ""
+                , "city": city ?? ""
+                
+                , "poster": poster ?? ""
+                , "square": square ?? ""
+                , "fanart": fanart ?? ""
+                , "thumb": thumb ?? ""
+                
+                // , "dateTime": AppUtility.formatDate(from: timestamp, to: "dd/MM/yyyy HH:mm") ?? ""
             ],
             hasRead: false
         )
@@ -142,3 +158,97 @@ extension Event {
     }
 }
 
+
+
+
+extension Event {
+    var notificationItemTest: NotificationItem? {
+        
+        let now = Date()
+        let newDate = now.addingTimeInterval(1 * 60) // 15 phút = 900 giây
+        print("Ngày giờ sau 1 phút: \(newDate)")
+        
+        return NotificationItem(
+            id: UUID().uuidString, // idEvent ?? "",// id.uuidString,
+            title: eventName ?? "Upcoming Event",
+            body: "\(homeTeam ?? "") vs \(awayTeam ?? "")",
+            triggerDate: newDate,
+            userInfo: [
+                
+                "idEvent": idEvent ?? ""
+                , "idAPIfootball": idAPIfootball ?? ""
+                , "eventName": eventName ?? ""
+                , "eventAlternate": eventAlternate ?? ""
+                , "filename": filename ?? ""
+                , "sportName": sportName ?? ""
+                , "idLeague": idLeague ?? ""
+                , "leagueName": leagueName ?? ""
+                , "leagueBadge": leagueBadge ?? ""
+                , "season": season ?? ""
+                , "descriptionEN": descriptionEN ?? ""
+                
+                , "round": round ?? ""
+                , "homeTeam": homeTeam ?? ""
+                , "awayTeam": awayTeam ?? ""
+                
+                , "idHomeTeam": idHomeTeam ?? ""
+                , "homeTeamBadge": homeTeamBadge ?? ""
+                , "idAwayTeam": idAwayTeam ?? ""
+                , "awayTeamBadge": awayTeamBadge ?? ""
+                
+                , "idVenue": idVenue ?? ""
+                , "venue": venue ?? ""
+                , "country": country ?? ""
+                , "city": city ?? ""
+                
+                , "poster": poster ?? ""
+                , "square": square ?? ""
+                , "fanart": fanart ?? ""
+                , "thumb": thumb ?? ""
+                
+                // , "dateTime": AppUtility.formatDate(from: timestamp, to: "dd/MM/yyyy HH:mm") ?? ""
+            ],
+            hasRead: false
+        )
+        
+    }
+}
+
+extension NotificationItem {
+    func toEvent() -> Event {
+        var event = Event()
+
+        event.idEvent = userInfo["idEvent"]
+        event.idAPIfootball = userInfo["idAPIfootball"]
+        event.eventName = userInfo["eventName"]
+        event.eventAlternate = userInfo["eventAlternate"]
+        event.filename = userInfo["filename"]
+        event.sportName = userInfo["sportName"]
+        event.idLeague = userInfo["idLeague"]
+        event.leagueName = userInfo["leagueName"]
+        event.leagueBadge = userInfo["leagueBadge"]
+        event.season = userInfo["season"]
+        event.descriptionEN = userInfo["descriptionEN"]
+        
+        event.homeTeam = userInfo["homeTeam"]
+        event.awayTeam = userInfo["awayTeam"]
+        event.round = userInfo["round"]
+        
+        event.idHomeTeam = userInfo["idHomeTeam"]
+        event.homeTeamBadge = userInfo["homeTeamBadge"]
+        event.idAwayTeam = userInfo["idAwayTeam"]
+        event.awayTeamBadge = userInfo["awayTeamBadge"]
+        
+        event.idVenue = userInfo["idVenue"]
+        event.venue = userInfo["venue"]
+        event.country = userInfo["country"]
+        event.city = userInfo["city"]
+        
+        event.poster = userInfo["poster"]
+        event.square = userInfo["square"]
+        event.thumb = userInfo["thumb"]
+        event.banner = userInfo["banner"]
+        
+        return event
+    }
+}

@@ -20,7 +20,7 @@ struct SeasonForLeagueView: View {
                 HStack {
                     ForEach(seasonListVM.seasons, id: \.season) { season in
                         
-                        let isSelected = season == seasonListVM.seasonSelected
+                        //let isSelected = season == seasonListVM.seasonSelected
                         
                         Text("\(season.season)")
                             .font(.callout.bold())

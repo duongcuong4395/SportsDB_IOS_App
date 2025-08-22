@@ -30,6 +30,16 @@
         }
       }
     },
+    "%@ (%@ )" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@ )"
+          }
+        }
+      }
+    },
     "%@:" : {
 
     },
@@ -462,6 +472,9 @@
     "Tap anywhere on this card for lens effect" : {
 
     },
+    "Test Notify" : {
+
+    },
     "This card demonstrates the liquid glass material with subtle animations, transparency effects, and responsive interactions." : {
 
     },
@@ -512,6 +525,9 @@
 
     },
     "Universal Header" : {
+
+    },
+    "Venue:" : {
 
     },
     "View Cart" : {

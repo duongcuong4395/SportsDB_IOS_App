@@ -9,15 +9,6 @@ import SwiftUI
 
 // , SelectTeamDelegate
 struct LeagueTableForLeagueDetailView: View  {
-    /*
-    @EnvironmentObject var eventsOfTeamByScheduleVM: EventsOfTeamByScheduleViewModel
-    @EnvironmentObject var teamListVM: TeamListViewModel
-    @EnvironmentObject var teamDetailVM: TeamDetailViewModel
-    @EnvironmentObject var playerListVM: PlayerListViewModel
-    @EnvironmentObject var trophyListVM: TrophyListViewModel
-    @EnvironmentObject var sportRouter: SportRouter
-    @EnvironmentObject var eventListVM: EventListViewModel
-    */
     @EnvironmentObject var leagueListVM: LeagueListViewModel
     
     @EnvironmentObject var teamSelectionManager: TeamSelectionManager
@@ -45,7 +36,7 @@ struct LeagueTableForLeagueDetailView: View  {
             , showRanks: $leagueListVM.showRanks
             , tappedTeam: { leagueTable in
                 Task {
-                    await teamSelectionManager.resetTeamData()
+                    teamSelectionManager.resetTeamData()
                     _ = try await teamSelectionManager.selectTeam(by: leagueTable.teamName ?? "")
                     //resetWhenTapTeam()
                     //try await selectTeam(by: leagueTable.teamName ?? "")

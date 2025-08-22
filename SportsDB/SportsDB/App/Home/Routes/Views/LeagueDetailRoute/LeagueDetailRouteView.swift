@@ -27,16 +27,6 @@ struct LeagueDetailRouteView: View {
                 LeagueDetailRouteContentView(league: league)
             }
             .backgroundOfRouteView(with: league.poster ?? "")
-            /*
-            .background {
-                KFImage(URL(string: league.poster ?? ""))
-                    .placeholder { progress in
-                        ProgressView()
-                    }
-                    .opacity(0.1)
-                    .ignoresSafeArea(.all)
-            }
-            */
         }
     }
 }

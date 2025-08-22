@@ -7,10 +7,15 @@
 
 import SwiftUI
 
-class EventDetailViewModel: ObservableObject {
+class EventDetailViewModel: EventsViewModel {
+    @Published var eventsStatus: ModelsStatus<[Event]> = .idle
+    
+    var events: [Event] {
+        eventsStatus.data ?? []
+    }
+    
     @Published var eventSelected: Event?
  
-    
     @Published var eventsResult: [EventResult] = []
     @Published var lineups: [EventLineup] = []
     @Published var timelines: [EventTimeline] = []
@@ -42,7 +47,16 @@ class EventDetailViewModel: ObservableObject {
         self.lookupEventStatisticsUseCase = lookupEventStatisticsUseCase
         self.lookupEventTVBroadcastsUseCase = lookupEventTVBroadcastsUseCase
     }
-    
+}
+
+
+extension EventDetailViewModel {
+    func setEventDetail(_ event: Event) {
+        self.eventsStatus = .success(data: [event])
+    }
+}
+
+extension EventDetailViewModel {
     func lookupEventResults(eventID: String) async {
         isLoading = true
         defer { isLoading = false }
@@ -98,6 +112,4 @@ class EventDetailViewModel: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
-    
-    
 }

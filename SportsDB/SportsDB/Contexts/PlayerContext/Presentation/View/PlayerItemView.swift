@@ -24,7 +24,7 @@ struct PlayerItemView: View {
                     .resizable()
                     .scaledToFill()
                     .frame(width: sizeImage.width * 3, height: sizeImage.height * 3)
-                    .matchedGeometryEffect(id: "player_\(player.player ?? "")", in: animation)
+                    //.matchedGeometryEffect(id: "player_\(player.player ?? "")", in: animation)
                 Text(player.player ?? "")
                     .font(.callout.bold())
             }

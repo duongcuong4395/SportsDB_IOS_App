@@ -19,8 +19,6 @@ struct BuildPlayersForTeamDetailView: View {
     @State var viewPlayerDetail: Bool = false
     @Namespace var animation
     var body: some View {
-        
-        
         ZStack {
             VStack {
                 ScrollView(showsIndicators: false) {
@@ -151,7 +149,7 @@ struct PlayerDetailView: View {
                 .frame(width: UIScreen.main.bounds.width / 2)
                 .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
                 .padding(.top, 5)
-                .matchedGeometryEffect(id: "player_\(player.player ?? "")", in: animation)
+                //.matchedGeometryEffect(id: "player_\(player.player ?? "")", in: animation)
                 .onTapGesture {
                     resetPlayer()
                 }

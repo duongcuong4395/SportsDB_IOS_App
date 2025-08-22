@@ -20,7 +20,8 @@ struct CarouselView<Content: View>: View {
     
     var body: some View {
         GeometryReader { geometry in
-            let totalWidth = CGFloat(items.count) * cardWidth + CGFloat(items.count - 1) * spacing
+            // totalWidth
+            let _ = CGFloat(items.count) * cardWidth + CGFloat(items.count - 1) * spacing
             let startOffset = (geometry.size.width - cardWidth) / 2
             
             HStack(spacing: spacing) {

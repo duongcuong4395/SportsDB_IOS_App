@@ -26,10 +26,10 @@ struct NotificationRouteView: View {
                 })
                 HStack(spacing: 5) {
                     Image(systemName: notificationListVM.notifications.count > 0 ? "bell.fill" : "bell")
-                        .font(.title3)
+                        .font(.body)
                         
                     Text("Notification")
-                        .font(.title3.bold())
+                        .font(.body.bold())
                 }
                 .onTapGesture {
                     sportRouter.pop()

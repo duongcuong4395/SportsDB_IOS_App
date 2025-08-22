@@ -44,7 +44,7 @@ struct ListLeagueRouteView: View {
                             .font(.caption)
                             .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
                         Text(country.name)
-                            .font(.caption)
+                            .font(.body.bold())
                     }
                 }
                 Spacer()

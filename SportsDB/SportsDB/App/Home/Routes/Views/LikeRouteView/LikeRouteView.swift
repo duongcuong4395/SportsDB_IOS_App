@@ -29,9 +29,9 @@ struct LikeRouteView: View {
                 })
                 HStack {
                     Image(systemName: events.count > 0 ? "heart.fill" : "heart")
-                        .font(.title3)
+                        .font(.body)
                     Text("Favotire")
-                        .font(.title3.bold())
+                        .font(.body.bold())
                 }
                 .onTapGesture {
                     sportRouter.pop()

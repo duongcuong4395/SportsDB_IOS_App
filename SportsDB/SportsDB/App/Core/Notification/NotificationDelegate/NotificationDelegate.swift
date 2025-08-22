@@ -7,6 +7,7 @@
 
 import UserNotifications
 
+/*
 class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationDelegate()
     
@@ -44,3 +45,4 @@ class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         completionHandler([.banner, .sound])
     }
 }
+*/

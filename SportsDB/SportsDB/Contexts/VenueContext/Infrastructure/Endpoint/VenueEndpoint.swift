@@ -23,7 +23,7 @@ extension VenueEndpoint: HttpRouter {
     var path: String {
         switch self {
         case .LookupVenue(eventID: _):
-            return "api/v1/json/3/lookupvenue.php"
+            return "api/v1/json/123/lookupvenue.php"
         case .SearchVenues(venueName: _):
             return "api/v1/json/3/searchvenues.php"
         }
