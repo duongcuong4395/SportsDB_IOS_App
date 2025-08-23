@@ -12,6 +12,8 @@ import Kingfisher
 struct LikeRouteView: View {
     @EnvironmentObject var sportRouter: SportRouter
     @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
+    @EnvironmentObject var eventToggleLikeManager: EventToggleLikeManager
+    
     @Environment(\.modelContext) var context
     
     @State var events: [EventSwiftData] = []
@@ -21,7 +23,6 @@ struct LikeRouteView: View {
             // MARK: Header
             HStack(spacing: 10) {
                 Button(action: {
-                    //leagueListVM.resetAll()
                     sportRouter.pop()
                 }, label: {
                     Image(systemName: "chevron.left")
@@ -83,16 +84,7 @@ struct LikeRouteView: View {
                 .font(.title2.bold())
                 .padding()
                 .onTapGesture {
-                    
-                    
-                    Task {
-                        _ = try await eventSwiftDataVM.toggleLike(event)
-                        withAnimation {
-                            self.events.removeAll(where: { $0.idEvent == event.idEvent })
-                        }
-                        
-                        //await notificationListVM.removeNotification(id: noti.id)
-                    }
+                    handleToggleLike(event)
                 }
         }
         .padding(10)
@@ -105,6 +97,16 @@ struct LikeRouteView: View {
         .overlay(alignment: .topLeading) {
             SportType(rawValue: event.sportName ?? "")?.getIcon()
                 .frame(width: 30, height: 30)
+        }
+    }
+    
+    func handleToggleLike(_ event: EventSwiftData) {
+        Task {
+            _ = try await eventSwiftDataVM.toggleLike(event)
+            withAnimation {
+                self.events.removeAll(where: { $0.idEvent == event.idEvent })
+            }
+            eventToggleLikeManager.toggleLikeOnUI(at: event.idEvent ?? "", by: false)
         }
     }
 }

@@ -54,7 +54,10 @@ class EventSwiftDataViewModel: ObservableObject {
     func loadEvents() async {
         await performOperation {
             let loadedEvents = try await useCase.getAllEvents()
-            events = loadedEvents
+            withAnimation(.easeInOut(duration: 0.3)) {
+                self.events = loadedEvents
+            }
+            
         }
     }
     
@@ -63,45 +66,16 @@ class EventSwiftDataViewModel: ObservableObject {
         let isEventExists = await getEvent(by: event.idEvent, or: event.eventName)
         
         if let  eventData = isEventExists {
-            
-            
-            
             let eventDataUpdate = try await toggleLike(eventData)
             var newEvent = event
             newEvent.like = eventDataUpdate.like
-            
-            if let index = events.firstIndex(where: { $0.idEvent == eventData.idEvent }) {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    events[index].like = newEvent.like
-                }
-                
-            }
-            
             return newEvent
         } else {
             var newEvent = event
             newEvent.like = true
-            
-            // Add to local state immediately
             let newEventSwiftData = newEvent.toEventSwiftData(with: .idle)
-            withAnimation(.easeInOut(duration: 0.3)) {
-                events.append(newEventSwiftData)
-            }
-            
-            do {
-                _ = await addEvent(event: newEventSwiftData)
-                return newEvent
-            } catch {
-                // Remove from local state on error
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    events.removeAll { $0.idEvent == newEvent.idEvent }
-                }
-                throw error
-            }
-            
-            //_ = await addEvent(event: newEvent.toEventSwiftData(with: .idle))
-            //await loadEvents()
-            //return newEvent
+            _ = await addEvent(event: newEventSwiftData)
+            return newEvent
         }
     }
     

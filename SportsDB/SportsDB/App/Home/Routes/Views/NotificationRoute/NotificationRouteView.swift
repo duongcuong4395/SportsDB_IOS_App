@@ -13,6 +13,7 @@ struct NotificationRouteView: View {
     @EnvironmentObject var notificationListVM: NotificationListViewModel
     @EnvironmentObject var sportRouter: SportRouter
     @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
+    @EnvironmentObject var eventToggleNotificationManager: EventToggleNotificationManager
     
     var body: some View {
         VStack {
@@ -71,34 +72,10 @@ struct NotificationRouteView: View {
                                         await notificationListVM.removeNotification(id: noti.id)
                                         await notificationListVM.loadNotifications()
                                         
-                                        
+                                        eventToggleNotificationManager.toggleNotificationOnUI(at: noti.userInfo["idEvent"] ?? "", by: .idle)
                                     }
                                     
                                 }
-                            /*
-                            NotificationItem(
-                                id: idEvent ?? "",// id.uuidString,
-                                title: eventName ?? "Upcoming Event",
-                                body: "\(homeTeam ?? "") vs \(awayTeam ?? "")",
-                                triggerDate: date,
-                                userInfo: [
-                                    "idEvent": idEvent ?? "",
-                                    "eventName": eventName ?? "",
-                                    "sportType": sportName ?? "", // hoặc sportType.rawValue
-                                    "homeTeamName": homeTeam ?? "",
-                                    "awayTeamName": awayTeam ?? "",
-                                    "idHomeTeam": idHomeTeam ?? "",
-                                    "idAwayTeam": idAwayTeam ?? "",
-                                    "idVenue": idVenue ?? "",
-                                    "strVenue": venue ?? "",
-                                    "poster": poster ?? "",
-                                    "thumb": thumb ?? "",
-                                    "banner": banner ?? "",
-                                    "square": square ?? ""
-                                ],
-                                hasRead: false
-                            )
-                            */
                         }
                         .padding(10)
                         .background{

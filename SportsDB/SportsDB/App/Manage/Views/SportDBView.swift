@@ -465,21 +465,16 @@ struct NavigationToLikedView: View {
     @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
     @EnvironmentObject var sportRouter: SportRouter
     
-    // Add state for smooth animation
-        @State private var likedCount: Int = 0
-        @State private var animationTrigger: Bool = false
+    @State private var likedCount: Int = 0
+    @State private var shouldBounce: Bool = false
     
     var body: some View {
         VStack {
             HStack(spacing: 5) {
-                Image(systemName: getNumberEventsLiked() > 0 ? "heart.fill" : "heart")
+                Image(systemName: likedCount > 0 ? "heart.fill" : "heart")
                     .font(.title3)
                     .frame(width: 25, height: 25)
                     
-                    .scaleEffect(animationTrigger ? 1.2 : 1.0)
-                    .animation(.spring(response: 0.4, dampingFraction: 0.6), value: animationTrigger)
-                                        
-                
                 Text("Favotire")
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -499,30 +494,25 @@ struct NavigationToLikedView: View {
         .padding(.top, 5)
         .overlay(alignment: .topTrailing) {
             Color.clear
-                .customBadge(getNumberEventsLiked())
-                //.customBadge(likedCount)
+                //.customBadge(getNumberEventsLiked())
+                .customBadge(likedCount)
         }
-        
-        .onReceive(eventSwiftDataVM.$events) { events in
-            let newCount = events.filter({ $0.like == true }).count
+        // Listen to changes in eventSwiftDataVM.events
+        .onChange(of: eventSwiftDataVM.events.map(\.like)) { oldValues, newValues in
+            let newCount = newValues.filter { $0 }.count
             
             if newCount != likedCount {
-                // Trigger animation when count changes
                 withAnimation(.easeInOut(duration: 0.3)) {
                     likedCount = newCount
                 }
                 
-                // Heart bounce animation
-                animationTrigger.toggle()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    animationTrigger.toggle()
-                }
+                // Trigger bounce animation
+                triggerBounce()
             }
         }
         .onAppear {
             likedCount = eventSwiftDataVM.getEventsLiked().count
         }
-        
     }
     
     func getNumberEventsLiked() -> Int {
@@ -530,5 +520,17 @@ struct NavigationToLikedView: View {
             return eventSwiftDataVM.getEventsLiked().count
         }
         
+    }
+    
+    private func triggerBounce() {
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+            shouldBounce = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                shouldBounce = false
+            }
+        }
     }
 }
