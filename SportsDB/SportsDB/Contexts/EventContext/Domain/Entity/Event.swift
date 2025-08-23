@@ -119,7 +119,8 @@ extension Event {
             body: "\(homeTeam ?? "") vs \(awayTeam ?? "")",
             triggerDate: date,
             userInfo: [
-                "idEvent": idEvent ?? ""
+                "sportType": sportName ?? ""
+                , "idEvent": idEvent ?? ""
                 , "idAPIfootball": idAPIfootball ?? ""
                 , "eventName": eventName ?? ""
                 , "eventAlternate": eventAlternate ?? ""

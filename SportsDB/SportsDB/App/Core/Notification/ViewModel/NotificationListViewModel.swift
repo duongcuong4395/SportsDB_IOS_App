@@ -79,10 +79,9 @@ final class NotificationListViewModel: ObservableObject {
 
         let items = await notificationManager.getPendingNotifications()
         DispatchQueue.main.async {
-            withAnimation {
+            withAnimation(.easeInOut(duration: 0.4)) {
                 self.notifications = items
             }
-            self.isLoading = false
         }
     }
     
@@ -117,7 +116,7 @@ final class NotificationListViewModel: ObservableObject {
             self.isLoading = true
         }
         notificationManager.cancelNotification(id: id)
-        await loadNotifications()
+        //await loadNotifications()
     }
     
     func hasNotification(for eventID: String) -> Bool {
