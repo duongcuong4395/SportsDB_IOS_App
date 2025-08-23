@@ -22,7 +22,6 @@ struct SportsDBApp: App {
 
 struct SportDBView_New: View {
     @StateObject private var container = AppDependencyContainer()
-    //@EnvironmentObject var notificationListVM: NotificationListViewModel
     
     var body: some View {
         GenericNavigationStack(
@@ -42,8 +41,6 @@ struct SportDBView_New: View {
         })
         .injectDependencies(container)
         .onAppear(perform: onAppear)
-        // Bắt sự kiện khi nhấn vào thông báo
-        // khi app đã tắt hoặc cả khi app đang ở background hoặc app đang active
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NavigateToEvent"))) { notification in
             handleNavigateToEvent(notification)
         }

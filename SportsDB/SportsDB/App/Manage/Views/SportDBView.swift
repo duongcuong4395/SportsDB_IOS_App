@@ -438,8 +438,6 @@ struct NavigationToNotificationView: View {
             Text("Notification")
                 .font(.caption)
                 .fontWeight(.semibold)
-                //.lineLimit(1)
-            
         }
         .padding(5)
         .background{

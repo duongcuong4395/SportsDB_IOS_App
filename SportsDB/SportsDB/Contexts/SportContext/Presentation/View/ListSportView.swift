@@ -28,7 +28,7 @@ struct SelectSportView : View {
                             .font(.caption)
                             .fontWeight(.semibold)
                     }
-                    .padding(5)
+                    .padding(5.5)
                     .background{
                         Color.clear
                             .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
