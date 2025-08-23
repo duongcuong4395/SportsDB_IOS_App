@@ -487,6 +487,7 @@ struct NavigationToLikedView: View {
             .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
             .onTapGesture {
                 if !sportRouter.isAtLike {
+                    
                     sportRouter.navigateToLike()
                 }
             }

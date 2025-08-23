@@ -150,8 +150,7 @@ extension Event {
                 , "square": square ?? ""
                 , "fanart": fanart ?? ""
                 , "thumb": thumb ?? ""
-                
-                // , "dateTime": AppUtility.formatDate(from: timestamp, to: "dd/MM/yyyy HH:mm") ?? ""
+                , "dateTime": AppUtility.formatDate(from: timestamp, to: "dd/MM/yyyy HH:mm") ?? ""
             ],
             hasRead: false
         )

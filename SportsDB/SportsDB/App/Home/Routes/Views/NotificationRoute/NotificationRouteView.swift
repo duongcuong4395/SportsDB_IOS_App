@@ -34,16 +34,23 @@ struct NotificationRouteView: View {
         }
     }
     
+    @State var isLoading: Bool = false
+    
     var body: some View {
-        VStack {
-            header
+        VStack(spacing: 0) {
+            headerView
             
             if !notifications.isEmpty {
                 searchBarView
                     .padding(.vertical)
             }
-            
-            contentView
+            if isLoading {
+                Spacer()
+                ProgressView()
+                Spacer()
+            } else {
+                contentView
+            }
         }
         .onAppear{
             loadNotifySaved()
@@ -65,12 +72,14 @@ struct NotificationRouteView: View {
     
     
     func loadNotifySaved() {
-        
+        self.isLoading = true
         
         Task {
             await notificationListVM.loadNotifications()
             withAnimation(.easeInOut(duration: 0.3)) {
+                
                 notifications = notificationListVM.notifications
+                self.isLoading = false
             }
         }
     }
@@ -123,61 +132,27 @@ extension NotificationRouteView {
     }
     
     @ViewBuilder
-    private var searchEmptyStateView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 40))
-                .foregroundColor(.secondary)
-            
-            Text("No Results")
-                .font(.title3.bold())
-            
-            Text("Try searching with different keywords")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.clear)
-    }
-    
-    @ViewBuilder
     private var notificationsListView: some View {
-        // Selection toolbar
-        if isSelectionMode && !selectedNotify.isEmpty {
-            selectionToolbar
-        }
-        
-        List {
-            ForEach(filteredNotification, id: \.id) { event in
-                notifyRowView(event)
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+        VStack {
+            // Selection toolbar
+            if isSelectionMode && !selectedNotify.isEmpty {
+                selectionToolbar
             }
-            .onDelete(perform: deleteEvents)
-        }
-        .listStyle(PlainListStyle())
-        .environment(\.editMode, .constant(isSelectionMode ? .active : .inactive))
-        .padding(0)
-        /*
-        ScrollView(showsIndicators: false) {
-            LazyVStack {
-                ForEach(notificationListVM.notifications, id: \.id) { noti in
-                    notifyRowView(noti)
+            
+            List {
+                ForEach(filteredNotification, id: \.id) { event in
+                    notifyRowView(event)
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }
+                .onDelete(perform: deleteEvents)
             }
-            .padding(.horizontal, 10)
+            .listStyle(PlainListStyle())
+            .environment(\.editMode, .constant(isSelectionMode ? .active : .inactive))
+            .padding(0)
         }
-        */
-    }
-    
-    private func deleteEvents(at offsets: IndexSet) {
-        let eventsToDelete = offsets.map { filteredNotification[$0] }
-        
-        for event in eventsToDelete {
-            handleToggleNotification(event)
-        }
+        .padding(0)
     }
     
     private func notifyRowView(_ noti: NotificationItem) -> some View {
@@ -202,14 +177,19 @@ extension NotificationRouteView {
             VStack(alignment: .leading) {
                 Text(noti.title)
                     .font(.footnote.bold())
-                
-                Text(noti.userInfo["leagueName"] ?? "")
-                    .font(.caption.bold())
-                + Text("(\(noti.userInfo["season"] ?? ""))")
-                    .font(.caption)
+                HStack {
+                    Text(noti.userInfo["leagueName"] ?? "")
+                        .font(.caption.bold())
+                        .foregroundColor(.secondary)
+                    Text("(\(noti.userInfo["season"] ?? ""))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
                 Text(noti.userInfo["dateTime"] ?? "")
                     .font(.caption2)
+                    .foregroundColor(.secondary)
             }
+            
             
             Spacer()
             
@@ -220,7 +200,7 @@ extension NotificationRouteView {
                     Button(action: {
                         showDeleteConfirmation(for: noti)
                     }) {
-                        Label("Remove from Favorites", systemImage: "heart.slash")
+                        Label("Remove from notifications", systemImage: "heart.slash")
                     }
                     
                     Button(action: {
@@ -238,18 +218,19 @@ extension NotificationRouteView {
                 .buttonStyle(PlainButtonStyle())
             }
         }
-        .padding(10)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
         .background{
             Color.clear
                 .liquidGlass(cornerRadius: 15, intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
         }
         .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .padding([.top, .leading], 13)
+        //.padding([.top, .leading], 13)
         .overlay(alignment: .topLeading) {
             SportType(rawValue: noti.userInfo["sportType"] ?? "")?.getIcon()
-                .frame(width: 30, height: 30)
-                //.frame(width: 25, height: 25)
-                //.offset(x: -5, y: -5)
+                //.frame(width: 30, height: 30)
+                .frame(width: 25, height: 25)
+                .offset(x: -5, y: -5)
         }
         .scaleEffect(selectedNotify.contains(noti.id) ? 0.98 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: selectedNotify.contains(noti.id))
@@ -263,6 +244,33 @@ extension NotificationRouteView {
         }
         
         
+    }
+    
+    @ViewBuilder
+    private var searchEmptyStateView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 40))
+                .foregroundColor(.secondary)
+            
+            Text("No Results")
+                .font(.title3.bold())
+            
+            Text("Try searching with different keywords")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.clear)
+    }
+    
+    private func deleteEvents(at offsets: IndexSet) {
+        let eventsToDelete = offsets.map { filteredNotification[$0] }
+        
+        for event in eventsToDelete {
+            handleToggleNotification(event)
+        }
     }
     
     private func handleEventTap(_ event: NotificationItem) {
@@ -404,7 +412,7 @@ extension NotificationRouteView {
     // MARK: - Empty State Views
     private var notifyStateView: some View {
         VStack(spacing: 16) {
-            Image(systemName: "heart")
+            Image(systemName: "bell")
                 .font(.system(size: 50))
                 .foregroundColor(.secondary)
             
@@ -424,7 +432,7 @@ extension NotificationRouteView {
 // MARK: Header
 extension NotificationRouteView {
     @ViewBuilder
-    var header: some View {
+    var headerView: some View {
         HStack(spacing: 10) {
             Button(action: {
                 sportRouter.pop()
@@ -432,12 +440,19 @@ extension NotificationRouteView {
                 Image(systemName: "chevron.left")
                     .font(.title2)
             })
-            HStack(spacing: 5) {
+            
+            HStack(spacing: 8) {
                 Image(systemName: notificationListVM.notifications.count > 0 ? "bell.fill" : "bell")
                     .font(.body)
                     
                 Text("Notification")
                     .font(.body.bold())
+                
+                if !notifications.isEmpty {
+                    Text("(\(notifications.count))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             .onTapGesture {
                 sportRouter.pop()
@@ -457,6 +472,7 @@ extension NotificationRouteView {
                 }
             }
         }
+        .padding(.horizontal, 16)
         .backgroundOfRouteHeaderView(with: 70)
     }
 }

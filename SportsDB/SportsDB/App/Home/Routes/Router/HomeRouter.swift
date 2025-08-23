@@ -36,11 +36,13 @@ class SportRouter: BaseRouter<SportRoute> {
     }
     
     func navigateToNotification() {
-        push(.Notification)
+        navigateToOrPush(.Notification)
+        //push(.Notification)
     }
     
     func navigateToLike() {
-        push(.Like)
+        navigateToOrPush(.Like)
+        //push(.Like)
     }
     
     func navigateToEventDetail() {
