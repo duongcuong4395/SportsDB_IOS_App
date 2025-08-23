@@ -96,6 +96,7 @@ struct LikeRouteView: View {
                     Text("(\(events.count))")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                        .contentTransition(.numericText())
                 }
             }
             .onTapGesture {
@@ -113,9 +114,10 @@ struct LikeRouteView: View {
                         selectedEvents.removeAll()
                     }
                 }) {
-                    Text(isSelectionMode ? "Done" : "Select")
-                        .font(.body)
-                        .foregroundColor(.blue)
+                    Image(systemName: isSelectionMode ?  "checkmark.circle.fill" : "checklist")
+                        .font(.title2)
+                        .foregroundColor(.primary)
+                    
                 }
             }
         }
@@ -168,6 +170,7 @@ struct LikeRouteView: View {
             // Selection toolbar
             if isSelectionMode && !selectedEvents.isEmpty {
                 selectionToolbar
+                    .padding(.bottom, 5)
             }
             
             List {
@@ -295,9 +298,10 @@ struct LikeRouteView: View {
                     }
                 }
             }) {
-                Text(selectedEvents.count == filteredEvents.count ? "Deselect All" : "Select All")
-                    .font(.caption)
-                    .foregroundColor(.blue)
+                
+                Image(systemName: selectedEvents.count == filteredEvents.count ?  "checklist.unchecked" : "checklist.checked")
+                    .font(.title3)
+                    .foregroundColor(.primary)
             }
             
             Spacer()
@@ -305,6 +309,7 @@ struct LikeRouteView: View {
             Text("\(selectedEvents.count) selected")
                 .font(.caption)
                 .foregroundColor(.secondary)
+                .contentTransition(.numericText())
             
             Spacer()
             

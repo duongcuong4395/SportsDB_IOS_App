@@ -40,7 +40,6 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
                 print("❌ Schedule error: \(error)")
             } else {
                 print("✅ Scheduled notification:")
-                dump(item)
             }
         }
     }

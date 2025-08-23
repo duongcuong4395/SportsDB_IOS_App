@@ -74,7 +74,6 @@ struct SportDBView_New: View {
    private func handleTappedNotification(_ notification: NotificationItem) {
        // Xử lý khi có notification được tap
        print("📱 Notification tapped in UI: \(notification.title)")
-       dump(notification)
        
        // Có thể show alert, navigation, etc.
        if let eventId = notification.userInfo["idEvent"] {

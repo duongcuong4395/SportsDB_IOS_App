@@ -21,7 +21,7 @@ struct CustomBadge: ViewModifier {
                 HStack(spacing: 0) {
                     // min returns the smallest value of either count, or the maxCountAmount
                     Text(min(count, maxCountAmount), format: .number)
-                    
+                        .contentTransition(.numericText())
                     // optionally adding a plus sign if our badge count gets too large to let the user know
                     // there are more badges than we want to display
                     if count > maxCountAmount {

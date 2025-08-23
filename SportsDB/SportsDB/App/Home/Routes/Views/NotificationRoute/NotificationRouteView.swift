@@ -324,9 +324,10 @@ extension NotificationRouteView {
                     }
                 }
             }) {
-                Text(selectedNotify.count == filteredNotification.count ? "Deselect All" : "Select All")
-                    .font(.caption)
-                    .foregroundColor(.blue)
+                
+                Image(systemName: selectedNotify.count == filteredNotification.count ?  "checklist.unchecked" : "checklist.checked")
+                    .font(.title3)
+                    .foregroundColor(.primary)
             }
             
             Spacer()
@@ -334,6 +335,8 @@ extension NotificationRouteView {
             Text("\(selectedNotify.count) selected")
                 .font(.caption)
                 .foregroundColor(.secondary)
+                .contentTransition(.numericText())
+                //.animation(.easeInOut(duration: 0.5), value: selectedNotify.count)
             
             Spacer()
             
@@ -452,6 +455,8 @@ extension NotificationRouteView {
                     Text("(\(notifications.count))")
                         .font(.caption)
                         .foregroundColor(.secondary)
+                        .contentTransition(.numericText())
+                        //.animation(.easeInOut(duration: 0.5), value: notifications.count)
                 }
             }
             .onTapGesture {
@@ -466,9 +471,9 @@ extension NotificationRouteView {
                         selectedNotify.removeAll()
                     }
                 }) {
-                    Text(isSelectionMode ? "Done" : "Select")
-                        .font(.body)
-                        .foregroundColor(.blue)
+                    Image(systemName: isSelectionMode ?  "checkmark.circle.fill" : "checklist")
+                        .font(.title2)
+                        .foregroundColor(.primary)
                 }
             }
         }

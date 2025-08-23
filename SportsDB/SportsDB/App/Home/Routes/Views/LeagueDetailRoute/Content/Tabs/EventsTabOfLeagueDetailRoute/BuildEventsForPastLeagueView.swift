@@ -162,6 +162,7 @@ extension EventsGenericView {
 extension EventsGenericView {
     func handleToggleNotificationEvent(_ event: Event) async throws {
         let newEvent = await notificationListVM.toggleNotification(event)
+        await notificationListVM.loadNotifications()
         _ = try await eventSwiftDataVM.setNotification(newEvent, by: newEvent.notificationStatus)
         
         eventToggleNotificationManager.toggleNotificationOnUI(at: event.idEvent ?? "", by: newEvent.notificationStatus)
