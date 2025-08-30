@@ -132,9 +132,12 @@ class AppDependencyContainer: ObservableObject {
         , eventsInSpecificInSeasonVM: eventsInSpecificInSeasonVM
         , eventsPerRoundInSeasonVM: eventsPerRoundInSeasonVM
         , eventsRecentOfLeagueVM: eventsRecentOfLeagueVM)
+    
+    lazy var manageLikeRouteVM = ManageLikeRouteViewModel(
+        sportRouter: sportRouter
+        , eventSwiftDataVM: eventSwiftDataVM
+        , eventToggleLikeManager: eventToggleLikeManager)
 }
-
-
 
 // MARK: List events
 extension AppDependencyContainer {
