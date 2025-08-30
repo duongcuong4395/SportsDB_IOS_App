@@ -137,6 +137,12 @@ class AppDependencyContainer: ObservableObject {
         sportRouter: sportRouter
         , eventSwiftDataVM: eventSwiftDataVM
         , eventToggleLikeManager: eventToggleLikeManager)
+    
+    lazy var manageNotificationRouteVM = ManageNotificationRouteViewModel(
+        notificationListVM: notificationListVM
+        , sportRouter: sportRouter
+        , eventSwiftDataVM: eventSwiftDataVM
+        , eventToggleNotificationManager: eventToggleNotificationManager)
 }
 
 // MARK: List events
