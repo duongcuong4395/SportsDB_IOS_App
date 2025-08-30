@@ -56,8 +56,6 @@ struct LikeRouteHeaderView: View {
                     withAnimation(.easeInOut(duration: 0.3)) {
                         manageLikeRouteVM.toggleSelectionMode()
                         manageLikeRouteVM.resetEventsSelected()
-                        //isSelectionMode.toggle()
-                        //selectedEvents.removeAll()
                     }
                 }) {
                     Image(systemName: manageLikeRouteVM.isSelectionMode ?  "checkmark.circle.fill" : "checklist")

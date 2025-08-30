@@ -28,39 +28,4 @@ struct LeagueDetailRouteView: View {
 }
 
 
-struct RouteGenericView<HeaderView: View, ContentView: View>: View {
-    
-    private var headerView: HeaderView
-    private var contentView: ContentView
-    private var backgroundURLLink: String?
-    
-    init(headerView: HeaderView, contentView: ContentView, backgroundURLLink: String? = nil) {
-        self.headerView = headerView
-        self.contentView = contentView
-        self.backgroundURLLink = backgroundURLLink
-    }
-    
-    var body: some View {
-        if let backgroundURLLink {
-            VStack {
-                headerView
-                contentView
-            }
-            .backgroundOfRouteView(with: backgroundURLLink)
-        } else {
-            VStack {
-                headerView
-                contentView
-            }
-        }
-    }
-}
-
-
-
-
-
-
-
-
 

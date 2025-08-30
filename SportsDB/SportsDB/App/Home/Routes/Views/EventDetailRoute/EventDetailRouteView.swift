@@ -17,16 +17,5 @@ struct EventDetailRouteView: View {
         .onDisappear{
             eventDetailVM.eventsStatus = .idle
         }
-        /*
-        VStack {
-            // MARK: Header
-            EventDetailRouteHeaderView()
-            // MARK: Content
-            EventDetailRouteContentView()
-        }
-        .onDisappear{
-            eventDetailVM.eventsStatus = .idle
-        }
-        */
     }
 }

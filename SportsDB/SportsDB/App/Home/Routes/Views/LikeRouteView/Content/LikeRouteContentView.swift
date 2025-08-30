@@ -17,11 +17,14 @@ struct LikeRouteContentView: View {
                 searchBarView
                     .padding(.vertical)
             }
-            
             contentView
         }
     }
-    
+}
+
+
+// MARK: contentView
+extension LikeRouteContentView {
     @ViewBuilder
     private var contentView: some View {
         if manageLikeRouteVM.events.isEmpty {
@@ -32,8 +35,10 @@ struct LikeRouteContentView: View {
             eventsListView
         }
     }
-    
-    // MARK: - Events List View
+}
+
+// MARK: Events List View
+extension LikeRouteContentView {
     private var eventsListView: some View {
         VStack(spacing: 0) {
             // Selection toolbar
@@ -155,70 +160,6 @@ struct LikeRouteContentView: View {
         }
     }
     
-    private var searchEmptyStateView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 40))
-                .foregroundColor(.secondary)
-            
-            Text("No Results")
-                .font(.title3.bold())
-            
-            Text("Try searching with different keywords")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.clear)
-    }
-    
-    // MARK: - Empty State Views
-    private var emptyStateView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "heart")
-                .font(.system(size: 50))
-                .foregroundColor(.secondary)
-            
-            Text("No Favorite Events")
-                .font(.title3.bold())
-            
-            Text("Events you like will appear here")
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.clear)
-    }
-    
-    // MARK: - Search Bar View
-    private var searchBarView: some View {
-        HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
-            
-            TextField("Search events...", text: $manageLikeRouteVM.searchText)
-                .textFieldStyle(PlainTextFieldStyle())
-            
-            if !manageLikeRouteVM.searchText.isEmpty {
-                Button(action: {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        manageLikeRouteVM.searchText = ""
-                    }
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(.secondary)
-                }
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, 16)
-        .padding(.bottom, 8)
-    }
-    
     // MARK: - Selection Toolbar
     private var selectionToolbar: some View {
         HStack {
@@ -260,5 +201,78 @@ struct LikeRouteContentView: View {
         .padding(.vertical, 8)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
         .padding(.horizontal, 16)
+    }
+}
+
+// MARK: Search Empty State View
+extension LikeRouteContentView {
+    private var searchEmptyStateView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 40))
+                .foregroundColor(.secondary)
+            
+            Text("No Results")
+                .font(.title3.bold())
+            
+            Text("Try searching with different keywords")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.clear)
+    }
+}
+
+// MARK: Empty State View
+extension LikeRouteContentView {
+    // MARK: - Empty State Views
+    private var emptyStateView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "heart")
+                .font(.system(size: 50))
+                .foregroundColor(.secondary)
+            
+            Text("No Favorite Events")
+                .font(.title3.bold())
+            
+            Text("Events you like will appear here")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.clear)
+    }
+}
+
+// MARK: - Search Bar View
+extension LikeRouteContentView {
+    @ViewBuilder
+    private var searchBarView: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+            
+            TextField("Search events...", text: $manageLikeRouteVM.searchText)
+                .textFieldStyle(PlainTextFieldStyle())
+            
+            if !manageLikeRouteVM.searchText.isEmpty {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        manageLikeRouteVM.searchText = ""
+                    }
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
     }
 }
