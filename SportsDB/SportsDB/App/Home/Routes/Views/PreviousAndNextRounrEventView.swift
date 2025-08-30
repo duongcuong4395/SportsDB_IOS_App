@@ -24,9 +24,10 @@ struct PreviousAndNextRounrEventView: View {
                         
                     }
             }
+            Spacer()
             Text("Round: \(currentRound)")
                 .font(.callout.bold())
-            
+            Spacer()
             if hasNextRound == true {
                 Text("Next >")
                     .font(.callout)
@@ -34,8 +35,6 @@ struct PreviousAndNextRounrEventView: View {
                         nextRoundTapped()
                     }
             }
-            
-            Spacer()
         }
     }
 }

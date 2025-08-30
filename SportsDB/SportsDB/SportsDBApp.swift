@@ -9,19 +9,22 @@ import SwiftUI
 
 @main
 struct SportsDBApp: App {
+    @StateObject private var networkMonitor = NetworkMonitor()
     
     var body: some Scene {
         WindowGroup {
             SportDBView_New()
-                .environmentObject(NetworkManager.shared)
+                .environment(\.isNetworkConnected, networkMonitor.isConnected)
+                .environment(\.connectionType, networkMonitor.connectionType)
         }
         .modelContainer(MainDB.shared)
-        .environmentObject(NetworkManager.shared)
     }
 }
 
 struct SportDBView_New: View {
     @StateObject private var container = AppDependencyContainer()
+    @Environment(\.isNetworkConnected) private var isConnected
+    @Environment(\.connectionType) private var connectionType
     
     var body: some View {
         GenericNavigationStack(
@@ -40,33 +43,25 @@ struct SportDBView_New: View {
                 .environmentObject(container.aiManageVM)
         })
         .injectDependencies(container)
-        .onAppear(perform: onAppear)
+        .onAppear(perform: container.appAppear)
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NavigateToEvent"))) { notification in
-            handleNavigateToEvent(notification)
+            
+            container.handleNavigateToEvent(from: notification)
         }
         .onChange(of: container.notificationListVM.tappedNotification) { oldVL, notification in
             if let notification = notification {
                 handleTappedNotification(notification)
             }
         }
+        .sheet(isPresented: .constant(!(isConnected ?? true))) {
+            NoInternetView()
+                .presentationDetents([.height(310)])
+                .presentationCornerRadius(0)
+                .presentationBackgroundInteraction(.disabled)
+                .presentationBackground(.clear)
+                .interactiveDismissDisabled()
+        }
     }
-    
-    private func handleNavigateToEvent(_ notification: Notification) {
-       guard let eventId = notification.userInfo?["eventId"] as? String,
-             let notificationItem = notification.userInfo?["notification"] as? NotificationItem else {
-           return
-       }
-       
-       print("🚀 Navigating to event: \(eventId)")
-        let event = notificationItem.toEvent()
-        container.eventDetailVM.setEventDetail(event)
-        container.sportRouter.navigateToEventDetail()
-        
-    
-       // Thực hiện navigation tại đây
-       // Ví dụ: push to event detail screen
-       // container.sportRouter.push(EventDetailRoute(eventId: eventId))
-   }
        
    private func handleTappedNotification(_ notification: NotificationItem) {
        // Xử lý khi có notification được tap
@@ -81,16 +76,6 @@ struct SportDBView_New: View {
     
 }
 
-extension SportDBView_New {
-    private func onAppear() {
-        Task {
-            await container.notificationListVM.loadNotifications()
-            await container.eventSwiftDataVM.loadEvents()
-            _ = await container.aiManageVM.getKey()
-        }
-    }
-}
-
 // MARK: bottomOverlay
 extension SportDBView_New {
     @ViewBuilder
@@ -98,13 +83,12 @@ extension SportDBView_New {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
                 SelectSportView(tappedSport: { sport in
-                    onTapSport()
+                    container.tapSport()
                 })
                 .padding(.horizontal, 5)
                 .padding(.top, 5)
                 
                 NavigationToNotificationView()
-                
                 NavigationToLikedView()
                 
                 //ButtonTestNotificationView()
@@ -112,59 +96,13 @@ extension SportDBView_New {
         }
         
     }
-    
-    func onTapSport() {
-        container.sportRouter.popToRoot()
-        
-        container.leagueListVM.resetAll()
-        container.leagueDetailVM.resetAll()
-        
-        container.teamListVM.resetAll()
-        container.teamDetailVM.resetAll()
-        
-        container.seasonListVM.resetAll()
-        
-        container.eventListVM.resetAll()
-        container.eventsInSpecificInSeasonVM.resetAll()
-        container.eventsRecentOfLeagueVM.resetAll()
-        container.eventsPerRoundInSeasonVM.resetAll()
-        container.eventsOfTeamByScheduleVM.resetAll()
-        
-        container.playerListVM.resetAll()
-        container.trophyListVM.resetAll()
-    }
 }
 
 // MARK: Sport Destination View
 private extension SportDBView_New {
     @ViewBuilder
     func sportDestination(_ route: SportRoute) -> some View {
-        VStack {
-            switch route {
-            case .ListCountry:
-                ListCountryRouteView()
-            case .ListLeague(by: let country, and: let sport):
-                ListLeagueRouteView(country: country, sport: sport)
-                    .navigationBarHidden(true)
-            case .LeagueDetail(by: _):
-                LeagueDetailRouteView()
-                    .navigationBarHidden(true)
-            case .TeamDetail:
-                TeamDetailRouteView()
-                .padding(0)
-                .navigationBarHidden(true)
-            case .Notification:
-                NotificationRouteView()
-                    .navigationBarHidden(true)
-            case .Like:
-                LikeRouteView()
-                    .navigationBarHidden(true)
-            case .EventDetail:
-                EventDetailRouteView()
-                    .navigationBarHidden(true)
-            }
-        }
-        .backgroundGradient()
+        route.destinationView()
     }
 }
 
@@ -216,23 +154,105 @@ struct ButtonTestNotificationView: View {
                     .font(.caption)
                     .fontWeight(.semibold)
             }
-            .padding(5)
-            .background{
-                Color.clear
-                    .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
-            }
-            .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .backgroundOfItemTouched()
             .onTapGesture {
-                let eventExample = getEventExample()
-                guard let notiItem = eventExample.notificationItemTest else { return }
-                
-                NotificationManager.shared.scheduleNotification(notiItem)
+                addScheduleNotification()
             }
         }
         .padding(.top, 5)
+    }
+    
+    func addScheduleNotification() {
+        let eventExample = getEventExample()
+        guard let notiItem = eventExample.notificationItemTest else { return }
+        
+        NotificationManager.shared.scheduleNotification(notiItem)
     }
 }
 
 
 
 
+struct BackgroundOfItemTouchedModifier: ViewModifier {
+    var tintColor: Color
+    var cornerRadius: Double
+    var intensity: Double
+    var hasGlow: Bool
+    var hasShimmer: Bool
+    func body(content: Content) -> some View {
+        content
+            .padding(5)
+            .background{
+                Color.clear
+                    .liquidGlass(intensity: intensity, tintColor: tintColor, hasShimmer: hasShimmer, hasGlow: hasGlow)
+            }
+            .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+    }
+}
+
+extension View {
+    func backgroundOfItemTouched(color: Color = .orange, cornerRadius: Double = 20, intensity: Double = 0.8, hasGlow: Bool = true, hasShimmer: Bool = true) -> some View {
+        self.modifier(BackgroundOfItemTouchedModifier(tintColor: color, cornerRadius: cornerRadius, intensity: intensity, hasGlow: hasGlow, hasShimmer: hasShimmer))
+    }
+}
+
+
+extension View {
+    func backgroundGradient() -> some View {
+        self.background{
+            LinearGradient(
+                colors: [
+                    Color.blue.opacity(0.3),
+                    Color.purple.opacity(0.3),
+                    Color.pink.opacity(0.3)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+        }
+    }
+}
+
+import Kingfisher
+extension View {
+    func backgroundOfRouteView(with image: String) -> some View {
+        self.background {
+            KFImage(URL(string: image))
+                .placeholder { progress in
+                    ProgressView()
+                }
+                .opacity(0.1)
+                .ignoresSafeArea(.all)
+        }
+    }
+}
+
+
+extension View {
+    func backgroundOfRouteHeaderView(with height: CGFloat = 70) -> some View {
+        self.padding(.horizontal)
+            .frame(height: height)
+            .background {
+                Color.clear
+                    .liquidGlass(intensity: 0.8)
+                    .ignoresSafeArea(.all)
+            }
+    }
+}
+
+
+extension View {
+    func liquidGlassForTabView<T>(with tag: T) -> some View where T : Hashable {
+        self.liquidGlassForCardView()
+            .tag(tag)
+    }
+}
+
+extension View {
+    func liquidGlassForCardView(intensity: Double = 0.8,
+                                cornerRadius: CGFloat = 20) -> some View {
+        self.liquidGlass(intensity: intensity, cornerRadius: cornerRadius)
+            .padding(.horizontal, 5)
+    }
+}

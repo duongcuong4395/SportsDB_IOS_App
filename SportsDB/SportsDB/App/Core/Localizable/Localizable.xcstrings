@@ -148,7 +148,7 @@
     "Complex Header Example" : {
 
     },
-    "Connection: %@" : {
+    "Connected" : {
 
     },
     "Custom Effects" : {
@@ -321,6 +321,9 @@
     "Navigation" : {
 
     },
+    "Network Monitor" : {
+
+    },
     "Next >" : {
 
     },
@@ -330,13 +333,16 @@
     "No Favorite Events" : {
 
     },
+    "No Internet" : {
+
+    },
+    "No Internet Connectivity" : {
+
+    },
     "No Notifications" : {
 
     },
     "No Results" : {
-
-    },
-    "Not connect Internet" : {
 
     },
     "NOTE" : {
@@ -375,6 +381,9 @@
 
     },
     "Orders" : {
+
+    },
+    "Please check your internet connection\nto continue using the app." : {
 
     },
     "Please return in a few minutes" : {
@@ -517,6 +526,9 @@
     "Standard" : {
 
     },
+    "Status" : {
+
+    },
     "Sticky Header" : {
 
     },
@@ -578,6 +590,9 @@
         }
       }
     },
+    "Type" : {
+
+    },
     "Universal Example" : {
 
     },
@@ -594,6 +609,9 @@
 
     },
     "Wage: %@" : {
+
+    },
+    "Waiting for internet connection..." : {
 
     },
     "Watch the subtle shape morphing animation" : {

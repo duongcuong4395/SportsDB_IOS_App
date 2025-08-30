@@ -14,8 +14,6 @@ struct LikeRouteView: View {
     @EnvironmentObject var eventSwiftDataVM: EventSwiftDataViewModel
     @EnvironmentObject var eventToggleLikeManager: EventToggleLikeManager
     
-    //@Environment(\.modelContext) var context
-    
     @State private var events: [EventSwiftData] = []
     @State private var searchText: String = ""
     @State private var showingDeleteAlert: Bool = false

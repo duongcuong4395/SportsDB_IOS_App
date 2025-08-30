@@ -92,13 +92,7 @@ struct GeminiAddKeyView: View {
                         .font(.caption)
                     Spacer()
                 }
-                /*
-                HStack(alignment: .center) {
-                    Text("- \(NSLocalizedString("stableNetworkRequires", comment: "")).")
-                        .font(.caption)
-                    Spacer()
-                }
-                */
+                
             }
         }
         //.foregroundStyleItemView(by: appVM.appMode)

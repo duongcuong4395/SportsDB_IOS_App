@@ -28,18 +28,12 @@ struct SelectSportView : View {
                             .font(.caption)
                             .fontWeight(.semibold)
                     }
-                    .padding(5.5)
-                    .background{
-                        Color.clear
-                            .liquidGlass(intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
-                    }
-                    .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                    
+                    .backgroundOfItemTouched()
                 } content: {
                     VStack {
                         ListSportView(sportSelected: sportVM.sportSelected, touchSport: { sport in
                             withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
-                                //if sportVM.sportSelected == sport { return }
+                                
                                 showFullScreenCover = false
                                 sportVM.sportSelected = sport
                                 tappedSport(sportVM.sportSelected)
@@ -73,8 +67,6 @@ struct SelectSportView : View {
                 } expandedContent: {
                     EmptyView()
                 }
-                
-
         }
         
         /*

@@ -16,7 +16,6 @@ struct ListCountryRouteView: View {
     @EnvironmentObject var countryListVM: CountryListViewModel
     
     var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]
-    //var animation: Namespace.ID
     
     @State var countryFilter : [Country] = []
     
@@ -29,8 +28,7 @@ struct ListCountryRouteView: View {
                 HStack(spacing: 10) {
                     TextFieldSearchView(listModels: [countryFilter], textSearch: $textSearch)
                     Image(systemName: "xmark")
-                        .padding(5)
-                        .liquidGlassBlur()
+                        .backgroundOfItemTouched()
                         .onTapGesture {
                             withAnimation {
                                 textSearch = ""
@@ -51,8 +49,7 @@ struct ListCountryRouteView: View {
                 HStack {
                     Spacer()
                     Image(systemName: "magnifyingglass")
-                        .padding(5)
-                        .liquidGlassBlur()
+                        .backgroundOfItemTouched()
                         .onTapGesture {
                             withAnimation {
                                 showTextSearch.toggle()

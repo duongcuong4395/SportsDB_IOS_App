@@ -7,6 +7,81 @@
 
 import SwiftUI
 
+enum MenuOfEventsAtTabOfLeagueDetailRouteView: String, CaseIterable {
+    case TableRanking = "Table Ranking"
+    case EventsPerRound = "Events Per Round"
+    case AllEventsForASeason = "All events in a season"
+}
+
+extension MenuOfEventsAtTabOfLeagueDetailRouteView {
+    
+    @ViewBuilder
+    func getView(by league: League, and season: Season) -> some View {
+        switch self {
+        case .TableRanking:
+            TableRankingView(league: league)
+        case .EventsPerRound:
+            EventsPerRoundView(league: league)
+        case .AllEventsForASeason:
+            AllEventsForASeasonView()
+        }
+    }
+    
+}
+
+struct TableRankingView: View {
+    @EnvironmentObject private var seasonListVM: SeasonListViewModel
+    @EnvironmentObject private var leagueListVM: LeagueListViewModel
+    var league: League
+    
+    init(league: League) {
+        self.league = league
+    }
+    
+    var body: some View {
+        LeagueTableForLeagueDetailView(onRetry: {
+            Task {
+                guard let season = seasonListVM.seasonSelected else { return }
+                await leagueListVM.lookupLeagueTable(
+                    leagueID: league.idLeague ?? "",
+                    season: season.season)
+            }
+        })
+    }
+}
+
+struct EventsPerRoundView: View {
+    
+    @EnvironmentObject private var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
+    
+    var league: League
+    init(league: League) {
+        self.league = league
+    }
+    
+    var body: some View {
+        VStack {
+            BuildEventsForEachRoundInControl(leagueID: league.idLeague ?? "")
+            
+            EventsGenericView(eventsViewModel: eventsPerRoundInSeasonVM, onRetry: { })
+        }
+        
+    }
+}
+
+
+struct AllEventsForASeasonView: View {
+    @EnvironmentObject private var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
+    
+    var body: some View {
+        VStack {
+            EventsGenericView(eventsViewModel: eventsInSpecificInSeasonVM, onRetry: { })
+        }
+        
+    }
+}
+
+
 struct EventsTabOfLeagueDetailRouteView: View {
     var league: League
     
@@ -17,6 +92,10 @@ struct EventsTabOfLeagueDetailRouteView: View {
     @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
+    
+    @State var menuOfEventActive: MenuOfEventsAtTabOfLeagueDetailRouteView = .TableRanking
+    
+    @Namespace var animation
     
     var body: some View {
         VStack {
@@ -36,32 +115,49 @@ struct EventsTabOfLeagueDetailRouteView: View {
                     }
                     
                     if seasonListVM.seasonSelected != nil {
-                        TitleComponentView(title: "Ranks")
-                        LeagueTableForLeagueDetailView(onRetry: {
-                            Task {
-                                guard let season = seasonListVM.seasonSelected else { return }
-                                await leagueListVM.lookupLeagueTable(
-                                    leagueID: league.idLeague ?? "",
-                                    season: season.season)
-                            }
-                        })
-                        .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
-
-                        TitleComponentView(title: "Events")
-                        BuildEventsForEachRoundInControl(leagueID: league.idLeague ?? "")
+                        MenuOfEventsView
                         
-                        EventsGenericView(eventsViewModel: eventsPerRoundInSeasonVM, onRetry: { })
-                            .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
-                        
-                        TitleComponentView(title: "Events Specific")
-                        EventsGenericView(eventsViewModel: eventsInSpecificInSeasonVM, onRetry: { })
-                            .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
+                        menuOfEventActive.getView(by: league, and: seasonListVM.seasonSelected ?? Season(season: ""))
+                            .frame(maxHeight: UIScreen.main.bounds.height / 2.75)
                     }
                 }
             }
             .padding(.vertical)
             .padding(.horizontal, 5)
         }
+    }
+    
+    @ViewBuilder
+    var MenuOfEventsView: some View {
+        HStack(spacing: 10) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(MenuOfEventsAtTabOfLeagueDetailRouteView.allCases, id: \.self) { menu in
+                        Text(menu.rawValue)
+                            .font(menuOfEventActive.rawValue == menu.rawValue ? .callout.bold() : .callout)
+                            .padding(5)
+                            .background{
+                                if menuOfEventActive == menu {
+                                    Color.clear
+                                        .background(.thinMaterial.opacity( menuOfEventActive.rawValue == menu.rawValue  ? 1 : 0)
+                                                , in: RoundedRectangle(cornerRadius: 25))
+                                        .matchedGeometryEffect(id: "menuOfEvents", in: animation)
+                                }
+                                
+                            }
+                            .onTapGesture {
+                                withAnimation(.spring()) {
+                                    menuOfEventActive = menu
+                                }
+                            }
+                        
+                    }
+                }
+                
+            }
+        }
+        
+        
     }
 }
 

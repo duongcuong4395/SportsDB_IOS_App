@@ -17,6 +17,32 @@ enum SportRoute: Hashable {
     case EventDetail
 }
 
+extension SportRoute {
+    @ViewBuilder
+    func destinationView() -> some View {
+        VStack {
+            switch self {
+            case .ListCountry:
+                ListCountryRouteView()
+            case .ListLeague(by: _, and: _):
+                ListLeagueRouteView()
+            case .LeagueDetail(by: _):
+                LeagueDetailRouteView()
+            case .TeamDetail:
+                TeamDetailRouteView()
+            case .Notification:
+                NotificationRouteView()
+            case .Like:
+                LikeRouteView()
+            case .EventDetail:
+                EventDetailRouteView()
+            }
+        }
+        .navigationBarHidden(true)
+        .backgroundGradient()
+    }
+}
+
 // MARK: - Specific Routers
 class SportRouter: BaseRouter<SportRoute> {
     func navigateToListLeague(by countryName: String, and sportName: String) {

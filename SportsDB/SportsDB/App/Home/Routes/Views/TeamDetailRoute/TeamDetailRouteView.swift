@@ -14,13 +14,10 @@ struct TeamDetailRouteView: View {
     @EnvironmentObject var teamDetailVM: TeamDetailViewModel
     
     var body: some View {
-        VStack {
-            // MARK: Header
-            TeamDetailRouteHeaderView()
-            
-            // MARK: Content
-            TeamDetailRouteContentView()
-        }
-        .backgroundOfRouteView(with: teamDetailVM.teamSelected?.fanart1 ?? "")
+        RouteGenericView(
+            headerView: TeamDetailRouteHeaderView()
+            , contentView: TeamDetailRouteContentView()
+            , backgroundURLLink: teamDetailVM.teamSelected?.fanart1)
+        
     }
 }

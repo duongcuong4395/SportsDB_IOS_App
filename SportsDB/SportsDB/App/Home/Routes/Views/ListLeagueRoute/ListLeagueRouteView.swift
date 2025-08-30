@@ -9,79 +9,79 @@ import SwiftUI
 import Kingfisher
 
 struct ListLeagueRouteView: View {
-    @EnvironmentObject var leagueListVM: LeagueListViewModel
-    @EnvironmentObject var leagueDetailVM: LeagueDetailViewModel
-    @EnvironmentObject var teamListVM: TeamListViewModel
-    @EnvironmentObject var seasonListVM: SeasonListViewModel
-    @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
-    @EnvironmentObject var sportRouter: SportRouter
+    var body: some View {
+        RouteGenericView(
+            headerView: ListLeagueRouteHeaderView()
+            , contentView: ListLeagueRouteContentView())
+    }
+}
+
+struct ListLeagueRouteContentView: View {
     @EnvironmentObject var countryListVM: CountryListViewModel
     @EnvironmentObject var sportVM: SportViewModel
     
-    let country: String
-    let sport: String
-    
-    //@State var isSticky: Bool = false
-    //var animation: Namespace.ID
-    
     var body: some View {
-        VStack {
-            // MARK: Header
-            HStack(spacing: 10) {
-                Button(action: {
-                    leagueListVM.resetAll()
-                    sportRouter.pop()
-                }, label: {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                })
-                if let country = countryListVM.countrySelected {
-                    HStack(spacing: 5) {
-                        KFImage(URL(string: country.getFlag(by: .Medium)))
-                            .placeholder {
-                                ProgressView()
-                            }
-                            .font(.caption)
-                            .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
-                        Text(country.name)
-                            .font(.body.bold())
-                    }
-                }
-                Spacer()
-            }
-            .backgroundOfRouteHeaderView(with: 70)
+        if let countrySelected = countryListVM.countrySelected {
             
-            // MARK: Content
             ScrollView(showsIndicators: false) {
-                ListLeaguesView(country: country, sport: sport, onRetry: {
-                    print("=== onRetry ListLeaguesView", country)
+                ListLeaguesView(country: countrySelected.name, sport: sportVM.sportSelected.rawValue, onRetry: {
+                    print("=== onRetry ListLeaguesView", countrySelected)
                 })
             }
         }
+        
+    }
+}
+
+struct ListLeagueRouteHeaderView: View {
+    @EnvironmentObject var countryListVM: CountryListViewModel
+    @EnvironmentObject var leagueListVM: LeagueListViewModel
+    @EnvironmentObject var sportRouter: SportRouter
+    
+    var body: some View {
+        HStack(spacing: 10) {
+            Button(action: {
+                leagueListVM.resetAll()
+                sportRouter.pop()
+            }, label: {
+                Image(systemName: "chevron.left")
+                    .font(.title2)
+            })
+            if let country = countryListVM.countrySelected {
+                HStack(spacing: 5) {
+                    KFImage(URL(string: country.getFlag(by: .Medium)))
+                        .placeholder {
+                            ProgressView()
+                        }
+                        .font(.caption)
+                        .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+                    Text(country.name)
+                        .font(.body.bold())
+                }
+            }
+            Spacer()
+        }
+        .backgroundOfRouteHeaderView(with: 70)
     }
 }
 
 struct ListLeaguesView: View {
     @EnvironmentObject var leagueListVM: LeagueListViewModel
     @EnvironmentObject var sportRouter: SportRouter
-    @EnvironmentObject var countryListVM: CountryListViewModel
-    @EnvironmentObject var sportVM: SportViewModel
     @EnvironmentObject var leagueDetailVM: LeagueDetailViewModel
     @EnvironmentObject var teamListVM: TeamListViewModel
     @EnvironmentObject var seasonListVM: SeasonListViewModel
     @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
-    
     
     let country: String
     let sport: String
     
     var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]
     private let badgeImageSizePerLeague: (width: CGFloat, height: CGFloat) = (60, 60)
-    @State var reloadNumb: Int = 0
-    @State var isSticky: Bool = false
     
     @State var numbRetry: Int = 0
     @State var onRetry: () -> Void
+    
     var body: some View {
         switch leagueListVM.leaguesStatus {
         case .loading:
@@ -114,15 +114,9 @@ struct ListLeaguesView: View {
             sportRouter.navigateToLeagueDetail(by: league.idLeague ?? "")
             // Get list teams
             await teamListVM.getListTeams(leagueName: league.leagueName ?? "", sportName: sport, countryName: country)
-            //await eventListVM.lookupEventsPastLeague(leagueID: league.idLeague ?? "")
-            // Get list Season
-            
         }
         
         eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
-        
-        
-        
     }
     
 }

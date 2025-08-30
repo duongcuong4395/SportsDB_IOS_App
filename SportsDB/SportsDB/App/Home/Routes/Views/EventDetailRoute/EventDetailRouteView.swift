@@ -11,6 +11,13 @@ struct EventDetailRouteView: View {
     @EnvironmentObject var eventDetailVM: EventDetailViewModel
     
     var body: some View {
+        RouteGenericView(
+            headerView: EventDetailRouteHeaderView()
+            , contentView: EventDetailRouteContentView())
+        .onDisappear{
+            eventDetailVM.eventsStatus = .idle
+        }
+        /*
         VStack {
             // MARK: Header
             EventDetailRouteHeaderView()
@@ -20,5 +27,6 @@ struct EventDetailRouteView: View {
         .onDisappear{
             eventDetailVM.eventsStatus = .idle
         }
+        */
     }
 }

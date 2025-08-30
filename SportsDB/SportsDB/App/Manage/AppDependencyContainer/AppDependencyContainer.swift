@@ -133,3 +133,49 @@ class AppDependencyContainer: ObservableObject {
         , eventsPerRoundInSeasonVM: eventsPerRoundInSeasonVM
         , eventsRecentOfLeagueVM: eventsRecentOfLeagueVM)
 }
+
+
+
+// MARK: List events
+extension AppDependencyContainer {
+    func tapSport() {
+        sportRouter.popToRoot()
+        
+        leagueListVM.resetAll()
+        leagueDetailVM.resetAll()
+        
+        teamListVM.resetAll()
+        teamDetailVM.resetAll()
+        
+        seasonListVM.resetAll()
+        
+        eventListVM.resetAll()
+        eventsInSpecificInSeasonVM.resetAll()
+        eventsRecentOfLeagueVM.resetAll()
+        eventsPerRoundInSeasonVM.resetAll()
+        eventsOfTeamByScheduleVM.resetAll()
+        
+        playerListVM.resetAll()
+        trophyListVM.resetAll()
+    }
+    
+    func appAppear() {
+        Task {
+            await notificationListVM.loadNotifications()
+            await eventSwiftDataVM.loadEvents()
+            _ = await aiManageVM.getKey()
+        }
+    }
+    
+    func handleNavigateToEvent(from notification: Notification) {
+        guard let eventId = notification.userInfo?["eventId"] as? String,
+              let notificationItem = notification.userInfo?["notification"] as? NotificationItem else {
+            return
+        }
+        
+        print("🚀 Navigating to event: \(eventId)")
+         let event = notificationItem.toEvent()
+         eventDetailVM.setEventDetail(event)
+         sportRouter.navigateToEventDetail()
+    }
+}

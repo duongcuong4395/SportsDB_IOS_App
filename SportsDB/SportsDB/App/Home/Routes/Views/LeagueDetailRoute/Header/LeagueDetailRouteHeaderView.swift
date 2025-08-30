@@ -28,15 +28,7 @@ struct LeagueDetailRouteHeaderView: View {
     var body: some View {
         HStack(spacing: 10) {
             Button(action: {
-                sportRouter.pop()
-                eventListVM.resetAll()
-                teamListVM.resetAll()
-                leagueDetailVM.resetAll()
-                seasonListVM.resetAll()
-                leagueListVM.resetLeaguesTable()
-                eventsRecentOfLeagueVM.resetAll()
-                eventsPerRoundInSeasonVM.resetAll()
-                eventsInSpecificInSeasonVM.resetAll()
+                backRoute()
             }, label: {
                 Image(systemName: "chevron.left")
                     .font(.title2)
@@ -81,5 +73,17 @@ struct LeagueDetailRouteHeaderView: View {
             
         }
         .backgroundOfRouteHeaderView(with: 70)
+    }
+    
+    func backRoute() {
+        sportRouter.pop()
+        eventListVM.resetAll()
+        teamListVM.resetAll()
+        leagueDetailVM.resetAll()
+        seasonListVM.resetAll()
+        leagueListVM.resetLeaguesTable()
+        eventsRecentOfLeagueVM.resetAll()
+        eventsPerRoundInSeasonVM.resetAll()
+        eventsInSpecificInSeasonVM.resetAll()
     }
 }

@@ -7,161 +7,114 @@
 
 import Network
 import Combine
+import SwiftUI
 
-// MARK: NetworkType & NetworkQuality Enum
-import Network
-
-enum NetworkType: String {
-    case wifi = "Wi-Fi"
-    case cellular = "Cellular"
-    case wired = "Wired Ethernet"
-    case other = "Other"
-    case none = "No Connection"
+extension EnvironmentValues {
+    @Entry var isNetworkConnected: Bool?
+    @Entry var connectionType: NWInterface.InterfaceType?
 }
 
-enum NetworkQuality: String {
-    case strong = "Strong"
-    case medium = "Medium"
-    case weak = "Weak"
-    case unknown = "Unknown"
-    case offline = "Offline"
-}
-
-
-
-// MARK: NetworkManager
-import Foundation
-import Network
-import Combine
-
-@MainActor
-final class NetworkManager: ObservableObject {
-    static let shared = NetworkManager()
+class NetworkMonitor: ObservableObject {
+    @Published var isConnected: Bool?
+    @Published var connectionType: NWInterface.InterfaceType?
     
-    @Published private(set) var isConnected: Bool = false
-    @Published private(set) var connectionType: NetworkType = .none
-    @Published private(set) var quality: NetworkQuality = .unknown
+    // monitor
+    private var queue = DispatchQueue(label: "Monitor")
+    private var monitor = NWPathMonitor()
     
-    private let monitor = NWPathMonitor()
-    private let queue = DispatchQueue.global(qos: .background)
-    private var timer: Timer?
-    
-    private init() {
+    init() {
         startMonitoring()
-        //startQualityCheckTimer()
     }
     
     private func startMonitoring() {
-        monitor.pathUpdateHandler = { [weak self] path in
+        monitor.pathUpdateHandler = { path in
             Task { @MainActor in
-                self?.isConnected = path.status == .satisfied
-                self?.connectionType = self?.mapInterfaceType(path) ?? .none
-                if self?.isConnected == false {
-                    self?.quality = .offline
+                self.isConnected = path.status == .satisfied
+                let types: [NWInterface.InterfaceType] = [.wifi, .cellular,.loopback, .wiredEthernet]
+                if let type = types.first(where: { path.usesInterfaceType($0) }) {
+                    self.connectionType = type
+                } else {
+                    self.connectionType = nil
                 }
             }
         }
+        
         monitor.start(queue: queue)
     }
     
-    private func mapInterfaceType(_ path: NWPath) -> NetworkType {
-        if path.usesInterfaceType(.wifi) { return .wifi }
-        if path.usesInterfaceType(.cellular) { return .cellular }
-        if path.usesInterfaceType(.wiredEthernet) { return .wired }
-        if path.usesInterfaceType(.other) { return .other }
-        return .none
-    }
-    
-    private func startQualityCheckTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
-            Task { await self?.checkQuality() }
-        }
-    }
-    
-    func checkQuality() async {
-        guard isConnected else {
-            quality = .offline
-            return
-        }
+    private func stopMonitoring() {
         
-        let latency = await measureLatency()
-        switch latency {
-        case 0..<0.1:
-            quality = .strong
-        case 0.1..<0.3:
-            quality = .medium
-        case 0.3...:
-            quality = .weak
-        default:
-            quality = .unknown
-        }
-    }
-    
-    private func measureLatency() async -> TimeInterval {
-        guard let url = URL(string: "https://www.google.com/generate_204") else { return -1 }
-        let start = Date()
-        
-        do {
-            let (_, _) = try await URLSession.shared.data(from: url)
-            return Date().timeIntervalSince(start)
-        } catch {
-            return -1
-        }
     }
 }
 
 
-import SwiftUI
-
-struct NetworkView: View {
-    @EnvironmentObject var network: NetworkManager
+struct NetworkMonitorView: View {
+    @Environment(\.isNetworkConnected) private var isConnected
+    @Environment(\.connectionType) private var connectionType
     
     var body: some View {
-        VStack(spacing: 12) {
-            Text("Connection: \(network.connectionType.rawValue)")
-                .foregroundColor(network.isConnected ? .green : .red)
-              
-            /*
-            + Text("(\(network.quality.rawValue))")
-                .foregroundColor(network.quality == .strong ? .green :
-                                 network.quality == .medium ? .orange :
-                                 network.quality == .weak ? .red : .gray)
-            */
-            
-        }
-        .font(.caption)
-        .padding()
-    }
-}
-
-
-
-struct NetworkNotConnectView: View {
-    @EnvironmentObject var network: NetworkManager
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            
-            Spacer()
-            Text("Not connect Internet")
-            HStack {
-                Spacer()
-                Text("Connection: \(network.connectionType.rawValue)")
-                    .foregroundColor(network.isConnected ? .green : .red)
-                Spacer()
+        NavigationStack {
+            List {
+                Section("Status") {
+                    Text((isConnected ?? false) ? "Connected" : "No Internet")
+                }
+                
+                if let connectionType {
+                    Section("Type") {
+                        Text(String(describing: connectionType).capitalized)
+                    }
+                }
             }
-            
-            Spacer()
-              
-            /*
-            + Text("(\(network.quality.rawValue))")
-                .foregroundColor(network.quality == .strong ? .green :
-                                 network.quality == .medium ? .orange :
-                                 network.quality == .weak ? .red : .gray)
-            */
+            .navigationTitle("Network Monitor")
             
         }
-        
-        
+        .sheet(isPresented: .constant(!(isConnected ?? true))) {
+            NoInternetView()
+                .presentationDetents([.height(310)])
+                .presentationCornerRadius(0)
+                .presentationBackgroundInteraction(.disabled)
+                .presentationBackground(.clear)
+                .interactiveDismissDisabled()
+        }
+    }
+}
+
+
+struct NoInternetView: View {
+    @Environment(\.isNetworkConnected) private var isConnected
+    @Environment(\.connectionType) private var connectionType
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "wifi.exclamationmark")
+                .font(.system(size: 80, weight: .semibold))
+                .frame(height: 100)
+            
+            Text("No Internet Connectivity")
+                .font(.title3)
+                .fontWeight(.semibold)
+            
+            Text("Please check your internet connection\nto continue using the app.")
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.gray)
+                .lineLimit(2)
+            
+            Text("Waiting for internet connection...")
+                .font(.caption)
+                .foregroundStyle(.background)
+                .padding(.vertical, 12)
+                .frame(maxWidth: .infinity)
+                .background(Color.primary)
+                .padding(.top, 10)
+                .padding(.horizontal, -20)
+            
+        }
+        .fontDesign(.rounded)
+        .padding([.horizontal, .top], 20)
+        .background(.background)
+        .clipShape(.rect(cornerRadius: 20))
+        .padding(.horizontal, 20)
+        .padding(.bottom, 10)
+        .frame(height: 310)
     }
 }
