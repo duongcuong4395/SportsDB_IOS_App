@@ -134,17 +134,7 @@ struct EventsTabOfLeagueDetailRouteView: View {
                 HStack(spacing: 10) {
                     ForEach(MenuOfEventsAtTabOfLeagueDetailRouteView.allCases, id: \.self) { menu in
                         Text(menu.rawValue)
-                            .font(menuOfEventActive.rawValue == menu.rawValue ? .callout.bold() : .callout)
-                            .padding(5)
-                            .background{
-                                if menuOfEventActive == menu {
-                                    Color.clear
-                                        .background(.thinMaterial.opacity( menuOfEventActive.rawValue == menu.rawValue  ? 1 : 0)
-                                                , in: RoundedRectangle(cornerRadius: 25))
-                                        .matchedGeometryEffect(id: "menuOfEvents", in: animation)
-                                }
-                                
-                            }
+                            .itemSelected(isSelected: menuOfEventActive == menu, animation: animation)
                             .onTapGesture {
                                 withAnimation(.spring()) {
                                     menuOfEventActive = menu
@@ -155,6 +145,12 @@ struct EventsTabOfLeagueDetailRouteView: View {
                 }
                 
             }
+        }
+        .padding(.vertical, 5)
+        .padding(.horizontal, 10)
+        .background{
+            Color.clear
+                .liquidGlass(intensity: 0.8, cornerRadius: 20)
         }
         
         

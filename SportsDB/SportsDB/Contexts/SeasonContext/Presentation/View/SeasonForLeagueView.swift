@@ -15,25 +15,12 @@ struct SeasonForLeagueView: View {
     @Namespace var animation
     
     var body: some View {
-        VStack {
+        HStack {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                HStack(spacing: 0) {
                     ForEach(seasonListVM.seasons, id: \.season) { season in
-                        
-                        //let isSelected = season == seasonListVM.seasonSelected
-                        
                         Text("\(season.season)")
-                            .font(.callout.bold())
-                            .padding(5)
-                            .background{
-                                if season == seasonListVM.seasonSelected {
-                                    Color.clear
-                                        .background(.thinMaterial.opacity(season == seasonListVM.seasonSelected  ? 1 : 0)
-                                                , in: RoundedRectangle(cornerRadius: 25))
-                                        .matchedGeometryEffect(id: "season", in: animation)
-                                }
-                                
-                            }
+                            .itemSelected(isSelected: season == seasonListVM.seasonSelected, animation: animation)
                             .onTapGesture {
                                 withAnimation {
                                     tappedSeason(season)
@@ -43,6 +30,12 @@ struct SeasonForLeagueView: View {
                     }
                 }
             }
+        }
+        .padding(.vertical, 5)
+        .padding(.horizontal, 10)
+        .background{
+            Color.clear
+                .liquidGlass(intensity: 0.8, cornerRadius: 20)
         }
     }
 }

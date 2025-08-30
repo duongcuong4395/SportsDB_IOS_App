@@ -13,96 +13,11 @@ struct SportsDBApp: App {
     
     var body: some Scene {
         WindowGroup {
-            SportDBView_New()
+            SportDBView()
                 .environment(\.isNetworkConnected, networkMonitor.isConnected)
                 .environment(\.connectionType, networkMonitor.connectionType)
         }
         .modelContainer(MainDB.shared)
-    }
-}
-
-struct SportDBView_New: View {
-    @StateObject private var container = AppDependencyContainer()
-    @Environment(\.isNetworkConnected) private var isConnected
-    @Environment(\.connectionType) private var connectionType
-    
-    var body: some View {
-        GenericNavigationStack(
-            router: container.sportRouter
-         , rootContent: {
-             ListCountryRouteView()
-                 .backgroundGradient()
-         }
-         , destination: sportDestination
-        )
-        .overlay(alignment: .bottomLeading, content: {
-            bottomOverlay
-        })
-        .overlay(content: {
-            DialogView()
-                .environmentObject(container.aiManageVM)
-        })
-        .injectDependencies(container)
-        .onAppear(perform: container.appAppear)
-        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("NavigateToEvent"))) { notification in
-            
-            container.handleNavigateToEvent(from: notification)
-        }
-        .onChange(of: container.notificationListVM.tappedNotification) { oldVL, notification in
-            if let notification = notification {
-                handleTappedNotification(notification)
-            }
-        }
-        .sheet(isPresented: .constant(!(isConnected ?? true))) {
-            NoInternetView()
-                .presentationDetents([.height(310)])
-                .presentationCornerRadius(0)
-                .presentationBackgroundInteraction(.disabled)
-                .presentationBackground(.clear)
-                .interactiveDismissDisabled()
-        }
-    }
-       
-   private func handleTappedNotification(_ notification: NotificationItem) {
-       // Xử lý khi có notification được tap
-       print("📱 Notification tapped in UI: \(notification.title)")
-       
-       // Có thể show alert, navigation, etc.
-       if let eventId = notification.userInfo["idEvent"] {
-           // Navigate to specific event
-           print("Should navigate to event: \(eventId)")
-       }
-   }
-    
-}
-
-// MARK: bottomOverlay
-extension SportDBView_New {
-    @ViewBuilder
-    var bottomOverlay: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                SelectSportView(tappedSport: { sport in
-                    container.tapSport()
-                })
-                .padding(.horizontal, 5)
-                .padding(.top, 5)
-                
-                NavigationToNotificationView()
-                NavigationToLikedView()
-                
-                //ButtonTestNotificationView()
-            }
-        }
-        
-    }
-}
-
-// MARK: Sport Destination View
-private extension SportDBView_New {
-    @ViewBuilder
-    func sportDestination(_ route: SportRoute) -> some View {
-        route.destinationView()
     }
 }
 
@@ -142,7 +57,6 @@ extension View {
     }
 }
 
-
 struct ButtonTestNotificationView: View {
     var body: some View {
         VStack {
@@ -175,6 +89,7 @@ struct ButtonTestNotificationView: View {
 
 
 struct BackgroundOfItemTouchedModifier: ViewModifier {
+    var padding: CGFloat
     var tintColor: Color
     var cornerRadius: Double
     var intensity: Double
@@ -182,7 +97,7 @@ struct BackgroundOfItemTouchedModifier: ViewModifier {
     var hasShimmer: Bool
     func body(content: Content) -> some View {
         content
-            .padding(5)
+            .padding(padding)
             .background{
                 Color.clear
                     .liquidGlass(intensity: intensity, tintColor: tintColor, hasShimmer: hasShimmer, hasGlow: hasGlow)
@@ -192,8 +107,8 @@ struct BackgroundOfItemTouchedModifier: ViewModifier {
 }
 
 extension View {
-    func backgroundOfItemTouched(color: Color = .orange, cornerRadius: Double = 20, intensity: Double = 0.8, hasGlow: Bool = true, hasShimmer: Bool = true) -> some View {
-        self.modifier(BackgroundOfItemTouchedModifier(tintColor: color, cornerRadius: cornerRadius, intensity: intensity, hasGlow: hasGlow, hasShimmer: hasShimmer))
+    func backgroundOfItemTouched(padding: CGFloat = 5, color: Color = .orange, cornerRadius: Double = 20, intensity: Double = 0.8, hasGlow: Bool = true, hasShimmer: Bool = true) -> some View {
+        self.modifier(BackgroundOfItemTouchedModifier(padding: padding, tintColor: color, cornerRadius: cornerRadius, intensity: intensity, hasGlow: hasGlow, hasShimmer: hasShimmer))
     }
 }
 
@@ -257,3 +172,37 @@ extension View {
             .padding(.horizontal, 5)
     }
 }
+
+struct ItemSelectedViewModifier: ViewModifier {
+    
+    var isSelected: Bool
+    var animation: Namespace.ID
+    
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
+    func body(content: Content) -> some View {
+        content
+            .font(.callout.bold())
+        
+            .foregroundColor(isSelected ? .black : (colorScheme == .light ? .gray : .white))
+        
+            .padding(10)
+            .background{
+                if isSelected {
+                    Color.clear
+                        .backgroundOfItemTouched(color: .blue, intensity: 0.8)
+                        .matchedGeometryEffect(id: "season", in: animation)
+                }
+            }
+            .animation(.easeInOut(duration: 0.3), value: isSelected)
+    }
+    
+}
+    
+
+extension View {
+    func itemSelected(isSelected: Bool, animation: Namespace.ID) -> some View {
+        self.modifier(ItemSelectedViewModifier(isSelected: isSelected, animation: animation))
+    }
+}
+                            

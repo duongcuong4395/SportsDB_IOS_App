@@ -49,6 +49,7 @@ struct ListCountryRouteView: View {
                 HStack {
                     Spacer()
                     Image(systemName: "magnifyingglass")
+                        .font(.title3)
                         .backgroundOfItemTouched()
                         .onTapGesture {
                             withAnimation {
@@ -83,7 +84,7 @@ struct ListCountryRouteView: View {
     }
     
     func filterCountry() -> [Country] {
-        //self.countryFilter
+        
         self.countryFilter = textSearch.isEmpty ? countryListVM.countries : countryListVM.countries.filter( { $0.name.lowercased().contains(textSearch.lowercased()) } )
         return []
         

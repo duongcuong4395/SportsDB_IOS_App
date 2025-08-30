@@ -17,8 +17,11 @@ struct PreviousAndNextRounrEventView: View {
     var body: some View {
         HStack {
             if currentRound > 1 {
-                Text("< Previous")
-                    .font(.callout)
+                //Text("< Previous")
+                Image(systemName: "chevron.left")
+                    //.font(.callout.bold())
+                    .font(.title3)
+                    .backgroundOfItemTouched()
                     .onTapGesture {
                         previousRoundTapped()
                         
@@ -29,8 +32,11 @@ struct PreviousAndNextRounrEventView: View {
                 .font(.callout.bold())
             Spacer()
             if hasNextRound == true {
-                Text("Next >")
-                    .font(.callout)
+                //Text("Next >")
+                Image(systemName: "chevron.right")
+                    //.font(.callout.bold())
+                    .font(.title3)
+                    .backgroundOfItemTouched()
                     .onTapGesture {
                         nextRoundTapped()
                     }
