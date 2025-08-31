@@ -173,8 +173,9 @@ extension View {
     }
 }
 
-struct ItemSelectedViewModifier: ViewModifier {
-    
+struct BackgroundItemSelectedViewModifier: ViewModifier {
+    var padding: CGFloat = 10
+    var hasShimmer: Bool = true
     var isSelected: Bool
     var animation: Namespace.ID
     
@@ -186,11 +187,11 @@ struct ItemSelectedViewModifier: ViewModifier {
         
             .foregroundColor(isSelected ? .black : (colorScheme == .light ? .gray : .white))
         
-            .padding(10)
+            .padding(padding)
             .background{
                 if isSelected {
                     Color.clear
-                        .backgroundOfItemTouched(color: .blue, intensity: 0.8)
+                        .backgroundOfItemTouched(color: .blue, intensity: 0.8, hasShimmer: hasShimmer)
                         .matchedGeometryEffect(id: "season", in: animation)
                 }
             }
@@ -201,8 +202,8 @@ struct ItemSelectedViewModifier: ViewModifier {
     
 
 extension View {
-    func itemSelected(isSelected: Bool, animation: Namespace.ID) -> some View {
-        self.modifier(ItemSelectedViewModifier(isSelected: isSelected, animation: animation))
+    func backgroundItemSelected(padding: CGFloat = 10, hasShimmer: Bool = true, isSelected: Bool, animation: Namespace.ID) -> some View {
+        self.modifier(BackgroundItemSelectedViewModifier(padding: padding, hasShimmer: hasShimmer, isSelected: isSelected, animation: animation))
     }
 }
                             

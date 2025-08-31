@@ -7,81 +7,6 @@
 
 import SwiftUI
 
-enum MenuOfEventsAtTabOfLeagueDetailRouteView: String, CaseIterable {
-    case TableRanking = "Table Ranking"
-    case EventsPerRound = "Events Per Round"
-    case AllEventsForASeason = "All events in a season"
-}
-
-extension MenuOfEventsAtTabOfLeagueDetailRouteView {
-    
-    @ViewBuilder
-    func getView(by league: League, and season: Season) -> some View {
-        switch self {
-        case .TableRanking:
-            TableRankingView(league: league)
-        case .EventsPerRound:
-            EventsPerRoundView(league: league)
-        case .AllEventsForASeason:
-            AllEventsForASeasonView()
-        }
-    }
-    
-}
-
-struct TableRankingView: View {
-    @EnvironmentObject private var seasonListVM: SeasonListViewModel
-    @EnvironmentObject private var leagueListVM: LeagueListViewModel
-    var league: League
-    
-    init(league: League) {
-        self.league = league
-    }
-    
-    var body: some View {
-        LeagueTableForLeagueDetailView(onRetry: {
-            Task {
-                guard let season = seasonListVM.seasonSelected else { return }
-                await leagueListVM.lookupLeagueTable(
-                    leagueID: league.idLeague ?? "",
-                    season: season.season)
-            }
-        })
-    }
-}
-
-struct EventsPerRoundView: View {
-    
-    @EnvironmentObject private var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
-    
-    var league: League
-    init(league: League) {
-        self.league = league
-    }
-    
-    var body: some View {
-        VStack {
-            BuildEventsForEachRoundInControl(leagueID: league.idLeague ?? "")
-            
-            EventsGenericView(eventsViewModel: eventsPerRoundInSeasonVM, onRetry: { })
-        }
-        
-    }
-}
-
-
-struct AllEventsForASeasonView: View {
-    @EnvironmentObject private var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
-    
-    var body: some View {
-        VStack {
-            EventsGenericView(eventsViewModel: eventsInSpecificInSeasonVM, onRetry: { })
-        }
-        
-    }
-}
-
-
 struct EventsTabOfLeagueDetailRouteView: View {
     var league: League
     
@@ -93,10 +18,6 @@ struct EventsTabOfLeagueDetailRouteView: View {
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
     
-    @State var menuOfEventActive: MenuOfEventsAtTabOfLeagueDetailRouteView = .TableRanking
-    
-    @Namespace var animation
-    
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
@@ -106,19 +27,17 @@ struct EventsTabOfLeagueDetailRouteView: View {
                         eventsRecentOfLeagueVM.getEvents(by: league.idLeague ?? "")
                     })
                     
-                    TitleComponentView(title: "Seasons")
-                    BuildSeasonForLeagueView(leagueID: league.idLeague ?? "")
+                    HStack {
+                        Text("Seasons:")
+                            .font(.callout.bold())
+                        BuildSeasonForLeagueView(leagueID: league.idLeague ?? "")
+                    }
 
                     if seasonListVM.seasonSelected == nil {
                         Text("Select season to see more about table rank and round events.")
                             .font(.caption2)
-                    }
-                    
-                    if seasonListVM.seasonSelected != nil {
-                        MenuOfEventsView
-                        
-                        menuOfEventActive.getView(by: league, and: seasonListVM.seasonSelected ?? Season(season: ""))
-                            .frame(maxHeight: UIScreen.main.bounds.height / 2.75)
+                    } else { // if seasonListVM.seasonSelected != nil
+                        SeasonOfLeagueContentView(league: league)
                     }
                 }
             }
@@ -127,34 +46,7 @@ struct EventsTabOfLeagueDetailRouteView: View {
         }
     }
     
-    @ViewBuilder
-    var MenuOfEventsView: some View {
-        HStack(spacing: 10) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(MenuOfEventsAtTabOfLeagueDetailRouteView.allCases, id: \.self) { menu in
-                        Text(menu.rawValue)
-                            .itemSelected(isSelected: menuOfEventActive == menu, animation: animation)
-                            .onTapGesture {
-                                withAnimation(.spring()) {
-                                    menuOfEventActive = menu
-                                }
-                            }
-                        
-                    }
-                }
-                
-            }
-        }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 10)
-        .background{
-            Color.clear
-                .liquidGlass(intensity: 0.8, cornerRadius: 20)
-        }
-        
-        
-    }
+    
 }
 
 // MARK: BuildSeasonForLeagueView
@@ -172,62 +64,35 @@ struct BuildSeasonForLeagueView: View {
     var body: some View {
         SeasonForLeagueView(
             tappedSeason: { season in
-                withAnimation(.spring()) {
-                    guard seasonListVM.seasonSelected != season else { return }
-                    seasonListVM.setSeason(by: season) { season in
-                        guard let season = season else { return }
-                        
-                        eventListVM.setCurrentRound(by: 1) { round in
-                            eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
-                        }
-                    }
-                    
-                    leagueListVM.resetLeaguesTable()
-                    
-                    Task {
-                        await leagueListVM.lookupLeagueTable(
-                            leagueID: leagueID,
-                            season: seasonListVM.seasonSelected?.season ?? "")
-                        
-                        
-                        await eventsInSpecificInSeasonVM.getEvents(
-                            leagueID: leagueID,
-                            season: seasonListVM.seasonSelected?.season ?? "")
-                    }
-                }
-                
+                selectSeason(season)
             })
+    }
+    
+    func selectSeason(_ season: Season) {
+        withAnimation(.spring()) {
+            guard seasonListVM.seasonSelected != season else { return }
+            seasonListVM.setSeason(by: season) { season in
+                guard let season = season else { return }
+                
+                eventListVM.setCurrentRound(by: 1) { round in
+                    eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
+                }
+            }
+            
+            leagueListVM.resetLeaguesTable()
+            
+            Task {
+                await leagueListVM.lookupLeagueTable(
+                    leagueID: leagueID,
+                    season: seasonListVM.seasonSelected?.season ?? "")
+                
+                
+                await eventsInSpecificInSeasonVM.getEvents(
+                    leagueID: leagueID,
+                    season: seasonListVM.seasonSelected?.season ?? "")
+            }
+        }
     }
 }
 
-// MARK: BuildEventsForEachRoundInControl
-struct BuildEventsForEachRoundInControl: View {
-    var leagueID: String
-    
-    @EnvironmentObject var eventListVM: EventListViewModel
-    @EnvironmentObject var seasonListVM: SeasonListViewModel
-    
-    @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
-    
-    var body: some View {
-        PreviousAndNextRounrEventView(
-            currentRound: eventListVM.currentRound,
-            hasNextRound: eventListVM.hasNextRound,
-            nextRoundTapped: {
-                withAnimation(.spring()) {
-                    eventListVM.setCurrentRound(by: eventListVM.currentRound + 1) { round in
-                        eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: seasonListVM.seasonSelected?.season ?? "")
-                    }
-                }
-            },
-            previousRoundTapped: {
-                withAnimation(.spring()) {
-                    eventListVM.setCurrentRound(by: eventListVM.currentRound - 1) { round in
-                        eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: seasonListVM.seasonSelected?.season ?? "")
-                    }
-                }
-                
-                
-            })
-    }
-}
+

@@ -12,6 +12,9 @@ protocol RouteMenu: CaseIterable {
     var title: String { get }
     var icon: String { get }
     var color: Color { get }
+    //var iconView: IconView{ get }
+    @ViewBuilder
+    func getIconView() -> AnyView
 }
 
 struct LeagueDetailRouteView: View {

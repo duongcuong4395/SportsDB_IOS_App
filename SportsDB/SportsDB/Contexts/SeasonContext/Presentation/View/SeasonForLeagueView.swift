@@ -17,25 +17,23 @@ struct SeasonForLeagueView: View {
     var body: some View {
         HStack {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 0) {
+                HStack(spacing: 10) {
                     ForEach(seasonListVM.seasons, id: \.season) { season in
                         Text("\(season.season)")
-                            .itemSelected(isSelected: season == seasonListVM.seasonSelected, animation: animation)
+                            .backgroundItemSelected(padding: 5, hasShimmer: false, isSelected: season == seasonListVM.seasonSelected, animation: animation)
                             .onTapGesture {
                                 withAnimation {
                                     tappedSeason(season)
                                 }
-                                
                             }
                     }
                 }
             }
         }
+        
+        
         .padding(.vertical, 5)
-        .padding(.horizontal, 10)
-        .background{
-            Color.clear
-                .liquidGlass(intensity: 0.8, cornerRadius: 20)
-        }
+        .padding(.horizontal, 5)
+        .liquidGlassForCardView()
     }
 }

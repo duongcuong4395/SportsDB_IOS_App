@@ -25,12 +25,14 @@ struct RouteGenericView<HeaderView: View, ContentView: View>: View {
                 headerView
                 contentView
             }
+            .padding(.bottom, 45)
             .backgroundOfRouteView(with: backgroundURLLink)
         } else {
             VStack {
                 headerView
                 contentView
             }
+            .padding(.bottom, 45)
         }
     }
 }

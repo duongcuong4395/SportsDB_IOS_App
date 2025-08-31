@@ -15,14 +15,18 @@ struct SportDBView: View {
     @Environment(\.connectionType) private var connectionType
     
     var body: some View {
-        GenericNavigationStack(
-            router: container.sportRouter
-         , rootContent: {
-             ListCountryRouteView()
-                 .backgroundGradient()
-         }
-         , destination: sportDestination
-        )
+        VStack(spacing: 0) {
+            GenericNavigationStack(
+                router: container.sportRouter
+             , rootContent: {
+                 ListCountryRouteView()
+                     .backgroundGradient()
+             }
+             , destination: sportDestination
+            )
+        }
+        .padding(0)
+        
         .overlay(alignment: .bottomLeading, content: {
             bottomOverlay
         })
@@ -68,20 +72,25 @@ struct SportDBView: View {
 extension SportDBView {
     @ViewBuilder
     var bottomOverlay: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 10) {
-                SelectSportView(tappedSport: { sport in
-                    container.tapSport()
-                })
-                .padding(.horizontal, 5)
-                .padding(.top, 5)
-                
-                NavigationToNotificationView()
-                NavigationToLikedView()
-                
-                //ButtonTestNotificationView()
+        HStack {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    SelectSportView(tappedSport: { sport in
+                        container.tapSport()
+                    })
+                    .padding(.horizontal, 5)
+                    .padding(.top, 5)
+                    
+                    NavigationToNotificationView()
+                    NavigationToLikedView()
+                    
+                    //ButtonTestNotificationView()
+                }
             }
+            //.backgroundGradient()
         }
+        
+        
         
     }
 }
@@ -91,6 +100,7 @@ private extension SportDBView {
     @ViewBuilder
     func sportDestination(_ route: SportRoute) -> some View {
         route.destinationView()
+            //.padding(.bottom, 50)
     }
 }
 

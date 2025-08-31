@@ -28,7 +28,8 @@ struct ListCountryRouteView: View {
                 HStack(spacing: 10) {
                     TextFieldSearchView(listModels: [countryFilter], textSearch: $textSearch)
                     Image(systemName: "xmark")
-                        .backgroundOfItemTouched()
+                        .font(.title3)
+                        .backgroundOfItemTouched(hasShimmer: false)
                         .onTapGesture {
                             withAnimation {
                                 textSearch = ""
@@ -50,7 +51,7 @@ struct ListCountryRouteView: View {
                     Spacer()
                     Image(systemName: "magnifyingglass")
                         .font(.title3)
-                        .backgroundOfItemTouched()
+                        .backgroundOfItemTouched(hasShimmer: false)
                         .onTapGesture {
                             withAnimation {
                                 showTextSearch.toggle()
@@ -81,6 +82,7 @@ struct ListCountryRouteView: View {
             textSearch = ""
             showTextSearch = false
         }
+        .padding(.bottom, 45)
     }
     
     func filterCountry() -> [Country] {
@@ -97,7 +99,6 @@ struct ListCountryRouteView: View {
             sportRouter.navigateToListLeague(by: country.name, and: sportVM.sportSelected.rawValue)
             textSearch = ""
             Task {
-                
                 await leagueListVM.fetchLeagues(country: country.name, sport: sportVM.sportSelected.rawValue)
             }
         }

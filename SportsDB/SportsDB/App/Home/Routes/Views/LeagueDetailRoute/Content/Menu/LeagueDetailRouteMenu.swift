@@ -9,6 +9,10 @@ import SwiftUI
 
 
 enum LeagueDetailRouteMenu: String, RouteMenu {
+    func getIconView() -> AnyView {
+        AnyView(Image(systemName: icon))
+    }
+    
     
     case General
     case Teams

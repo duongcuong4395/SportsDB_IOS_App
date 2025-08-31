@@ -17,7 +17,6 @@ struct MenuOfLeagueDetailRouteView: View {
                     menu: LeagueDetailRouteMenu.allCases[index],
                     isSelected: selectedTab == index
                 )
-                
                 .background {
                     if selectedTab == index {
                         ZStack {

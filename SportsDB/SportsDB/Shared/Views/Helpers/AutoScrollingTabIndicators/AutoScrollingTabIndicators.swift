@@ -109,26 +109,34 @@ struct AutoScrollingTabView: View {
     }
 }
 
-struct MenuTabIndicatorView: View {
-    var menu: any RouteMenu
+struct MenuTabIndicatorView<Menu: RouteMenu>: View {
+    var menu: Menu
     let isSelected: Bool
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     
     var body: some View {
         VStack(spacing: 8) {
-            // Icon với animation
-            Image(systemName: menu.icon)
-                .font(.system(size: isSelected ? 24 : 20, weight: .semibold))
-                .foregroundColor(isSelected ? menu.color : (colorScheme == .light ? .gray : .white))
-                .scaleEffect(isSelected ? 1.2 : 1.0)
-                .animation(.spring(response: 0.4, dampingFraction: 0.6), value: isSelected)
+            HStack {
+                // Icon với animation
+                menu.getIconView()
+                //Image(systemName: menu.icon)
+                    .font(.title3)
+                //.font(.system(size: isSelected ? 24 : 20, weight: .semibold))
+                    .foregroundColor(isSelected ? menu.color : (colorScheme == .light ? .gray : .white))
+                    .scaleEffect(isSelected ? 1.2 : 1.0)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.6), value: isSelected)
+                
+                // Title
+                if isSelected {
+                    Text(menu.title)
+                        .font(.system(size: isSelected ? 14 : 12, weight: isSelected ? .semibold : .medium))
+                        .foregroundColor(isSelected ? menu.color : (colorScheme == .light ? .gray : .white))
+                        .animation(.easeInOut(duration: 0.3), value: isSelected)
+                }
+            }
             
-            // Title
-            Text(menu.title)
-                .font(.system(size: isSelected ? 14 : 12, weight: isSelected ? .semibold : .medium))
-                .foregroundColor(isSelected ? menu.color : (colorScheme == .light ? .gray : .white))
-                .animation(.easeInOut(duration: 0.3), value: isSelected)
+            
             
             // Animated Indicator Line
             /*
