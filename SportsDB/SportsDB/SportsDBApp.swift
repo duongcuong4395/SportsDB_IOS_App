@@ -51,8 +51,11 @@ extension View {
         
             .environmentObject(container.eventToggleLikeManager)
             .environmentObject(container.eventToggleNotificationManager)
+        
             .environmentObject(container.manageLikeRouteVM)
             .environmentObject(container.manageNotificationRouteVM)
+            .environmentObject(container.manageEventsGenericVM)
+        
         
     }
 }

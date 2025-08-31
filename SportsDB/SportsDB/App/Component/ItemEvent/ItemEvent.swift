@@ -160,3 +160,44 @@ extension SelectTeamDelegate {
         }
     }
 }
+
+
+
+// MARK: Events ViewModel
+
+@MainActor
+protocol EventsViewModel: ObservableObject {
+    var eventsStatus: ModelsStatus<[Event]> { get set }
+    var events: [Event] { get }
+    func updateEvent(from oldItem: Event, with newItem: Event)
+}
+
+extension EventsViewModel {
+    func updateEvent(from oldItem: Event, with newItem: Event) {
+        self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
+            oldEvent.idEvent == oldItem.idEvent
+        }, with: newItem)
+    }
+    
+    func findEvent(with eventID: String) -> Event? {
+        self.eventsStatus.data?.first(where: { $0.idEvent == eventID })
+    }
+    
+    func toggleLikeOnUI(at eventID: String, by like: Bool) {
+        guard var event = findEvent(with: eventID) else { return }
+        
+        event.like = like
+        updateEvent(from: event, with: event)
+    }
+    
+    func toggleNotificationOnUI(at eventID: String, by status: NotificationStatus) {
+        guard var event = findEvent(with: eventID) else { return }
+        
+        event.notificationStatus = status
+        updateEvent(from: event, with: event)
+    }
+    
+    func resetAll() {
+        self.eventsStatus = .idle
+    }
+}

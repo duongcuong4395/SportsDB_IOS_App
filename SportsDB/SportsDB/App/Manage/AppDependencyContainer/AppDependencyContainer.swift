@@ -143,6 +143,20 @@ class AppDependencyContainer: ObservableObject {
         , sportRouter: sportRouter
         , eventSwiftDataVM: eventSwiftDataVM
         , eventToggleNotificationManager: eventToggleNotificationManager)
+    
+    lazy var manageEventsGenericVM = ManageEventsGenericViewModel(
+        trophyListVM: trophyListVM
+        , playerListVM: playerListVM
+        , teamDetailVM: teamDetailVM
+        , teamListVM: teamListVM
+        , notificationListVM: notificationListVM
+        , eventSwiftDataVM: eventSwiftDataVM
+        , sportRouter: sportRouter
+        , aiManageVM: aiManageVM
+        , appVM: appVM
+        , teamSelectionManager: teamSelectionManager
+        , eventToggleLikeManager: eventToggleLikeManager
+        , eventToggleNotificationManager: eventToggleNotificationManager)
 }
 
 // MARK: List events
