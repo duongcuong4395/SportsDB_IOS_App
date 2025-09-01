@@ -7,7 +7,45 @@
 
 import SwiftUI
 
-struct EventsGenericView<ViewModel: EventsViewModel>: View {
+@MainActor
+protocol GeneralEventManagement: ObservableObject {
+    var eventsStatus: ModelsStatus<[Event]> { get set }
+    var events: [Event] { get }
+    func updateEvent(from oldItem: Event, with newItem: Event)
+}
+
+extension GeneralEventManagement {
+    func updateEvent(from oldItem: Event, with newItem: Event) {
+        self.eventsStatus = eventsStatus.updateElement(where: { oldEvent in
+            oldEvent.idEvent == oldItem.idEvent
+        }, with: newItem)
+    }
+    
+    func findEvent(with eventID: String) -> Event? {
+        self.eventsStatus.data?.first(where: { $0.idEvent == eventID })
+    }
+    
+    func toggleLikeOnUI(at eventID: String, by like: Bool) {
+        guard var event = findEvent(with: eventID) else { return }
+        
+        event.like = like
+        updateEvent(from: event, with: event)
+    }
+    
+    func toggleNotificationOnUI(at eventID: String, by status: NotificationStatus) {
+        guard var event = findEvent(with: eventID) else { return }
+        
+        event.notificationStatus = status
+        updateEvent(from: event, with: event)
+    }
+    
+    func resetAll() {
+        self.eventsStatus = .idle
+    }
+}
+
+
+struct EventsGenericView<ViewModel: GeneralEventManagement>: View {
     @EnvironmentObject var manageEventsGenericVM: ManageEventsGenericViewModel
     
     // MARK: - Properties
@@ -36,20 +74,32 @@ extension EventsGenericView {
     private var eventsList: some View {
         ListEventGenericView(
             events: eventsViewModel.events
-            , itemBuilder: ItemBuilderForEventsOfPastLeague()
+            , itemBuilder: ItemBuilderForEvent()
             , onEvent: { event in
                 manageEventsGenericVM.handle(event, eventsViewModel: eventsViewModel)
             })
     }
     
     private var errorView: some View {
-        Text("Please return in a few minutes.")
-            .font(.caption2.italic())
-            .onAppear {
-                numbRetry += 1
-                guard numbRetry <= 3 else { numbRetry = 0 ; return }
-                onRetry()
+        VStack {
+            if numbRetry <= 3 {
+                loadingView
+            } else {
+                Text("Please return in a few minutes.")
+                    .font(.caption2.italic())
+                    .onTapGesture {
+                        numbRetry = 0
+                        onRetry()
+                    }
             }
+        }
+        .onAppear {
+            numbRetry += 1
+            guard numbRetry <= 3 else { numbRetry = 0 ; return }
+            onRetry()
+        }
+        
+        
     }
     
     private var loadingView: some View {
@@ -58,9 +108,11 @@ extension EventsGenericView {
     }
 }
 
-
-struct ItemBuilderForEventsOfPastLeague: ItemBuilder {
+struct ItemBuilderForEvent: ItemBuilder {
     func buildOptionsBind(for item: Binding<Event>, send: @escaping (ItemEvent<Event>) -> Void) -> AnyView {
+        
+        AnyView(EmptyView())
+        /*
         AnyView(
             HStack(spacing: 30) {
                 if item.wrappedValue.awayTeam != nil {
@@ -95,6 +147,7 @@ struct ItemBuilderForEventsOfPastLeague: ItemBuilder {
                 }
             }
         )
+        */
     }
     
     func buildOptions(for item: Event, send: @escaping (ItemEvent<Event>) -> Void) -> AnyView {

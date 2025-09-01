@@ -9,9 +9,9 @@ import Foundation
 
 struct NotificationItem: Identifiable, Equatable, Codable {
     var id: String                     // Unique ID
-    var title: String                  // Title hiển thị
-    var body: String                   // Nội dung
-    var triggerDate: Date              // Thời gian trigger
-    var userInfo: [String: String]     // Metadata tùy ý (ví dụ: idEvent, sportType...)
+    var title: String
+    var body: String
+    var triggerDate: Date
+    var userInfo: [String: String]     // Metadata (ex: idEvent, sportType...)
     var hasRead: Bool
 }

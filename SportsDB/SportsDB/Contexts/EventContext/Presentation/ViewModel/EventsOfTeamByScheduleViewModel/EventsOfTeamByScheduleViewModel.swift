@@ -37,7 +37,7 @@ class EventsOfTeamByScheduleViewModel: ObservableObject {
 }
 
 @MainActor
-class EventsOfTeamByUpcomingViewModel: EventsViewModel {
+class EventsOfTeamByUpcomingViewModel: GeneralEventManagement {
     @Published var eventsStatus: ModelsStatus<[Event]> = .idle
     
     var events: [Event] {
@@ -67,7 +67,7 @@ class EventsOfTeamByUpcomingViewModel: EventsViewModel {
 }
 
 @MainActor
-class EventsOfTeamByResultsViewModel: EventsViewModel {
+class EventsOfTeamByResultsViewModel: GeneralEventManagement {
     @Published var eventsStatus: ModelsStatus<[Event]> = .idle
     
     var events: [Event] {

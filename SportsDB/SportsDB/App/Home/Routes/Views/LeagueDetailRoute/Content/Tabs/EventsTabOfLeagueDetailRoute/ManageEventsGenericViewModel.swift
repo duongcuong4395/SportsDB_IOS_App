@@ -8,6 +8,15 @@
 import SwiftUI
 
 @MainActor
+class ManageTeamGenericViewModel: ObservableObject {
+    private var teamSelectionManager: TeamSelectionManager
+    
+    init(teamSelectionManager: TeamSelectionManager) {
+        self.teamSelectionManager = teamSelectionManager
+    }
+}
+
+@MainActor
 class ManageEventsGenericViewModel: ObservableObject {
     // MARK: - Environment Objects
     private var trophyListVM: TrophyListViewModel
@@ -44,7 +53,7 @@ class ManageEventsGenericViewModel: ObservableObject {
         self.eventToggleNotificationManager = eventToggleNotificationManager
     }
     
-    func handle<ViewModel: EventsViewModel>(_ event: ItemEvent<Event>, eventsViewModel: ViewModel) {
+    func handle<ViewModel: GeneralEventManagement>(_ event: ItemEvent<Event>, eventsViewModel: ViewModel) {
         switch event {
         case .toggleLike(for: let event):
             Task { try await handleToggleLikeEvent(event) }
@@ -64,13 +73,13 @@ class ManageEventsGenericViewModel: ObservableObject {
 }
 
 extension ManageEventsGenericViewModel {
-    func handleEventAppear<ViewModel: EventsViewModel>(_ event: Event, eventsViewModel: ViewModel) {
+    func handleEventAppear<ViewModel: GeneralEventManagement>(_ event: Event, eventsViewModel: ViewModel) {
         hasNotification(event, eventsViewModel: eventsViewModel) { event in
             self.hasLike(event, eventsViewModel: eventsViewModel)
         }
     }
     
-    func hasLike<ViewModel: EventsViewModel>(_ event: Event, eventsViewModel: ViewModel) {
+    func hasLike<ViewModel: GeneralEventManagement>(_ event: Event, eventsViewModel: ViewModel) {
         Task {
             let isEventExists = await eventSwiftDataVM.getEvent(by: event.idEvent, or: event.eventName)
             guard let eventData = isEventExists else { return }
@@ -81,93 +90,12 @@ extension ManageEventsGenericViewModel {
         
     }
     
-    func hasNotification<ViewModel: EventsViewModel>(_ event: Event, eventsViewModel: ViewModel, completion: @escaping (Event) -> Void) {
+    func hasNotification<ViewModel: GeneralEventManagement>(_ event: Event, eventsViewModel: ViewModel, completion: @escaping (Event) -> Void) {
         let hasNotification = notificationListVM.hasNotification(for: event.idEvent ?? "")
         var newEvent = event
         newEvent.notificationStatus = hasNotification ? .creeated : .idle
         eventsViewModel.updateEvent(from: event, with: newEvent)
         completion(newEvent)
-    }
-}
-
-// MARK: handleTapOnTeam
-extension ManageEventsGenericViewModel {
-    func handleTapOnTeam(by event: Event, with kindTeam: KindTeam) async throws {
-        
-        let teamName = getTeamName(by: event, with: kindTeam)
-        
-        if let teamSelected = teamDetailVM.teamSelected
-            , teamSelected.teamName == teamName {
-            return
-        }
-        
-        resetWhenTapTeam()
-        try await selectTeam(by: teamName)
-    }
-    
-    private func getTeamName(by event: Event, with kindTeam: KindTeam) -> String {
-        let homeVSAwayTeam = event.eventName?.split(separator: " vs ")
-        let homeTeam = String(homeVSAwayTeam?[0] ?? "")
-        let awayTeam = String(homeVSAwayTeam?[1] ?? "")
-        let teamName: String = kindTeam == .AwayTeam ? awayTeam : homeTeam
-        return teamName
-    }
-    
-    private func resetWhenTapTeam() {
-        teamSelectionManager.resetTeamData()
-    }
-    
-    private func selectTeam(by teamName: String) async throws {
-        if let teamSelected = teamDetailVM.teamSelected {
-            if teamSelected.teamName != teamName {
-                await setTeam(by: teamName)
-            }
-        } else {
-            await setTeam(by: teamName)
-        }
-       
-        guard let team = teamDetailVM.teamSelected else { return }
-        if !sportRouter.isAtTeamDetail() {
-            sportRouter.navigateToTeamDetail()
-        }
-        
-        
-        
-        //async let eventsTask: () = getEventsUpcomingAndResults(by: team)
-        //async let equipmentsTask: () = getEquipments(by: team.idTeam ?? "")
-        async let equipmentsTask: () = teamSelectionManager.fetchEquipments(for: team.idTeam ?? "")
-        //async let playersTask: () = getPlayersAndTrophies(by: team)
-        async let playersTask: () = await teamSelectionManager.fetchPlayersAndTrophies(for: team)
-        async let events: () =  await teamSelectionManager.fetchEvents(for: team)
-        _ = await (playersTask, equipmentsTask, events)
-    }
-    
-    private func setTeam(by teamName: String) async {
-        await teamListVM.searchTeams(teamName: teamName)
-        guard teamListVM.teamsBySearch.count > 0 else { return }
-        teamDetailVM.setTeam(by: teamListVM.teamsBySearch[0])
-        return
-    }
-    
-    func getPlayersAndTrophies(by team: Team) async {
-        await playerListVM.lookupAllPlayers(teamID: team.idTeam ?? "")
-        let(players, trophies) = await team.fetchPlayersAndTrophies()
-        trophyListVM.setTrophyGroup(by: trophies)
-        getMorePlayer(players: players)
-    }
-    
-    private func getMorePlayer(players: [Player]) {
-        let cleanedPlayers = players.filter { otherName in
-            !playerListVM.playersByLookUpAllForaTeam.contains { fullName in
-                let fulName = (fullName.player ?? "").replacingOccurrences(of: "-", with: " ")
-                
-                return fulName.lowercased().contains(otherName.player?.lowercased() ?? "")
-            }
-        }
-        
-        DispatchQueueManager.share.runOnMain {
-            self.playerListVM.playersByLookUpAllForaTeam.append(contentsOf: cleanedPlayers)
-        }
     }
 }
 

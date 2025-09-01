@@ -9,11 +9,8 @@ import UserNotifications
 
 final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     static let shared = NotificationManager()
-    
-    // Closure để xử lý khi tap vào notification
     var onNotificationTapped: ((NotificationItem) -> Void)?
         
-    
     private override init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self
@@ -39,7 +36,7 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             if let error = error {
                 print("❌ Schedule error: \(error)")
             } else {
-                print("✅ Scheduled notification:")
+                // print("✅ Scheduled notification:")
             }
         }
     }
@@ -47,12 +44,11 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     // MARK: - Cancel
     func cancelNotification(id: String) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
-        print("🗑 Cancelled notification ID: \(id)")
+        
     }
     
     func cancelAll() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        print("🗑 Cancelled ALL notifications")
     }
     
     // MARK: - Request permission
@@ -104,34 +100,23 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
     
     // MARK: - Handle notification tap
-    // Write code
     
-    // Được gọi khi app đang foreground và nhận notification
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        print("📱 Notification received while app is active")
-        // Hiển thị notification ngay cả khi app đang active
         completionHandler([.banner, .sound, .badge])
     }
     
-    // Được gọi khi người dùng tap vào notification
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        print("🔔 User tapped on notification!")
-        
         let userInfo = response.notification.request.content.userInfo
         let notificationId = response.notification.request.identifier
         
-        print("Notification ID: \(notificationId)")
-        print("UserInfo: \(userInfo)")
-        
-        // Chuyển đổi userInfo thành NotificationItem
         let userInfoStringDict: [String: String] = userInfo.reduce(into: [:]) { result, pair in
             if let key = pair.key as? String,
                let value = pair.value as? String {
@@ -148,16 +133,10 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             hasRead: true
         )
         
-        // Gọi closure để xử lý
         onNotificationTapped?(notificationItem)
         
         completionHandler()
     }
-}
-
-
-extension NotificationManager {
-    
 }
 
 extension Notification.Name {

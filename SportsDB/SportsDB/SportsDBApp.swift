@@ -46,9 +46,10 @@ extension View {
             .environmentObject(container.sportRouter)
             .environmentObject(container.eventSwiftDataVM)
             .environmentObject(container.aiManageVM)
-            .environmentObject(container.teamSelectionManager)
+            
             .environmentObject(container.notificationListVM)
         
+            .environmentObject(container.teamSelectionManager)
             .environmentObject(container.eventToggleLikeManager)
             .environmentObject(container.eventToggleNotificationManager)
         

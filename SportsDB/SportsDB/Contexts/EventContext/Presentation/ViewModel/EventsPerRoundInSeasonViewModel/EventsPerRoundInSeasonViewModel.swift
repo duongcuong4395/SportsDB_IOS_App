@@ -8,7 +8,7 @@
 import SwiftUI
 
 @MainActor
-class EventsPerRoundInSeasonViewModel: EventsViewModel {
+class EventsPerRoundInSeasonViewModel: GeneralEventManagement {
     @Published var eventsStatus: ModelsStatus<[Event]> = .idle
     
     var events: [Event] {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class EventDetailViewModel: EventsViewModel {
+class EventDetailViewModel: GeneralEventManagement {
     @Published var eventsStatus: ModelsStatus<[Event]> = .idle
     
     var events: [Event] {

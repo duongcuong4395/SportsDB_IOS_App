@@ -10,11 +10,9 @@ import SwiftUI
 // , SelectTeamDelegate
 struct LeagueTableForLeagueDetailView: View  {
     @EnvironmentObject var leagueListVM: LeagueListViewModel
-    
     @EnvironmentObject var teamSelectionManager: TeamSelectionManager
     
     var onRetry: () -> Void
-    
     @State var numbRetry: Int = 0
     
     var body: some View {
