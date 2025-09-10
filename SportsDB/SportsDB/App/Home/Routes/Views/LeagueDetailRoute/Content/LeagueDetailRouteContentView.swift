@@ -18,13 +18,18 @@ struct LeagueDetailRouteContentView: View {
             
             TabView(selection: $selectedTab) {
                 GeneralTabOfLeagueDetailRouteView(league: league)
-                    .liquidGlassForTabView(with: 0)
+                    .backgroundOfCardView()
+                    .tag(0)
+                    
                     
                 TeamsTabOfLeagueDetailRouteView(league: league)
-                    .liquidGlassForTabView(with: 1)
+                    .backgroundOfCardView()
+                    .tag(1)
+                    
                     
                 EventsTabOfLeagueDetailRouteView(league: league)
-                    .liquidGlassForTabView(with: 2)
+                    .backgroundOfCardView()
+                    .tag(2)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .animation(.easeInOut(duration: 0.2), value: selectedTab)

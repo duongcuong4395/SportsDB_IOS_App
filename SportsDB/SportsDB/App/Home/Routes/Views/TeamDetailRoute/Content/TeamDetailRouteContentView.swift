@@ -24,21 +24,26 @@ struct TeamDetailRouteContentView: View {
             
             TabView(selection: $selectedTab) {
                 GeneralTabOfTeamDetailRouteView()
-                    .liquidGlassForTabView(with: 0)
+                    .backgroundOfCardView()
+                    .tag(0)
                     
                 if playerListVM.playersByLookUpAllForaTeam.count > 0 {
                     ListPlayerTabOfTeamDetailRouteView()
-                        .liquidGlassForTabView(with: 1)
+                        .backgroundOfCardView()
+                        .tag(1)
                 }
                 
                 ListEventOfTeamDetailRouteView(isVisibleViews: $isVisibleViews)
-                    .liquidGlassForTabView(with: 2)
+                    .backgroundOfCardView()
+                    .tag(2)
                 
                 TrophiesTabOfTeamDetailRouteView()
-                    .liquidGlassForTabView(with: 3)
+                    .backgroundOfCardView()
+                    .tag(3)
                 
                 EquipmentsTabOfTeamDetailRouteView(isVisibleViews: $isVisibleViews)
-                    .liquidGlassForTabView(with: 4)
+                    .backgroundOfCardView()
+                    .tag(4)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .animation(.easeInOut(duration: 0.2), value: selectedTab)

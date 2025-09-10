@@ -109,46 +109,6 @@ extension EventsGenericView {
 }
 
 struct ItemBuilderForEvent: ItemBuilder {
-    func buildOptionsBind(for item: Binding<Event>, send: @escaping (ItemEvent<Event>) -> Void) -> AnyView {
-        
-        AnyView(EmptyView())
-        /*
-        AnyView(
-            HStack(spacing: 30) {
-                if item.wrappedValue.awayTeam != nil {
-                    if item.wrappedValue.homeTeam != "" && item.wrappedValue.awayTeam != "" {
-                        if item.wrappedValue.homeScore == nil {
-                            buildItemButton(with: .MultiStar) {
-                                send(.viewDetail(for: item.wrappedValue))
-                            }
-                            .foregroundStyle(.blue)
-                        }
-                    }
-                }
-                
-                
-                let now = Date()
-                
-                if let dateTimeOfMatch = DateUtility.convertToDate(from: item.wrappedValue.timestamp ?? "") {
-                    if now < dateTimeOfMatch {
-                        buildItemButton(with: item.wrappedValue.notificationStatus == .creeated ? .NotificationOn : .NotificationOff) {
-                            send(.toggleNotify(for: item.wrappedValue))
-                        }
-                    }
-                }
-                
-                if item.wrappedValue.video?.isEmpty == false {
-                    buildItemButton(with: .openVideo) {
-                        send(.openVideo(for: item.wrappedValue))
-                    }
-                }
-                buildItemButton(with: item.wrappedValue.like ? .HeartFill : .Heart) {
-                    send(.toggleLike(for: item.wrappedValue))
-                }
-            }
-        )
-        */
-    }
     
     func buildOptions(for item: Event, send: @escaping (ItemEvent<Event>) -> Void) -> AnyView {
         AnyView(

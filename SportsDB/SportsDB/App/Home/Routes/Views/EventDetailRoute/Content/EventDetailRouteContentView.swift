@@ -10,7 +10,6 @@ import Kingfisher
 struct EventDetailRouteContentView: View {
     @EnvironmentObject var eventDetailVM: EventDetailViewModel
     @State var isVisible: Bool = false
-    
     @State var event: Event?
     
     @StateObject var venueListVM = VenueListViewModel(
@@ -40,10 +39,11 @@ struct EventDetailRouteContentView: View {
                     VenueDetailView(event: event)
                 }
             }
-            .padding(.vertical)
-            .padding(.horizontal, 5)
+            
         }
-        .liquidGlassForCardView()
+        .padding(.vertical)
+        .padding(.horizontal, 5)
+        .backgroundOfCardView()
         .environmentObject(venueListVM)
         .onAppear{
             

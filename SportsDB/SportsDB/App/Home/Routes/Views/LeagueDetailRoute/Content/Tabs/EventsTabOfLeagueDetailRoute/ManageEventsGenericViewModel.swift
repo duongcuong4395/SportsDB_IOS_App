@@ -122,10 +122,19 @@ extension ManageEventsGenericViewModel {
 // MARK: handleViewDetailEvent
 extension ManageEventsGenericViewModel {
     func handleViewDetailEvent(_ event: Event) {
-        if aiManageVM.aiSwiftData == nil {
-            appVM.showDialogView("AI Key", by: AnyView(GeminiAddKeyView()))
+        if let aiSwiftData = aiManageVM.aiSwiftData {
+            aiManageVM.testKeyExists(with: "chỉ cần in ra text: hello", and: aiSwiftData.valueItem) { messResult, geminiStatus in
+                switch geminiStatus {
+                case .Success:
+                    self.appVM.showDialogView("Event Analysis", by: AnyView(EventAIAnalysisView(event: event)))
+                case .NotExistsKey:
+                    self.appVM.showDialogView("AI Key", by: AnyView(GeminiAddKeyView()))
+                default:
+                    self.appVM.showDialogView("AI Key", by: AnyView(GeminiAddKeyView()))
+                }
+            }
         } else {
-            appVM.showDialogView("Event Analysis", by: AnyView(EventAIAnalysisView(event: event)))
+            appVM.showDialogView("AI Key", by: AnyView(GeminiAddKeyView()))
         }
     }
 }
@@ -165,6 +174,8 @@ struct EventAIAnalysisView: View {
         .padding(0)
         .frame(maxHeight: UIScreen.main.bounds.height / 2)
         .onAppear{
+            print("=== Event analysis")
+            dump(event)
             eventAnalysis()
         }
     }

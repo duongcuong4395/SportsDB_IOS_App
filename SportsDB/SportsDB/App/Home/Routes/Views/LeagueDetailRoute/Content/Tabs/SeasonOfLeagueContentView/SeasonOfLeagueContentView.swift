@@ -100,7 +100,7 @@ struct SeasonOfLeagueContentView: View {
                             }
                             
                         }
-                        .backgroundItemSelected(padding: 5, hasShimmer: false, isSelected: menuOfEventActive == menu, animation: animation)
+                        .backgroundOfItemSelected(padding: 5, hasShimmer: false, isSelected: menuOfEventActive == menu, animation: animation)
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 menuOfEventActive = menu
@@ -116,12 +116,7 @@ struct SeasonOfLeagueContentView: View {
         }
         .padding(.vertical, 5)
         .padding(.horizontal, 10)
-        .background{
-            Color.clear
-                .liquidGlass(intensity: 0.8, cornerRadius: 20)
-        }
-        
-        
+        .backgroundOfCardView()
     }
 }
 

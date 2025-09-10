@@ -30,7 +30,7 @@ enum MainDB {
 
         // Xoá file MainDB.store nếu tồn tại
         
-        /*
+        
         if FileManager.default.fileExists(atPath: storeURL.path) {
             do {
                 try FileManager.default.removeItem(at: storeURL)
@@ -39,7 +39,7 @@ enum MainDB {
                 print("⚠️ Lỗi khi xoá MainDB.store: \(error)")
             }
         }
-        */
+        
         
         // Tạo config với URL
         let configuration = ModelConfiguration(

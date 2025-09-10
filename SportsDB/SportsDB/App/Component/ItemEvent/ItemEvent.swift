@@ -43,7 +43,6 @@ enum IconItemType: String {
 
 protocol ItemBuilder {
     associatedtype T: Equatable
-    //func buildOptionsBind(for item: Binding<T>, send: @escaping (ItemEvent<T>) -> Void) -> AnyView
     func buildOptions(for item: T, send: @escaping (ItemEvent<T>) -> Void) -> AnyView
 }
 

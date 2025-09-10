@@ -12,16 +12,12 @@ import SwiftUI
 class BaseRouter<Route: Hashable>: Router, ObservableObject {
     @Published var path = NavigationPath()
     
-    
-    // Maintain một array riêng để track routes
     @Published private var routeStack: [Route] = []
     
-    // Current route là route cuối cùng trong stack
     var currentRoute: Route? {
         return routeStack.last
     }
     
-    // Computed property để lấy tên route hiện tại
     var currentRouteName: String {
         if let current = currentRoute {
             return String(describing: current)
@@ -29,25 +25,21 @@ class BaseRouter<Route: Hashable>: Router, ObservableObject {
         return "Root"
     }
     
-    // Method để check xem có đang ở route cụ thể không
-       func isCurrentRoute(_ route: Route) -> Bool {
-           return currentRoute == route
-       }
-       
-       // Method để lấy route history
-       var routeHistory: [Route] {
-           return routeStack
-       }
-       
-       // Method để lấy depth của navigation stack
-       var navigationDepth: Int {
-           return routeStack.count
-       }
-       
-       // Method để check xem có thể pop không
-       var canPop: Bool {
-           return !routeStack.isEmpty
-       }
+   func isCurrentRoute(_ route: Route) -> Bool {
+       return currentRoute == route
+   }
+   
+   var routeHistory: [Route] {
+       return routeStack
+   }
+   
+   var navigationDepth: Int {
+       return routeStack.count
+   }
+   
+   var canPop: Bool {
+       return !routeStack.isEmpty
+   }
     
     
     func push(_ route: Route) {

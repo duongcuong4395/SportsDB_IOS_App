@@ -20,7 +20,7 @@ struct SeasonForLeagueView: View {
                 HStack(spacing: 10) {
                     ForEach(seasonListVM.seasons, id: \.season) { season in
                         Text("\(season.season)")
-                            .backgroundItemSelected(padding: 5, hasShimmer: false, isSelected: season == seasonListVM.seasonSelected, animation: animation)
+                            .backgroundOfItemSelected(padding: 5, hasShimmer: false, isSelected: season == seasonListVM.seasonSelected, animation: animation)
                             .onTapGesture {
                                 withAnimation {
                                     tappedSeason(season)
@@ -34,6 +34,6 @@ struct SeasonForLeagueView: View {
         
         .padding(.vertical, 5)
         .padding(.horizontal, 5)
-        .liquidGlassForCardView()
+        .backgroundOfCardView()
     }
 }

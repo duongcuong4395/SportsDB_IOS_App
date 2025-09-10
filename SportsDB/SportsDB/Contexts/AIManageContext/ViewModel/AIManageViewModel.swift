@@ -143,8 +143,6 @@ extension AIManageViewModel {
             let modelKey = AIModel(itemKey: AIUtility.key, valueItem: modelData.valueItem)
             
             let model = self.getModel(with: modelKey)
-            
-            //let model = self.getModel(with: aiModel)
             let chat = model.startChat(history: [])
             
             Task {
@@ -162,7 +160,8 @@ extension AIManageViewModel {
                       completed(response.text ?? "Empty", .Success, modelKey.valueItem)
                   }
               } catch {
-                  completed("Data not found", .SendReqestFail, "")
+                  let err = self.getError(from: error)
+                  completed(err.0, err.1, "")
               }
             }
         }
@@ -213,22 +212,18 @@ extension AIManageViewModel {
                   DispatchQueueManager.share.runOnMain {
                       completed(response.text ?? "Empty", .Success)
                   }
-                  
               }
           } catch {
               DispatchQueueManager.share.runOnMain {
-                  completed("Data not found", .SendReqestFail)
+                  let err = self.getError(from: error)
+                  completed(err.0, err.1)
               }
               
           }
         }
     }
     
-    
-    
     func testKeyExists(with prompt: String, and keyInput: String, completed: @escaping (String, GeminiStatus) -> Void) {
-        
-        //guard let modelData = aiSwiftData else { return }
         let modelKey = AIModel(itemKey: AIUtility.key, valueItem: keyInput)
         
         let model = self.getModel(with: modelKey)
@@ -237,16 +232,38 @@ extension AIManageViewModel {
         Task {
           do {
               let response = try await chat.sendMessage(prompt)
-              let _ = try await model.countTokens(prompt)
               DispatchQueueManager.share.runOnMain {
                   completed(response.text ?? "Empty", .Success)
               }
           } catch {
               DispatchQueueManager.share.runOnMain {
-                  completed("Data not found", .SendReqestFail)
+                  let err = self.getError(from: error)
+                  completed(err.0, err.1)
               }
               
           }
+        }
+    }
+    
+    
+    
+    
+    func getError(from err: any Error) -> (String, GeminiStatus) {
+        if let er = error as? GenerateContentError {
+            switch er {
+            case .invalidAPIKey(let message):
+                print("❌ Invalid API Key:", message)
+                if message.contains("API key not valid. Please pass a valid API key.") {
+                    return (message, .NotExistsKey)
+                } else {
+                    return (message, .SendReqestFail)
+                }
+            default:
+                print("❌ Other Error:", er.localizedDescription)
+                return ("Data not found", .SendReqestFail)
+            }
+        } else {
+            return ("Unexpected error", .SendReqestFail)
         }
     }
     

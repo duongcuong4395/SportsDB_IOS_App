@@ -39,7 +39,7 @@ extension SportRoute {
             }
         }
         .navigationBarHidden(true)
-        .backgroundGradient()
+        .backgroundOfPage(by: .Gradient)
     }
 }
 
