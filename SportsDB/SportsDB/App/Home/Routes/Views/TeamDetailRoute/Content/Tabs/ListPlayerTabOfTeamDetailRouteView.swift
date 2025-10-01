@@ -8,45 +8,28 @@ import SwiftUI
 import Kingfisher
 
 struct ListPlayerTabOfTeamDetailRouteView: View {
-    
-    var body: some View {
-        BuildPlayersForTeamDetailView(progressing: false)
-    }
-}
-
-struct BuildPlayersForTeamDetailView: View {
     @EnvironmentObject var playerListVM: PlayerListViewModel
     @EnvironmentObject var teamDetailVM: TeamDetailViewModel
-    
-    var progressing: Bool
     var columns: [GridItem] = [GridItem(), GridItem()]
-    
     @State var viewPlayerDetail: Bool = false
     @Namespace var animation
+    
     var body: some View {
-        ZStack {
-            VStack {
-                ScrollView(showsIndicators: false) {
-                    LazyVGrid(columns: columns) {
-                        ForEach(Array(playerListVM.playersByLookUpAllForaTeam.enumerated()), id: \.element.player) { index, player in
-                            if player.player != playerListVM.playerDetail?.player {
-                                PlayerItemView(player: player, animation: animation)
-                                    .cornerRadius(10)
-                                    .shadow(radius: 5)
-                                    .onTapGesture {
-                                        Task {
-                                            await getPlayerDetail(player: player)
-                                        }
-                                    }
-                            }
+        VStack {
+            SmartContainer(hasScroll: true, maxWidth: .grid) {
+                SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
+                    ListPlayerView(players: playerListVM.playersByLookUpAllForaTeam
+                                   , animation: animation
+                                   , onTappedPlayerSelected: { player in
+                        Task {
+                            await getPlayerDetail(player: player)
                         }
-                    }
+                    })
                 }
-                .padding()
-                .padding(.top, viewPlayerDetail ? 50 : 0)
             }
-            
-            
+            .padding(.top, viewPlayerDetail ? 50 : 0)
+        }
+        .overlay {
             if viewPlayerDetail {
                 if let player = playerListVM.playerDetail {
                     PlayerDetailView(player: player, animation: animation
@@ -89,26 +72,25 @@ struct BuildPlayersForTeamDetailView: View {
         }
         return nil
     }
+}
+
+struct ListPlayerView: View {
+    var players: [Player]
+    var playerSelected: Player?
+    var animation: Namespace.ID
+    var onTappedPlayerSelected: (Player) -> Void
     
-    func getRefreshPlayer(player: Player) async  -> PlayerExecuteStatus {
-        guard let team = teamDetailVM.teamSelected else { return .Idle }
-        let playersSearch = await playerListVM.searchPlayers(by: player.player ?? "")
-        if let playerF = playersSearch.first(where: { $0.team ?? ""  == team.teamName }) {
-            
-            if let id = playerF.idPlayer {
-                let players = await playerListVM.lookupPlayer(by: id)
-                if players.count > 0 {
-                    guard let index = playerListVM.playersByLookUpAllForaTeam.firstIndex(where: { $0.player == player.player }) else { return .TryAgain}
-                    playerListVM.playersByLookUpAllForaTeam[index] = players[0]
-                    return PlayerExecuteStatus.Success
-                } else {
-                    return PlayerExecuteStatus.TryAgain
-                }
+    var body: some View {
+        ForEach(Array(players.enumerated()), id: \.element.player) { index, player in
+            if player.player != playerSelected?.player {
+                PlayerItemView(player: player, animation: animation)
+                    .cornerRadius(10)
+                    .shadow(radius: 5)
+                    .onTapGesture {
+                        onTappedPlayerSelected(player)
+                    }
             }
-        } else {
-            return PlayerExecuteStatus.TryAgain
         }
-        return PlayerExecuteStatus.Success
     }
 }
 

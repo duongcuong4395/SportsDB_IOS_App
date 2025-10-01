@@ -40,8 +40,10 @@ struct ListCountryRouteView: View {
                 .padding(.horizontal)
             }
             ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: columns) {
-                    CountriesView(countries: countryFilter, tappedCountry: tapped)
+                SmartContainer(maxWidth: .grid) {
+                    SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
+                        CountriesView(countries: countryFilter, tappedCountry: tapped)
+                    }
                 }
             }
         }

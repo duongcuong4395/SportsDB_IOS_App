@@ -10,6 +10,8 @@ import Kingfisher
 
 struct LikeRouteContentView: View {
     @EnvironmentObject var manageLikeRouteVM: ManageLikeRouteViewModel
+    @EnvironmentObject var eventDetailVM: EventDetailViewModel
+    @EnvironmentObject var sportRouter: SportRouter
     
     var body: some View {
         VStack {
@@ -64,100 +66,37 @@ extension LikeRouteContentView {
     }
     
     // MARK: - Event Row View
-    private func eventRowView(_ event: EventSwiftData) -> some View {
-        HStack {
-            // Selection checkbox
-            if manageLikeRouteVM.isSelectionMode {
-                Button(action: {
-                    manageLikeRouteVM.toggleSelection(for: event)
-                }) {
-                    Image(systemName: manageLikeRouteVM.selectedEvents.contains(event.idEvent ?? "") ? "checkmark.circle.fill" : "circle")
-                        .foregroundColor(manageLikeRouteVM.selectedEvents.contains(event.idEvent ?? "") ? .blue : .secondary)
-                        .font(.title3)
-                }
-                .buttonStyle(PlainButtonStyle())
+    private func eventRowView(_ eventDT: EventSwiftData) -> some View {
+        EventRowView(
+            event: eventDT.toEvent()
+            , isSelectionMode: manageLikeRouteVM.isSelectionMode
+            , isSelectedEvent: manageLikeRouteVM.selectedEvents.contains(eventDT.idEvent ?? "")
+            , toggleSelectionRow: { newEvent in
+                manageLikeRouteVM.toggleSelection(for: eventDT)
             }
-            
-            // Event poster
-            KFImage(URL(string: event.poster ?? ""))
-                .resizable()
-                .scaledToFill()
-                .frame(width: 50, height: 50)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(.ultraThinMaterial, lineWidth: 1)
-                )
-            
-            // Event details
-            VStack(alignment: .leading, spacing: 4) {
-                Text(event.eventName ?? "Unknown Event")
-                    .font(.footnote.bold())
-                    .lineLimit(2)
+            , navigateToEventDetailRoute: { newEvent in
+                let event = eventDT.toEvent()
+                eventDetailVM.setEventDetail(event)
+                sportRouter.navigateToEventDetail()
+            }
+            , showDeleteConfirmation: {
+                manageLikeRouteVM.showDeleteConfirmation(for: eventDT)
+            }
+            , shareEvent: { newEvent in
+                manageLikeRouteVM.shareEvent(eventDT)
+            }
+            , onTapGesture: { newEvent in
+                let event = eventDT.toEvent()
+                eventDetailVM.setEventDetail(event)
+                sportRouter.navigateToEventDetail()
                 
-                HStack(spacing: 4) {
-                    Text(event.leagueName ?? "Unknown League")
-                        .font(.caption.bold())
-                        .foregroundColor(.secondary)
-                    
-                    Text("(\(event.season ?? ""))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                if manageLikeRouteVM.isSelectionMode {
+                    manageLikeRouteVM.toggleSelection(for: eventDT)
+                } else {
+                    // Navigate to event detail or perform default action
+                    manageLikeRouteVM.handleEventTap(eventDT)
                 }
-                
-                Text(event.getDateTime())
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            // Actions
-            if !manageLikeRouteVM.isSelectionMode {
-                Menu {
-                    Button(action: {
-                        manageLikeRouteVM.showDeleteConfirmation(for: event)
-                    }) {
-                        Label("Remove from Favorites", systemImage: "heart.slash")
-                    }
-                    
-                    Button(action: {
-                        // Add share functionality
-                        manageLikeRouteVM.shareEvent(event)
-                    }) {
-                        Label("Share", systemImage: "square.and.arrow.up")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.title3)
-                        .foregroundColor(.secondary)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(PlainButtonStyle())
-            }
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background {
-            Color.clear
-                .liquidGlass(cornerRadius: 15, intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
-        }
-        .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-        .overlay(alignment: .topLeading) {
-            SportType(rawValue: event.sportName ?? "")?.getIcon()
-                .frame(width: 25, height: 25)
-                .offset(x: -5, y: -5)
-        }
-        .scaleEffect(manageLikeRouteVM.selectedEvents.contains(event.idEvent ?? "") ? 0.98 : 1.0)
-        .animation(.easeInOut(duration: 0.2), value: manageLikeRouteVM.selectedEvents.contains(event.idEvent ?? ""))
-        .onTapGesture {
-            if manageLikeRouteVM.isSelectionMode {
-                manageLikeRouteVM.toggleSelection(for: event)
-            } else {
-                // Navigate to event detail or perform default action
-                manageLikeRouteVM.handleEventTap(event)
-            }
-        }
+            })
     }
     
     // MARK: - Selection Toolbar
@@ -276,3 +215,10 @@ extension LikeRouteContentView {
         .padding(.bottom, 8)
     }
 }
+
+
+import Kingfisher
+
+
+
+

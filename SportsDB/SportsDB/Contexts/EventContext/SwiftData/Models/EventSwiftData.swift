@@ -128,4 +128,58 @@ enum NotificationStatus: String{
         AppUtility.formatDate(from: timestamp ?? "", to: "dd/MM/yyyy HH:mm") ?? ""
     }
     
+    func toEvent() -> Event {
+        var newEvent = Event()
+        newEvent.idEvent = idEvent
+        newEvent.idAPIfootball = idAPIfootball
+        newEvent.eventName = eventName
+        newEvent.eventAlternate = eventAlternate
+        newEvent.filename = filename
+        newEvent.sportName = sportName
+        newEvent.idLeague = idLeague
+        newEvent.leagueName = leagueName
+        newEvent.leagueBadge = leagueBadge
+        newEvent.season = season
+        newEvent.descriptionEN = descriptionEN
+        newEvent.homeTeam = homeTeam
+        newEvent.awayTeam = awayTeam
+        newEvent.homeScore = homeScore
+        newEvent.round = round
+        newEvent.awayScore = awayScore
+        newEvent.spectators = spectators
+        newEvent.official = official
+        newEvent.timestamp = timestamp
+        newEvent.dateEvent = dateEvent
+        newEvent.dateEventLocal = dateEventLocal
+        newEvent.time = time
+        newEvent.timeLocal = timeLocal
+        newEvent.group = group
+        newEvent.idHomeTeam = idHomeTeam
+        newEvent.homeTeamBadge = homeTeamBadge
+        newEvent.idAwayTeam = idAwayTeam
+        newEvent.awayTeamBadge = awayTeamBadge
+        newEvent.score = score
+        newEvent.scoreVotes = scoreVotes
+        newEvent.result = result
+        newEvent.idVenue = idVenue
+        newEvent.venue = venue
+        newEvent.country = country
+        newEvent.city = city
+        newEvent.poster = poster
+        newEvent.square = square
+        newEvent.fanart = fanart
+        newEvent.thumb = thumb
+        newEvent.banner = banner
+        newEvent.map = map
+        newEvent.tweet1 = tweet1
+        newEvent.tweet2 = tweet2
+        newEvent.tweet3 = tweet3
+        newEvent.video = video
+        newEvent.status = status
+        newEvent.postponed = postponed
+        newEvent.locked = locked
+        newEvent.like = like
+        //newEvent.notificationStatus = notificationStatus
+        return newEvent
+    }
 }

@@ -11,14 +11,19 @@ struct EquipmentsListView: View {
     var equipments: [Equipment]
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            LazyVGrid(columns: AppUtility.columns) {
-                ForEach(equipments, id: \.id) { equipment in
-                    EquipmentItemView(equipment: equipment)
-                        //.rotateOnAppear(angle: -90, duration: 0.5, axis: .y)
-                        
-                }
+        SmartContainer(hasScroll: true, maxWidth: .grid) {
+            SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
+                ListEquipmentView(equipments: equipments)
             }
+        }
+    }
+}
+
+struct ListEquipmentView: View {
+    var equipments: [Equipment]
+    var body: some View {
+        ForEach(equipments, id: \.id) { equipment in
+            EquipmentItemView(equipment: equipment)
         }
     }
 }

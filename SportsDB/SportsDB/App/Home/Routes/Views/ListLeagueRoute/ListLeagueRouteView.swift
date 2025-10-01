@@ -29,7 +29,6 @@ struct ListLeagueRouteContentView: View {
                 })
             }
         }
-        
     }
 }
 
@@ -89,9 +88,14 @@ struct ListLeaguesView: View {
             ProgressView()
             Spacer()
         case .success(data: _):
-            LazyVGrid(columns: columns) {
-                LeaguesView(leagues: leagueListVM.leagues, badgeImageSizePerLeague: badgeImageSizePerLeague, tappedLeague: tappedLeague)
+            //LazyVGrid(columns: columns) { }
+            SmartContainer(maxWidth: .grid) {
+                SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
+                    LeaguesView(leagues: leagueListVM.leagues, badgeImageSizePerLeague: badgeImageSizePerLeague, tappedLeague: tappedLeague)
+                }
             }
+            
+            
         case .idle:
             Spacer()
         case .failure(error: _):

@@ -12,25 +12,31 @@ enum MainDB {
     static let shared: ModelContainer = {
         let schema = Schema([EventSwiftData.self, AISwiftData.self])
         
-        /*
-        let url = FileManager.default
-            .urls(for: .applicationSupportDirectory, in: .userDomainMask)
-            .first!
-            .appendingPathComponent("MainDB.sqlite")
-        */
         
-        //let config = ModelConfiguration("MainDB", isStoredInMemoryOnly: false)
-        
-        
-        // Lấy đường dẫn lưu file
+        // url/path save file
         let storeURL = FileManager.default
             .urls(for: .applicationSupportDirectory, in: .userDomainMask)
             .first!
             .appendingPathComponent("MainDB.store")
 
-        // Xoá file MainDB.store nếu tồn tại
+        // delete file MainDB.store nếu tồn tại
+        // clearAllDataBase(from: storeURL)
         
+        // Tạo config với URL
+        let configuration = ModelConfiguration(
+            "MainDB",
+             //isStoredInMemoryOnly: false, // = true => khi app hoặc process bị kill/tắ app, toàn bộ dữ liệu biến mất.
+            url: storeURL
+        )
         
+        do {
+            return try ModelContainer(for: schema, configurations: [configuration])
+        } catch {
+            fatalError("⚠️ Failed to initialize ModelContainer: \(error)")
+        }
+    }()
+    
+    static func clearAllDataBase(from storeURL: URL) {
         if FileManager.default.fileExists(atPath: storeURL.path) {
             do {
                 try FileManager.default.removeItem(at: storeURL)
@@ -39,32 +45,7 @@ enum MainDB {
                 print("⚠️ Lỗi khi xoá MainDB.store: \(error)")
             }
         }
-        
-        
-        // Tạo config với URL
-        let configuration = ModelConfiguration(
-            "MainDB",
-             //isStoredInMemoryOnly: false, // = true => khi app hoặc process bị kill/tắ app, toàn bộ dữ liệu biến mất.
-            url: storeURL
-        )
-
-        
-        /*
-        ModelConfiguration(
-            schema: schema,
-            url: url
-            , isStoredInMemoryOnly: false
-            
-            //, migrationPlan: MigrationPlan.self
-        )
-        */
-        
-        do {
-            return try ModelContainer(for: schema, configurations: [configuration])
-        } catch {
-            fatalError("⚠️ Failed to initialize ModelContainer: \(error)")
-        }
-    }()
+    }
 }
 
 

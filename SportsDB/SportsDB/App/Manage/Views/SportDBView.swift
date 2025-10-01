@@ -98,3 +98,30 @@ private extension SportDBView {
 
 
 
+struct ButtonTestNotificationView: View {
+    var body: some View {
+        VStack {
+            HStack(spacing: 5) {
+                Image(systemName: "bell")
+                    .font(.title3)
+                    .frame(width: 25, height: 25)
+                    
+                Text("Test Notify")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+            }
+            .backgroundOfItemTouched()
+            .onTapGesture {
+                addScheduleNotification()
+            }
+        }
+        .padding(.top, 5)
+    }
+    
+    func addScheduleNotification() {
+        let eventExample = getEventExample()
+        guard let notiItem = eventExample.notificationItemTest else { return }
+        
+        NotificationManager.shared.scheduleNotification(notiItem)
+    }
+}

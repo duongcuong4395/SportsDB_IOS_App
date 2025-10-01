@@ -11,6 +11,8 @@ import Kingfisher
 
 struct NotificationRouteContentView: View {
     @EnvironmentObject var manageNotificationRouteVM: ManageNotificationRouteViewModel
+    @EnvironmentObject var sportRouter: SportRouter
+    @EnvironmentObject var eventDetailVM: EventDetailViewModel
     
     var body: some View {
         VStack {
@@ -66,96 +68,7 @@ extension NotificationRouteContentView {
         .padding(0)
     }
     
-    private func notifyRowView(_ noti: NotificationItem) -> some View {
-        HStack {
-            // Selection checkbox
-            if manageNotificationRouteVM.isSelectionMode {
-                Button(action: {
-                    manageNotificationRouteVM.toggleSelection(for: noti)
-                }) {
-                    Image(systemName: manageNotificationRouteVM.selectedNotify.contains(noti.id) ? "checkmark.circle.fill" : "circle")
-                        .foregroundColor(manageNotificationRouteVM.selectedNotify.contains(noti.id) ? .blue : .secondary)
-                        .font(.title3)
-                }
-                .buttonStyle(PlainButtonStyle())
-            }
-            
-            KFImage(URL(string: noti.userInfo["poster"] ?? ""))
-                .resizable()
-                .scaledToFill()
-                .frame(width: 50, height: 50)
-                .cornerRadius(15)
-            VStack(alignment: .leading) {
-                Text(noti.title)
-                    .font(.footnote.bold())
-                HStack {
-                    Text(noti.userInfo["leagueName"] ?? "")
-                        .font(.caption.bold())
-                        .foregroundColor(.secondary)
-                    Text("(\(noti.userInfo["season"] ?? ""))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                Text(noti.userInfo["dateTime"] ?? "")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
-            
-            
-            Spacer()
-            
-            
-            // Actions
-            if !manageNotificationRouteVM.isSelectionMode {
-                Menu {
-                    Button(action: {
-                        manageNotificationRouteVM.showDeleteConfirmation(for: noti)
-                    }) {
-                        Label("Remove from notifications", systemImage: "heart.slash")
-                    }
-                    
-                    Button(action: {
-                        // Add share functionality
-                        manageNotificationRouteVM.shareEvent(noti)
-                    }) {
-                        Label("Share", systemImage: "square.and.arrow.up")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.title3)
-                        .foregroundColor(.secondary)
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(PlainButtonStyle())
-            }
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background{
-            Color.clear
-                .liquidGlass(cornerRadius: 15, intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
-        }
-        .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-        //.padding([.top, .leading], 13)
-        .overlay(alignment: .topLeading) {
-            SportType(rawValue: noti.userInfo["sportType"] ?? "")?.getIcon()
-                //.frame(width: 30, height: 30)
-                .frame(width: 25, height: 25)
-                .offset(x: -5, y: -5)
-        }
-        .scaleEffect(manageNotificationRouteVM.selectedNotify.contains(noti.id) ? 0.98 : 1.0)
-        .animation(.easeInOut(duration: 0.2), value: manageNotificationRouteVM.selectedNotify.contains(noti.id))
-        .onTapGesture {
-            if manageNotificationRouteVM.isSelectionMode {
-                manageNotificationRouteVM.toggleSelection(for: noti)
-            } else {
-                // Navigate to event detail or perform default action
-                manageNotificationRouteVM.handleEventTap(noti)
-            }
-        }
-        
-        
-    }
+    
     
     // MARK: - Selection Toolbar
     private var selectionToolbar: some View {
@@ -223,6 +136,142 @@ extension NotificationRouteContentView {
         .background(Color.clear)
     }
 }
+
+extension NotificationRouteContentView {
+    private func notifyRowView(_ noti: NotificationItem) -> some View {
+        
+        EventRowView(
+            event: noti.toEvent()
+            , isSelectionMode: manageNotificationRouteVM.isSelectionMode
+            , isSelectedEvent: manageNotificationRouteVM.selectedNotify.contains(noti.id)
+            , toggleSelectionRow: { event in
+                manageNotificationRouteVM.toggleSelection(for: noti)
+            }
+            , navigateToEventDetailRoute: { event in
+                let event = noti.toEvent()
+                eventDetailVM.setEventDetail(event)
+                sportRouter.navigateToEventDetail()
+            }
+            , showDeleteConfirmation: {
+                manageNotificationRouteVM.showDeleteConfirmation(for: noti)
+            }
+            , shareEvent: { event in
+                manageNotificationRouteVM.shareEvent(noti)
+            }
+            , onTapGesture: { event in
+                let event = noti.toEvent()
+                eventDetailVM.setEventDetail(event)
+                sportRouter.navigateToEventDetail()
+                
+                if manageNotificationRouteVM.isSelectionMode {
+                    manageNotificationRouteVM.toggleSelection(for: noti)
+                } else {
+                    // Navigate to event detail or perform default action
+                    manageNotificationRouteVM.handleEventTap(noti)
+                }
+            })
+    }
+}
+
+struct EventRowView: View {
+    let event: Event
+    
+    var isSelectionMode: Bool
+    var isSelectedEvent: Bool
+    var toggleSelectionRow: (Event) -> Void
+    var navigateToEventDetailRoute: (Event) -> Void
+    var showDeleteConfirmation: () -> Void
+    var shareEvent: (Event) -> Void
+    var onTapGesture: (Event) -> Void
+    
+    var body: some View {
+        HStack {
+            // Selection checkbox
+            if isSelectionMode {
+                Button(action: {
+                    toggleSelectionRow(event)
+                }) {
+                    Image(systemName: isSelectedEvent ? "checkmark.circle.fill" : "circle")
+                        .foregroundColor(isSelectedEvent ? .blue : .secondary)
+                        .font(.title3)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+            
+            KFImage(URL(string: event.poster ?? ""))
+                .resizable()
+                .scaledToFill()
+                .frame(width: 50, height: 50)
+                .cornerRadius(15)
+            VStack(alignment: .leading) {
+                Text(event.eventName ?? "")
+                    .font(.footnote.bold())
+                HStack {
+                    Text(event.leagueName ?? "")
+                        .font(.caption.bold())
+                        .foregroundColor(.secondary)
+                    Text("(\(event.season ?? ""))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Text(event.getDateTime())
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            // Actions
+            if !isSelectionMode {
+                Menu {
+                    Button(action: {
+                        navigateToEventDetailRoute(event)
+                    }) {
+                        Label("info", systemImage: "info.circle")
+                    }
+                    
+                    Button(action: {
+                        showDeleteConfirmation()
+                        //manageNotificationRouteVM.showDeleteConfirmation(for: noti)
+                    }) {
+                        Label("Remove", systemImage: "bell.slash")
+                    }
+                    
+                    
+                    Button(action: {
+                        shareEvent(event)
+                    }) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .font(.title3)
+                        .foregroundColor(.secondary)
+                        .frame(width: 44, height: 44)
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background{
+            Color.clear
+                .liquidGlass(cornerRadius: 15, intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
+        }
+        .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .overlay(alignment: .topLeading) {
+            SportType(rawValue: event.sportName ?? "")?.getIcon()
+                .frame(width: 25, height: 25)
+                .offset(x: -5, y: -5)
+        }
+        .scaleEffect(isSelectedEvent ? 0.98 : 1.0)
+        .animation(.easeInOut(duration: 0.2), value: isSelectedEvent)
+        .onTapGesture {
+            onTapGesture(event)
+        }
+    }
+}
+
 
 // MARK: - Empty State Views
 extension NotificationRouteContentView {

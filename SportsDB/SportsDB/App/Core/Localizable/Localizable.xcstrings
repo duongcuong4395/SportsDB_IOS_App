@@ -95,6 +95,9 @@
     "Blur Effect" : {
 
     },
+    "Box %lld" : {
+
+    },
     "Button" : {
 
     },
@@ -155,6 +158,9 @@
 
     },
     "Custom Glass" : {
+
+    },
+    "Device: %@" : {
 
     },
     "Double tap to expand" : {
@@ -237,7 +243,16 @@
     "Ignores safe area" : {
 
     },
+    "info" : {
+
+    },
     "Interactive glass material with depth" : {
+
+    },
+    "iPad Only Content" : {
+
+    },
+    "iPhone Only Content" : {
 
     },
     "Item" : {
@@ -451,9 +466,6 @@
     "Remove from notification saved" : {
 
     },
-    "Remove from notifications" : {
-
-    },
     "Resizable Header Demo" : {
 
     },
@@ -521,6 +533,15 @@
 
     },
     "Slider Value: %lld%%" : {
+
+    },
+    "Smart Grid Demo" : {
+
+    },
+    "Smart Responsive System" : {
+
+    },
+    "Smart Stack Demo" : {
 
     },
     "Special Effects" : {

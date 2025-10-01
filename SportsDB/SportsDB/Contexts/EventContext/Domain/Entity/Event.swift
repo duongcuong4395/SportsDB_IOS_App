@@ -42,6 +42,10 @@ Sự kiện này sẽ diễn ra vào thời điểm \(timestamp ?? "") tại đ�
 Bên cạnh đó, hãy đưa ra dự đoán kết quả cuối cùng của trận đấu trong vòng \(round ?? "") của mùa giải \(season ?? "") này. Phân tích của bạn sẽ rất có giá trị đối với những người hâm mộ và các nhà đầu tư trong lĩnh vực cá cược thể thao.
 """}
     
+    
+    func getDateTime() -> String {
+        AppUtility.formatDate(from: timestamp ?? "", to: "dd/MM/yyyy HH:mm") ?? ""
+    }
 }
 
 

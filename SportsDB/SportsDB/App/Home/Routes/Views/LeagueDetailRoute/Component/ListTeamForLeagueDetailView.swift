@@ -25,21 +25,22 @@ struct ListTeamForLeagueDetailView: View {
             ProgressView()
         case .success(_):
             ScrollView(showsIndicators: false) {
-                LazyVGrid(columns: AppUtility.columns) {
-                    TeamListView(
-                        teams: teamListVM.teams,
-                        badgeImageSizePerTeam: badgeImageSizePerLeague,
-                        teamTapped: { team in
-                            Task {
-                                teamSelectionManager.resetTeamData()
-                                teamDetailVM.setTeam(by: team)
-                                try await teamSelectionManager.selectTeam(by: team.teamName)
+                SmartContainer(maxWidth: .grid) {
+                    SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
+                        TeamListView(
+                            teams: teamListVM.teams,
+                            badgeImageSizePerTeam: badgeImageSizePerLeague,
+                            teamTapped: { team in
+                                Task {
+                                    teamSelectionManager.resetTeamData()
+                                    teamDetailVM.setTeam(by: team)
+                                    try await teamSelectionManager.selectTeam(by: team.teamName)
+                                }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
-            
         case .failure(_):
             Text("Please return in a few minutes.")
                 .font(.caption2.italic())
