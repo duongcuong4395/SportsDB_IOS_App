@@ -17,7 +17,7 @@ struct ListPlayerTabOfTeamDetailRouteView: View {
     var body: some View {
         VStack {
             SmartContainer(hasScroll: true, maxWidth: .grid) {
-                SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
+                SmartGrid(columns: DeviceSize.current.isPad ? 5 : 2, spacing: .medium) {
                     ListPlayerView(players: playerListVM.playersByLookUpAllForaTeam
                                    , animation: animation
                                    , onTappedPlayerSelected: { player in

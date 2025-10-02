@@ -37,32 +37,31 @@ struct ListCountryRouteView: View {
                             }
                         }
                 }
-                .padding(.horizontal)
+                .padding([.horizontal, .top])
             }
             ScrollView(showsIndicators: false) {
                 SmartContainer(maxWidth: .grid) {
                     SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
-                        CountriesView(countries: countryFilter, tappedCountry: tapped)
+                        ListCountryView(countries: countryFilter, tappedCountry: tapped)
                     }
                 }
             }
         }
         .overlay(alignment: .topTrailing) {
             if !showTextSearch {
-                HStack {
-                    Spacer()
-                    Image(systemName: "magnifyingglass")
-                        .font(.title3)
-                        .backgroundOfItemTouched(hasShimmer: false)
-                        .onTapGesture {
-                            withAnimation {
-                                showTextSearch.toggle()
-                            }
+                Image(systemName: "magnifyingglass")
+                    .font(.title3)
+                    .backgroundOfItemTouched(hasShimmer: false)
+                    .onTapGesture {
+                        withAnimation {
+                            showTextSearch.toggle()
                         }
-                    
-                }
-                .padding(.horizontal)
+                    }
+                    .padding([.horizontal, .top])
+                    .scaleEffect(!showTextSearch ? 1 : 0)
             }
+            
+            
             
         }
         .onChange(of: textSearch) { oldValue, newValue in

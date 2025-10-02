@@ -59,11 +59,29 @@ struct EventsGenericView<ViewModel: GeneralEventManagement>: View {
             case .success:
                 eventsList
             case .loading:
-                loadingView
+                //loadingView
+                getExampleView()
             case .idle:
                 EmptyView()
             case .failure(error: _):
                 errorView
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func getExampleView() -> some View {
+        let event = getEventExample()
+        VStack {
+            ForEach(0 ..< 3) {_ in
+                EventItemGenericView(
+                    event: event
+                    , isVisible: .constant(true)
+                    , delay: 0.01
+                    , itemBuilder: ItemBuilderForEvent()
+                    , onEvent: { ev in })
+                    .redacted(reason: .placeholder)
+                    .backgroundOfItemTouched(color: .clear)
             }
         }
     }

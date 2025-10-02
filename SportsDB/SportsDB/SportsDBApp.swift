@@ -29,7 +29,6 @@ struct SportsDBApp: App {
                 .environmentObject(adaptiveLayoutManager)
         }
         .modelContainer(MainDB.shared)
-        
     }
 }
 

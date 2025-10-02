@@ -81,7 +81,8 @@ struct SeasonOfLeagueContentView: View {
         VStack(spacing: 5) {
             MenuOfEventsView
             menuOfEventActive.getView(by: league, and: seasonListVM.seasonSelected ?? Season(season: ""))
-                .frame(maxHeight: UIScreen.main.bounds.height / 2.5)
+            
+                .frame(maxHeight: DeviceSize.current.isPad ? UIScreen.main.bounds.height / 1.5 : UIScreen.main.bounds.height / 2.5)
         }
     }
     
