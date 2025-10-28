@@ -7,9 +7,7 @@
 
 import SwiftUI
 import Combine
-
-
-
+/*
 // MARK: - Generic Navigation Stack
 struct GenericNavigationStack<Route: Hashable, Content: View, Destination: View>: View {
     @ObservedObject var router: BaseRouter<Route>
@@ -37,3 +35,7 @@ struct GenericNavigationStack<Route: Hashable, Content: View, Destination: View>
         .environmentObject(router)
     }
 }
+
+
+
+*/

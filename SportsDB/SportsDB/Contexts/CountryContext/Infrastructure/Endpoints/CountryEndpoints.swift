@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import Networking
 
 enum CountryEndPoint<T: Decodable> {
     case GetCountries
@@ -22,7 +23,7 @@ extension CountryEndPoint: HttpRouter {
         }
     }
     
-    var menthod: Alamofire.HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         .get
     }
     

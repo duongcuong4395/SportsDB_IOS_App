@@ -5,11 +5,10 @@
 //  Created by Macbook on 29/5/25.
 //
 
+import Networking
+
 final class TeamAPIService: APIExecution, TeamRepository {
-    
-    
-    
-    
+
     func searchTeams(teamName: String) async throws -> [Team] {
         let response: SearchTeamsAPIResponse = try await sendRequest(for: TeamEndpoint<SearchTeamsAPIResponse>.SearchTeams(teamName: teamName))
         guard let teams = response.teams else {

@@ -6,6 +6,7 @@
 //
 import SwiftUI
 
+/*
 // MARK: - Router Protocol
 protocol Router: ObservableObject {
     associatedtype Route: Hashable
@@ -16,3 +17,7 @@ protocol Router: ObservableObject {
     func popToRoot()
     func replace(with route: Route)
 }
+
+
+
+*/

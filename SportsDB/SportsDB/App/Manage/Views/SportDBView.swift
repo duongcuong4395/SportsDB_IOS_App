@@ -7,16 +7,17 @@
 
 import SwiftUI
 import SwiftData
+import Networking
+import NavigationRouter
 
 
 struct SportDBView: View {
     @StateObject private var container = AppDependencyContainer()
-    @Environment(\.isNetworkConnected) private var isConnected
-    @Environment(\.connectionType) private var connectionType
+    @EnvironmentObject private var networkMonitor: NetworkMonitor
     
     var body: some View {
         VStack(spacing: 0) {
-            GenericNavigationStack(
+            NavigationRouter(
                 router: container.sportRouter
              , rootContent: {
                  ListCountryRouteView()
@@ -24,15 +25,30 @@ struct SportDBView: View {
              }
              , destination: sportDestination
             )
+            
+            if networkMonitor.isVPNActive {
+                Label("VPN is active", systemImage: "lock.shield.fill")
+                        .foregroundStyle(.orange)
+                        .font(.caption)
+            }
         }
         .padding(0)
-        
         .overlay(alignment: .bottomLeading, content: {
             bottomOverlay
         })
         .overlay(content: {
             DialogView()
                 .environmentObject(container.aiManageVM)
+        })
+        .overlay(content: {
+            if !networkMonitor.isConnected{
+                NoInternetView()
+                    .presentationDetents([.height(310)])
+                    .presentationCornerRadius(0)
+                    .presentationBackgroundInteraction(.disabled)
+                    .presentationBackground(.clear)
+                    .interactiveDismissDisabled()
+            }
         })
         .injectDependencies(container)
         .onAppear(perform: container.appAppear)
@@ -45,23 +61,17 @@ struct SportDBView: View {
                 handleTappedNotification(notification)
             }
         }
-        .sheet(isPresented: .constant(!(isConnected ?? true))) {
-            NoInternetView()
-                .presentationDetents([.height(310)])
-                .presentationCornerRadius(0)
-                .presentationBackgroundInteraction(.disabled)
-                .presentationBackground(.clear)
-                .interactiveDismissDisabled()
+    }
+}
+
+
+extension SportDBView {
+    private func handleTappedNotification(_ notification: NotificationItem) {
+        print("📱 Notification tapped in UI: \(notification.title)")
+        if let eventId = notification.userInfo["idEvent"] {
+            print("Should navigate to event: \(eventId)")
         }
     }
-       
-   private func handleTappedNotification(_ notification: NotificationItem) {
-       print("📱 Notification tapped in UI: \(notification.title)")
-       if let eventId = notification.userInfo["idEvent"] {
-           print("Should navigate to event: \(eventId)")
-       }
-   }
-    
 }
 
 // MARK: bottomOverlay
@@ -79,8 +89,6 @@ extension SportDBView {
                     
                     NavigationToNotificationView()
                     NavigationToLikedView()
-                    
-                    //ButtonTestNotificationView()
                 }
             }
         }
@@ -94,9 +102,6 @@ private extension SportDBView {
         route.destinationView()
     }
 }
-
-
-
 
 struct ButtonTestNotificationView: View {
     var body: some View {

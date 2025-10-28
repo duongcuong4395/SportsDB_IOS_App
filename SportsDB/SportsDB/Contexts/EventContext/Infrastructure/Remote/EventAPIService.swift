@@ -5,6 +5,8 @@
 //  Created by Macbook on 27/5/25.
 //
 
+import Networking
+
 final class EventAPIService: EventRepository, APIExecution {
     func getEvents(of team: String, by schedule: NextAndPrevious) async throws -> [Event] {
         switch schedule {

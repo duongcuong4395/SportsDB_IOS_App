@@ -16,41 +16,4 @@ struct NotificationItem: Identifiable, Equatable, Codable {
     var hasRead: Bool
 }
 
-/*
- [
-     "sportType": sportName ?? ""
-     , "idEvent": idEvent ?? ""
-     , "idAPIfootball": idAPIfootball ?? ""
-     , "eventName": eventName ?? ""
-     , "eventAlternate": eventAlternate ?? ""
-     , "filename": filename ?? ""
-     , "sportName": sportName ?? ""
-     , "idLeague": idLeague ?? ""
-     , "leagueName": leagueName ?? ""
-     , "leagueBadge": leagueBadge ?? ""
-     , "season": season ?? ""
-     , "descriptionEN": descriptionEN ?? ""
-     
-     , "round": round ?? ""
-     , "homeTeam": homeTeam ?? ""
-     , "awayTeam": awayTeam ?? ""
-     
-     , "idHomeTeam": idHomeTeam ?? ""
-     , "homeTeamBadge": homeTeamBadge ?? ""
-     , "idAwayTeam": idAwayTeam ?? ""
-     , "awayTeamBadge": awayTeamBadge ?? ""
-     
-     , "idVenue": idVenue ?? ""
-     , "venue": venue ?? ""
-     , "country": country ?? ""
-     , "city": city ?? ""
-     
-     , "poster": poster ?? ""
-     , "square": square ?? ""
-     , "fanart": fanart ?? ""
-     , "thumb": thumb ?? ""
-     , "dateTime": AppUtility.formatDate(from: timestamp, to: "dd/MM/yyyy HH:mm") ?? ""
- ]
- */
-
 

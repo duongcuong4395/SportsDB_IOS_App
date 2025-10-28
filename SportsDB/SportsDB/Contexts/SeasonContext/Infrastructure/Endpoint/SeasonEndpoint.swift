@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import Networking
 
 enum SeasonEndpoint<T: Decodable> {
     case GetListSeasons(leagueID: String)
@@ -26,7 +27,7 @@ extension SeasonEndpoint: HttpRouter {
         }
     }
     
-    var menthod: Alamofire.HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         .get
     }
     

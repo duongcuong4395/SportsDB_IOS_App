@@ -15,6 +15,7 @@ enum TeamEndpoint<T: Decodable> {
 
 import Foundation
 import Alamofire
+import Networking
 
 extension TeamEndpoint: HttpRouter {
     typealias responseDataType = T
@@ -36,7 +37,7 @@ extension TeamEndpoint: HttpRouter {
         }
     }
     
-    var menthod: Alamofire.HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         .get
     }
     

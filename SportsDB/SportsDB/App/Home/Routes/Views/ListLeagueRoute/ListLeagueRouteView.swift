@@ -89,15 +89,12 @@ struct ListLeaguesView: View {
                     getExampleView()
                 }
             }
-            
         case .success(data: _):
             SmartContainer(maxWidth: .grid) {
                 SmartGrid(columns: DeviceSize.current.isPad ? 5 : 3, spacing: .medium) {
                     LeaguesView(leagues: leagueListVM.leagues, badgeImageSizePerLeague: badgeImageSizePerLeague, tappedLeague: tappedLeague)
                 }
             }
-            
-            
         case .idle:
             Spacer()
         case .failure(error: _):

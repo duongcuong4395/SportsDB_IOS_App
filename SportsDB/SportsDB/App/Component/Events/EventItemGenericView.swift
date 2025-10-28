@@ -173,14 +173,14 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
         HStack {
             HStack {
                 Text(event.round ?? "")
-                    .smartFont(.caption, weight: .medium)
+                    .fontByDevice(.caption, weight: .medium)
                     //.font(.caption2.bold())
                 VStack {
                     Text(AppUtility.formatDate(from: event.timestamp, to: "dd/MM") ?? "")
                         //.font(.caption2.bold())
-                        .smartFont(.caption, weight: .medium)
+                        .fontByDevice(.caption, weight: .medium)
                     Text(AppUtility.formatDate(from: event.timestamp, to: "HH:mm") ?? "")
-                        .smartFont(.caption, weight: .medium)
+                        .fontByDevice(.caption, weight: .medium)
                         //.font(.caption2.bold())
                 }
             }
@@ -191,8 +191,6 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                     showOptionsView.toggle()
                 }
             }
-            
-            //itemBuilder.buildOptions(for: event, send: onEvent)
             Spacer()
             if showOptionsView {
                 itemBuilder.buildOptions(for: event, send: onEvent)
@@ -221,20 +219,16 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
     @ViewBuilder
     func TeamNameView(by name: String, with kindTeam: KindTeam) -> some View {
         Text(name)
-            .font(.caption2)
-            //.smartFont(.caption, weight: .medium)
-            //.smartFont(.caption, weight: .semibold)
-            //.smartFont(.caption, weight: .ultraLight)
+            .fontByDevice(.caption, weight: .medium)
             .foregroundStyle(.white)
             .lineLimit(2)
-            .smartPadding(.small)
-            .frame(width: UIScreen.main.bounds.width/2 - 80.0)
+            .paddingByDevice(.small)
+            .frame(width: UIScreen.main.bounds.width/2 - 50.0)
             .background {
                 ArrowShape()
-                    .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.black, .black, .black, .white.opacity(0.1)]), startPoint: .trailing, endPoint: .leading))
+                    .foregroundStyle(LinearGradient(gradient: Gradient(colors: [.blue, .blue, .blue, .white.opacity(0.1)]), startPoint: .trailing, endPoint: .leading))
                     .rotation3DEffect(Angle(degrees: kindTeam == .HomeTeam ? 0 : 180), axis: (0, 1, 0))
-                    .frame(width: UIScreen.main.bounds.width/2 - 80.0)
-                    
+                    .frame(width: UIScreen.main.bounds.width/2 - 50.0)
             }
     }
     

@@ -8,6 +8,7 @@
 import SwiftUI
 
 
+/*
 // MARK: - Base Implementation
 class BaseRouter<Route: Hashable>: Router, ObservableObject {
     @Published var path = NavigationPath()
@@ -162,3 +163,4 @@ class BaseRouter<Route: Hashable>: Router, ObservableObject {
         return routeStack
     }
 }
+*/

@@ -408,31 +408,31 @@ class AdaptiveLayoutManager: ObservableObject {
 // MARK: - View Extensions for Smart Adaptive Design
 extension View {
     // Smart Padding
-    func smartPadding(_ type: SmartPaddingType = .container) -> some View {
+    func paddingByDevice(_ type: PaddingType = .container) -> some View {
         self.padding(type.value)
     }
     
-    func smartPadding(_ edges: Edge.Set, _ type: SmartPaddingType = .container) -> some View {
+    func paddingByDevice(_ edges: Edge.Set, _ type: PaddingType = .container) -> some View {
         self.padding(edges, type.value)
     }
     
     // Smart Spacing
-    func smartSpacing(_ type: SmartSpacingType = .medium) -> some View {
+    func spacingByDevice(_ type: SpacingType = .medium) -> some View {
         self.modifier(SmartSpacingModifier(spacing: type.value))
     }
     
     // Smart Font
-    func smartFont(_ type: SmartFontType, weight: Font.Weight = .regular) -> some View {
+    func fontByDevice(_ type: FontType, weight: Font.Weight = .regular) -> some View {
         self.font(.system(size: type.value, weight: weight))
     }
     
     // Smart Corner Radius
-    func smartCornerRadius(_ type: SmartCornerRadiusType = .standard) -> some View {
+    func cornerRadiusByDevice(_ type: CornerRadiusType = .standard) -> some View {
         self.cornerRadius(type.value)
     }
     
     // Smart Max Width
-    func smartMaxWidth(_ type: SmartMaxWidthType = .content) -> some View {
+    func maxWidthByDevice(_ type: MaxWidthType = .content) -> some View {
         self.frame(maxWidth: type.value)
     }
     
@@ -452,7 +452,7 @@ extension View {
 
 
 // MARK: - Smart Padding Types
-enum SmartPaddingType {
+enum PaddingType {
     case tiny
     case small
     case medium
@@ -475,7 +475,7 @@ enum SmartPaddingType {
 }
 
 // MARK: - Smart Spacing Types
-enum SmartSpacingType {
+enum SpacingType {
     case tiny
     case small
     case medium
@@ -502,7 +502,7 @@ struct SmartSpacingModifier: ViewModifier {
 }
 
 // MARK: - Smart Font Types
-enum SmartFontType {
+enum FontType {
     case title
     case headline
     case body
@@ -519,7 +519,7 @@ enum SmartFontType {
 }
 
 // MARK: - Smart Corner Radius Types
-enum SmartCornerRadiusType {
+enum CornerRadiusType {
     case standard
     case card
     
@@ -532,7 +532,7 @@ enum SmartCornerRadiusType {
 }
 
 // MARK: - Smart Max Width Types
-enum SmartMaxWidthType {
+enum MaxWidthType {
     case content
     case form
     case grid
@@ -565,13 +565,13 @@ struct DeviceVisibilityModifier: ViewModifier {
 struct SmartStack<Content: View>: View {
     let horizontalAlignment: HorizontalAlignment
     let verticalAlignment: VerticalAlignment
-    let spacing: SmartSpacingType
+    let spacing: SpacingType
     let content: Content
     
     init(
         horizontalAlignment: HorizontalAlignment = .center,
         verticalAlignment: VerticalAlignment = .center,
-        spacing: SmartSpacingType = .medium,
+        spacing: SpacingType = .medium,
         @ViewBuilder content: () -> Content
     ) {
         self.horizontalAlignment = horizontalAlignment
@@ -596,12 +596,12 @@ struct SmartStack<Content: View>: View {
 // MARK: - Smart Grid
 struct SmartGrid<Content: View>: View {
     let columns: Int?
-    let spacing: SmartSpacingType
+    let spacing: SpacingType
     let content: Content
     
     init(
         columns: Int? = nil,
-        spacing: SmartSpacingType = .medium,
+        spacing: SpacingType = .medium,
         @ViewBuilder content: () -> Content
     ) {
         self.columns = columns
@@ -627,12 +627,12 @@ struct SmartGrid<Content: View>: View {
 // MARK: - Smart Container
 struct SmartContainer<Content: View>: View {
     let hasScroll: Bool
-    let maxWidth: SmartMaxWidthType
+    let maxWidth: MaxWidthType
     let content: Content
     
     init(
         hasScroll: Bool = false,
-        maxWidth: SmartMaxWidthType = .content,
+        maxWidth: MaxWidthType = .content,
         @ViewBuilder content: () -> Content
     ) {
         self.hasScroll = hasScroll
@@ -645,13 +645,13 @@ struct SmartContainer<Content: View>: View {
             ScrollView(showsIndicators: false) {
                 content
                     .frame(maxWidth: maxWidth.value)
-                    .smartPadding(.container)
+                    .paddingByDevice(.container)
             }
             
         } else {
             content
                 .frame(maxWidth: maxWidth.value)
-                .smartPadding(.container)
+                .paddingByDevice(.container)
         }
         
     }
@@ -671,188 +671,3 @@ struct ResponsiveContainer<Content: View>: View {
             .environmentObject(layoutManager)
     }
 }
-
-
-
-
-// ===============================================
-
-// MARK: - Demo View
-struct SmartResponsiveDemo: View {
-    @EnvironmentObject var layoutManager: AdaptiveLayoutManager
-    
-    var body: some View {
-        ScrollView {
-            VStack(spacing: SmartAdaptive.large) {
-                // Header
-                SmartContainer(maxWidth: .content) {
-                    VStack(spacing: SmartAdaptive.medium) {
-                        Text("Smart Responsive System")
-                            .smartFont(.title, weight: .bold)
-                        
-                        Text("Device: \(deviceInfo)")
-                            .smartFont(.body)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                // Device Info Card
-                SmartContainer(maxWidth: .form) {
-                    VStack(alignment: .leading, spacing: SmartAdaptive.small) {
-                        InfoRow(label: "Device Type", value: layoutManager.isPad ? "iPad" : "iPhone")
-                        InfoRow(label: "Screen Size", value: screenSizeText)
-                        InfoRow(label: "Orientation", value: layoutManager.isLandscape ? "Landscape" : "Portrait")
-                        InfoRow(label: "Width", value: "\(Int(layoutManager.screenWidth))pt")
-                        InfoRow(label: "Grid Columns", value: "\(SmartAdaptive.gridColumns)")
-                    }
-                    .smartPadding(.section)
-                    .background(Color.blue.opacity(0.1))
-                    .smartCornerRadius(.card)
-                }
-                
-                // Adaptive Stack Demo
-                Text("Smart Stack Demo")
-                    .smartFont(.headline, weight: .semibold)
-                
-                SmartStack(spacing: .medium) {
-                    ForEach(0..<3) { index in
-                        RoundedRectangle(cornerRadius: SmartAdaptive.cornerRadius)
-                            .fill(Color.purple.opacity(0.6))
-                            .frame(width: 100, height: 100)
-                            .overlay(
-                                Text("Box \(index + 1)")
-                                    .smartFont(.body, weight: .semibold)
-                                    .foregroundColor(.white)
-                            )
-                    }
-                }
-                .smartPadding(.container)
-                
-                // Smart Grid Demo
-                Text("Smart Grid Demo")
-                    .smartFont(.headline, weight: .semibold)
-                
-                SmartContainer(maxWidth: .grid) {
-                    SmartGrid(spacing: .medium) {
-                        ForEach(0..<12) { index in
-                            RoundedRectangle(cornerRadius: SmartAdaptive.cardCornerRadius)
-                                .fill(Color.green.opacity(0.6))
-                                .aspectRatio(1, contentMode: .fit)
-                                .overlay(
-                                    VStack {
-                                        Image(systemName: "star.fill")
-                                            .font(.system(size: SmartAdaptive.iconSize))
-                                        Text("Item \(index + 1)")
-                                            .smartFont(.caption, weight: .medium)
-                                    }
-                                    .foregroundColor(.white)
-                                )
-                        }
-                    }
-                }
-                
-                // Device Specific Content
-                VStack(spacing: SmartAdaptive.medium) {
-                    Text("iPhone Only Content")
-                        .smartFont(.headline, weight: .semibold)
-                        .foregroundColor(.orange)
-                        .smartPadding(.medium)
-                        .background(Color.orange.opacity(0.2))
-                        .smartCornerRadius()
-                        .phoneOnly()
-                    
-                    Text("iPad Only Content")
-                        .smartFont(.headline, weight: .semibold)
-                        .foregroundColor(.blue)
-                        .smartPadding(.medium)
-                        .background(Color.blue.opacity(0.2))
-                        .smartCornerRadius()
-                        .padOnly()
-                }
-                .smartPadding(.container)
-            }
-            .smartPadding(.section)
-        }
-    }
-    
-    var deviceInfo: String {
-        switch DeviceSize.current {
-        case .iPhoneSmall: return "iPhone Small"
-        case .iPhoneMedium: return "iPhone Medium"
-        case .iPhoneLarge: return "iPhone Large"
-        case .iPadSmall: return "iPad Small"
-        case .iPadMedium: return "iPad Medium"
-        case .iPadLarge: return "iPad Large"
-        }
-    }
-    
-    var screenSizeText: String {
-        let size = DeviceSize.current
-        switch size {
-        case .iPhoneSmall: return "320-375pt"
-        case .iPhoneMedium: return "390-393pt"
-        case .iPhoneLarge: return "414-430pt"
-        case .iPadSmall: return "744-820pt"
-        case .iPadMedium: return "834pt"
-        case .iPadLarge: return "1024pt+"
-        }
-    }
-}
-
-struct InfoRow: View {
-    let label: String
-    let value: String
-    
-    var body: some View {
-        HStack {
-            Text(label)
-                .smartFont(.caption)
-                .foregroundColor(.secondary)
-            Spacer()
-            Text(value)
-                .smartFont(.body, weight: .medium)
-        }
-    }
-}
-
-// MARK: - App Entry Point
-struct SmartResponsiveApp: View {
-    var body: some View {
-        ResponsiveContainer {
-            SmartResponsiveDemo()
-        }
-    }
-}
-
-/*
-// MARK: - Previews
-struct SmartResponsiveApp_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            SmartResponsiveApp()
-                .previewDevice("iPhone SE (3rd generation)")
-                .previewDisplayName("iPhone SE")
-            
-            SmartResponsiveApp()
-                .previewDevice("iPhone 15 Pro")
-                .previewDisplayName("iPhone 15 Pro")
-            
-            SmartResponsiveApp()
-                .previewDevice("iPhone 15 Pro Max")
-                .previewDisplayName("iPhone 15 Pro Max")
-            
-            SmartResponsiveApp()
-                .previewDevice("iPad mini (6th generation)")
-                .previewDisplayName("iPad Mini")
-            
-            SmartResponsiveApp()
-                .previewDevice("iPad Pro (11-inch) (4th generation)")
-                .previewDisplayName("iPad Pro 11\"")
-            
-            SmartResponsiveApp()
-                .previewDevice("iPad Pro (12.9-inch) (6th generation)")
-                .previewDisplayName("iPad Pro 12.9\"")
-        }
-    }
-}
-*/

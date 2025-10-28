@@ -39,3 +39,4 @@ extension View {
         self.modifier(BackgroundOfItemSelectedViewModifier(padding: padding, hasShimmer: hasShimmer, isSelected: isSelected, animation: animation))
     }
 }
+

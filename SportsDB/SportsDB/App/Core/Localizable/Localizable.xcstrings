@@ -74,9 +74,6 @@
     "👤" : {
 
     },
-    "Add to Cart & View Cart" : {
-
-    },
     "Advanced Sticky Header" : {
 
     },
@@ -95,9 +92,6 @@
     "Blur Effect" : {
 
     },
-    "Box %lld" : {
-
-    },
     "Button" : {
 
     },
@@ -111,9 +105,6 @@
 
     },
     "Cards" : {
-
-    },
-    "Cart" : {
 
     },
     "change color" : {
@@ -136,31 +127,16 @@
         }
       }
     },
-    "Checkout" : {
-
-    },
-    "Clothing" : {
-
-    },
-    "Complete your purchase..." : {
-
-    },
     "Complex Header" : {
 
     },
     "Complex Header Example" : {
 
     },
-    "Connected" : {
-
-    },
     "Custom Effects" : {
 
     },
     "Custom Glass" : {
-
-    },
-    "Device: %@" : {
 
     },
     "Double tap to expand" : {
@@ -170,12 +146,6 @@
 
     },
     "Dynamic Header" : {
-
-    },
-    "Edit Profile" : {
-
-    },
-    "Electronics" : {
 
     },
     "Enter text" : {
@@ -247,12 +217,6 @@
 
     },
     "Interactive glass material with depth" : {
-
-    },
-    "iPad Only Content" : {
-
-    },
-    "iPhone Only Content" : {
 
     },
     "Item" : {
@@ -336,19 +300,10 @@
     "Navigation" : {
 
     },
-    "Network Monitor" : {
-
-    },
     "No Effects (Clean)" : {
 
     },
     "No Favorite Events" : {
-
-    },
-    "No Internet" : {
-
-    },
-    "No Internet Connectivity" : {
 
     },
     "No Notifications" : {
@@ -380,24 +335,6 @@
     "Notifications you Saved will appear here" : {
 
     },
-    "Order #%lld" : {
-
-    },
-    "Order Detail" : {
-
-    },
-    "Order Details: %@" : {
-
-    },
-    "Order History" : {
-
-    },
-    "Orders" : {
-
-    },
-    "Please check your internet connection\nto continue using the app." : {
-
-    },
     "Please return in a few minutes" : {
 
     },
@@ -411,27 +348,6 @@
 
     },
     "Primary" : {
-
-    },
-    "Proceed to Checkout" : {
-
-    },
-    "Product" : {
-
-    },
-    "Product %lld" : {
-
-    },
-    "Product Details" : {
-
-    },
-    "Product ID: %@" : {
-
-    },
-    "Products in %@" : {
-
-    },
-    "Profile" : {
 
     },
     "Progress: %@" : {
@@ -496,9 +412,6 @@
     "Select season to see more about table rank and round events." : {
 
     },
-    "Settings" : {
-
-    },
     "Share" : {
 
     },
@@ -509,15 +422,6 @@
 
     },
     "Shimmer Glass" : {
-
-    },
-    "Shop" : {
-
-    },
-    "Shop Categories" : {
-
-    },
-    "Shopping Cart" : {
 
     },
     "Short content %lld" : {
@@ -535,22 +439,10 @@
     "Slider Value: %lld%%" : {
 
     },
-    "Smart Grid Demo" : {
-
-    },
-    "Smart Responsive System" : {
-
-    },
-    "Smart Stack Demo" : {
-
-    },
     "Special Effects" : {
 
     },
     "Standard" : {
-
-    },
-    "Status" : {
 
     },
     "Sticky Header" : {
@@ -614,9 +506,6 @@
         }
       }
     },
-    "Type" : {
-
-    },
     "Universal Example" : {
 
     },
@@ -626,16 +515,13 @@
     "Venue:" : {
 
     },
-    "View Cart" : {
+    "VPN is active" : {
 
     },
     "VS" : {
 
     },
     "Wage: %@" : {
-
-    },
-    "Waiting for internet connection..." : {
 
     },
     "Watch the subtle shape morphing animation" : {
@@ -664,9 +550,6 @@
 
     },
     "With Shimmer Only" : {
-
-    },
-    "Your cart items here..." : {
 
     }
   },

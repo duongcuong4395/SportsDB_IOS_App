@@ -12,8 +12,13 @@ enum VenueEndpoint<T: Decodable> {
 
 import Foundation
 import Alamofire
+import Networking
 
 extension VenueEndpoint: HttpRouter {
+    var method: Alamofire.HTTPMethod {
+        .get
+    }
+    
     typealias responseDataType = T
     
     var baseURL: String {
@@ -27,10 +32,6 @@ extension VenueEndpoint: HttpRouter {
         case .SearchVenues(venueName: _):
             return "api/v1/json/3/searchvenues.php"
         }
-    }
-    
-    var menthod: Alamofire.HTTPMethod {
-        .get
     }
     
     var headers: Alamofire.HTTPHeaders? {

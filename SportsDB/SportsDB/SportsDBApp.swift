@@ -6,31 +6,21 @@
 //
 
 import SwiftUI
+import Networking
 
 @main
 struct SportsDBApp: App {
-    @StateObject private var networkMonitor = NetworkMonitor()
-    
-    @StateObject var adaptiveLayoutManager = AdaptiveLayoutManager()
+    @StateObject private var monitor = NetworkMonitor()
     
     var body: some Scene {
-        /*
-        WindowGroup {
-            SmartResponsiveDemo()
-                .environmentObject(adaptiveLayoutManager)
-        }
-        */
-        
-        
         WindowGroup {
             SportDBView()
-                .environment(\.isNetworkConnected, networkMonitor.isConnected)
-                .environment(\.connectionType, networkMonitor.connectionType)
-                .environmentObject(adaptiveLayoutManager)
+                .environmentObject(monitor)
         }
         .modelContainer(MainDB.shared)
     }
 }
+
 
 // MARK: - Dependency Injection Extension
 extension View {

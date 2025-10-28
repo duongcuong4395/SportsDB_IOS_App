@@ -5,8 +5,9 @@
 //  Created by Macbook on 27/5/25.
 //
 
-import Foundation
 import Alamofire
+import Networking
+import Foundation
 
 enum NextAndPrevious: String {
     case Next = "next"
@@ -85,7 +86,7 @@ extension EventEndpoint: HttpRouter {
         }
     }
     
-    var menthod: Alamofire.HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         .get
     }
     

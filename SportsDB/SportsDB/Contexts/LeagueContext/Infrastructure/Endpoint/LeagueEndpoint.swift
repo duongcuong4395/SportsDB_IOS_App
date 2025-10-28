@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import Networking
 
 enum LeagueEndpoint<T: Decodable> {
     case GetLeagues(country: String, sport: String)
@@ -31,7 +32,7 @@ extension LeagueEndpoint: HttpRouter {
         }
     }
     
-    var menthod: Alamofire.HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         .get
     }
     

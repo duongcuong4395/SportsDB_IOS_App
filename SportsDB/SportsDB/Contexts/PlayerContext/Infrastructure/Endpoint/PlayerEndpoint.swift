@@ -22,6 +22,7 @@ enum PlayerEndpoint<T: Decodable> {
 
 import Foundation
 import Alamofire
+import Networking
 
 extension PlayerEndpoint: HttpRouter {
     typealias responseDataType = T
@@ -49,7 +50,7 @@ extension PlayerEndpoint: HttpRouter {
         }
     }
     
-    var menthod: Alamofire.HTTPMethod {
+    var method: Alamofire.HTTPMethod {
         .get
     }
     

@@ -20,7 +20,7 @@ enum MainDB {
             .appendingPathComponent("MainDB.store")
 
         // delete file MainDB.store nếu tồn tại
-        // clearAllDataBase(from: storeURL)
+        //clearAllDataBase(from: storeURL)
         
         // Tạo config với URL
         let configuration = ModelConfiguration(

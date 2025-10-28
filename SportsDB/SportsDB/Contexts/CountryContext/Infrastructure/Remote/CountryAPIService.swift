@@ -6,14 +6,12 @@
 //
 
 import Foundation
+import Networking
 
-// CountryContext/Infrastructure/Remote/CountryAPIService.swift
 final class CountryAPIService: CountryRepository, APIExecution {
     
     func getAllCountries() async throws -> [Country] {
-        // Gọi API thông qua HttpRouter layer
-       let response: CountriesAPIResponse = try await sendRequest(for: CountryEndPoint<CountriesAPIResponse>.GetCountries)
-        // Mapping về domain
+        let response: CountriesAPIResponse = try await sendRequest(for: CountryEndPoint<CountriesAPIResponse>.GetCountries)
         return response.countries.compactMap { $0.toDomain() }
     }
 }
