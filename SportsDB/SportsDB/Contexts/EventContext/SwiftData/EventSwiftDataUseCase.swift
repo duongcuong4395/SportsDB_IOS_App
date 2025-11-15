@@ -28,8 +28,6 @@ final class EventSwiftDataUseCase: EventSwiftDataUseCaseProtocol {
         try await repository.toggleLike(event)
     }
     
-    
-    
     private let repository: EventSwiftDataRepositoryProtocol
     
     init(repository: EventSwiftDataRepositoryProtocol) {
@@ -54,8 +52,5 @@ final class EventSwiftDataUseCase: EventSwiftDataUseCaseProtocol {
     
     func getEvent(by idEvent: String?, or eventName: String?) async -> EventSwiftData? {
         return await repository.getEvent(by: idEvent, or: eventName)
-        
     }
-    
-    
 }

@@ -14,6 +14,7 @@ struct SportsDBApp: App {
     
     var body: some Scene {
         WindowGroup {
+            //LiquidGlassDemoApp()
             SportDBView()
                 .environmentObject(monitor)
         }

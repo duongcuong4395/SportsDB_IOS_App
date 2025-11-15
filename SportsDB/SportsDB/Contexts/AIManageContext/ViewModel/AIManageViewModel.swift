@@ -69,7 +69,8 @@ class AIManageViewModel: ObservableObject {
     
     func getModel(with model: AIModel) -> GenerativeModel {
         return GenerativeModel(
-          name:  "gemini-2.5-flash", // "gemini-1.5-flash-latest", // "gemini-1.5-pro-latest", // "gemini-1.5-flash-latest",
+          name: "gemini-2.5-flash-lite",
+            // "gemini-2.5-flash", // "gemini-1.5-flash-latest", // "gemini-1.5-pro-latest", // "gemini-1.5-flash-latest",
           apiKey:  model.valueItem,
           generationConfig: GenerationConfig(
             temperature: 1,

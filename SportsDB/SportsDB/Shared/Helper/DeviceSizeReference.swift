@@ -658,6 +658,7 @@ struct SmartContainer<Content: View>: View {
 }
 
 // MARK: - Responsive Container
+/*
 struct ResponsiveContainer<Content: View>: View {
     let content: Content
     @StateObject private var layoutManager = AdaptiveLayoutManager()
@@ -671,3 +672,4 @@ struct ResponsiveContainer<Content: View>: View {
             .environmentObject(layoutManager)
     }
 }
+*/

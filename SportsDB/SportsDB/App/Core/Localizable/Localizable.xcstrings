@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "\n❌ DON'T:" : {
+
+    },
     "- %@." : {
 
     },
@@ -68,7 +71,46 @@
     "•" : {
 
     },
+    "• Animate on every pixel of scroll" : {
+
+    },
+    "• Cleanup timers in .onDisappear" : {
+
+    },
+    "• Create timers without cleanup" : {
+
+    },
+    "• Reduce particle count on lower-end devices" : {
+
+    },
+    "• Stack multiple .animation() modifiers" : {
+
+    },
+    "• Throttle scroll offset updates" : {
+
+    },
+    "• Use .task instead of .onAppear for async work" : {
+
+    },
+    "• Use Canvas for many similar views" : {
+
+    },
+    "• Use drawingGroup() for complex animations" : {
+
+    },
+    "• Use ForEach for 20+ animated views" : {
+
+    },
+    "• Use GeometryReader in ScrollView without throttling" : {
+
+    },
     "+" : {
+
+    },
+    "⚡ Performance Best Practices" : {
+
+    },
+    "✅ DO:" : {
 
     },
     "👤" : {
@@ -164,6 +206,9 @@
 
     },
     "Form Controls" : {
+
+    },
+    "FPS: %lld" : {
 
     },
     "Frosted Glass" : {
