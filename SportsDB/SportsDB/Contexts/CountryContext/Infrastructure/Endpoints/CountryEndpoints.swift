@@ -14,7 +14,9 @@ enum CountryEndPoint<T: Decodable> {
 }
 
 extension CountryEndPoint: HttpRouter {
-    typealias responseDataType = T
+    typealias ResponseType = T
+    
+    //typealias responseDataType = T
     
     var path: String {
         switch self {

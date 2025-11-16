@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		FA0E52192DE4750F0070599B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FA0E52182DE4750F0070599B /* Alamofire */; };
+		FA481B992EC8A74600CA5DD0 /* AIManageKit in Frameworks */ = {isa = PBXBuildFile; productRef = FA481B982EC8A74600CA5DD0 /* AIManageKit */; };
 		FA5583952EB05D5D006C5E1C /* NavigationRouter in Frameworks */ = {isa = PBXBuildFile; productRef = FA5583942EB05D5D006C5E1C /* NavigationRouter */; };
+		FA55EE4F2ECA051C00AC8C0C /* MarkdownTypingKit in Frameworks */ = {isa = PBXBuildFile; productRef = FA55EE4E2ECA051C00AC8C0C /* MarkdownTypingKit */; };
 		FA60674A2DF432DF002FC07B /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = FA6067492DF432DF002FC07B /* Shimmer */; };
 		FAB118692DE8692C00496521 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = FAB118682DE8692C00496521 /* Kingfisher */; };
 		FAC3B8AB2EAFA0A30031CFC0 /* Networking in Frameworks */ = {isa = PBXBuildFile; productRef = FAC3B8AA2EAFA0A30031CFC0 /* Networking */; };
@@ -52,7 +54,9 @@
 				FAC8A8892DEEA70D00905B7C /* GeminiAI in Frameworks */,
 				FAB118692DE8692C00496521 /* Kingfisher in Frameworks */,
 				FA0E52192DE4750F0070599B /* Alamofire in Frameworks */,
+				FA481B992EC8A74600CA5DD0 /* AIManageKit in Frameworks */,
 				FAD6222F2DEDF30F00019CB4 /* SwiftSoup in Frameworks */,
+				FA55EE4F2ECA051C00AC8C0C /* MarkdownTypingKit in Frameworks */,
 				FAC3B8AB2EAFA0A30031CFC0 /* Networking in Frameworks */,
 				FAC8A8862DEEA6F300905B7C /* GoogleGenerativeAI in Frameworks */,
 			);
@@ -105,6 +109,8 @@
 				FA6067492DF432DF002FC07B /* Shimmer */,
 				FAC3B8AA2EAFA0A30031CFC0 /* Networking */,
 				FA5583942EB05D5D006C5E1C /* NavigationRouter */,
+				FA481B982EC8A74600CA5DD0 /* AIManageKit */,
+				FA55EE4E2ECA051C00AC8C0C /* MarkdownTypingKit */,
 			);
 			productName = SportsDB;
 			productReference = FA0E51CF2DE472970070599B /* SportsDB.app */;
@@ -452,10 +458,20 @@
 			package = FA0E52172DE4750F0070599B /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
+		FA481B982EC8A74600CA5DD0 /* AIManageKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */;
+			productName = AIManageKit;
+		};
 		FA5583942EB05D5D006C5E1C /* NavigationRouter */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */;
 			productName = NavigationRouter;
+		};
+		FA55EE4E2ECA051C00AC8C0C /* MarkdownTypingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */;
+			productName = MarkdownTypingKit;
 		};
 		FA6067492DF432DF002FC07B /* Shimmer */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -14,7 +14,9 @@ enum SeasonEndpoint<T: Decodable> {
 }
 
 extension SeasonEndpoint: HttpRouter {
-    typealias responseDataType = T
+    typealias ResponseType = T
+    
+    //typealias responseDataType = T
     
     var baseURL: String {
         AppUtility.SportBaseURL

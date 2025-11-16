@@ -15,11 +15,13 @@ import Alamofire
 import Networking
 
 extension VenueEndpoint: HttpRouter {
+    typealias ResponseType = T
+    
     var method: Alamofire.HTTPMethod {
         .get
     }
     
-    typealias responseDataType = T
+    //typealias responseDataType = T
     
     var baseURL: String {
         AppUtility.SportBaseURL

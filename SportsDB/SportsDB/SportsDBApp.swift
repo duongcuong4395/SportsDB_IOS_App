@@ -15,8 +15,14 @@ struct SportsDBApp: App {
     var body: some Scene {
         WindowGroup {
             //LiquidGlassDemoApp()
+            
+            //AIManageKitDemoApp()
+            MarkdownTypewriterDemoView()
+            
+            /*
             SportDBView()
                 .environmentObject(monitor)
+             */
         }
         .modelContainer(MainDB.shared)
     }

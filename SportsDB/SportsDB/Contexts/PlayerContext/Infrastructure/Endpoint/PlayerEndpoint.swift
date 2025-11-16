@@ -25,7 +25,9 @@ import Alamofire
 import Networking
 
 extension PlayerEndpoint: HttpRouter {
-    typealias responseDataType = T
+    typealias ResponseType = T
+    
+    //typealias responseDataType = T
     
     var baseURL: String {
         AppUtility.SportBaseURL

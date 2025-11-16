@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 
+/*
 // CÁCH 3: Enum để quản lý các mức tốc độ
 enum TypingSpeed: Double, CaseIterable {
     case veryFast = 0.005
@@ -504,3 +505,4 @@ func parseInlineMarkdown(_ text: String) -> AttributedString {
     
     return finalAttributedString
 }
+*/

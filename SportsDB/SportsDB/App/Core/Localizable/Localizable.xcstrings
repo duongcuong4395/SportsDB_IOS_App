@@ -68,6 +68,9 @@
     "%lld selected" : {
 
     },
+    "%llds" : {
+
+    },
     "•" : {
 
     },
@@ -78,6 +81,9 @@
 
     },
     "• Create timers without cleanup" : {
+
+    },
+    "• Key is never shared with third parties" : {
 
     },
     "• Reduce particle count on lower-end devices" : {
@@ -104,6 +110,12 @@
     "• Use GeometryReader in ScrollView without throttling" : {
 
     },
+    "• You can delete it anytime" : {
+
+    },
+    "• Your key is stored securely in Keychain" : {
+
+    },
     "+" : {
 
     },
@@ -116,19 +128,73 @@
     "👤" : {
 
     },
+    "A modern, production-ready Swift package for managing Google Gemini AI integration with clean architecture, type safety, and secure storage." : {
+
+    },
+    "About" : {
+
+    },
+    "About AIManageKit" : {
+
+    },
+    "Advanced" : {
+
+    },
     "Advanced Sticky Header" : {
+
+    },
+    "AI" : {
+
+    },
+    "AI Chat" : {
+
+    },
+    "AI Configuration" : {
+
+    },
+    "AI Model" : {
+
+    },
+    "AI Setup" : {
+
+    },
+    "AIManageKit" : {
 
     },
     "All" : {
 
     },
+    "Analysis" : {
+
+    },
     "Animated Liquid Glass" : {
+
+    },
+    "API Documentation" : {
+
+    },
+    "API Key" : {
+
+    },
+    "Apply Changes" : {
 
     },
     "Are you sure you want to remove this event from your favorites?" : {
 
     },
     "Are you sure you want to remove this item from your notification saved?" : {
+
+    },
+    "Ask anything about the image..." : {
+
+    },
+    "Auto-scroll" : {
+
+    },
+    "Basic" : {
+
+    },
+    "Basic Demo" : {
 
     },
     "Blur Effect" : {
@@ -140,6 +206,9 @@
     "Buttons" : {
 
     },
+    "Camera" : {
+
+    },
     "Cancel" : {
 
     },
@@ -149,7 +218,13 @@
     "Cards" : {
 
     },
+    "Change API Key" : {
+
+    },
     "change color" : {
+
+    },
+    "Chat" : {
 
     },
     "Check" : {
@@ -169,16 +244,73 @@
         }
       }
     },
+    "Clear" : {
+
+    },
+    "Clear Cache" : {
+
+    },
+    "Clear Chat" : {
+
+    },
     "Complex Header" : {
 
     },
     "Complex Header Example" : {
 
     },
+    "Configuration" : {
+
+    },
+    "Continue" : {
+
+    },
+    "Controls randomness in responses. Lower = more deterministic, Higher = more creative." : {
+
+    },
+    "Copy" : {
+
+    },
+    "Count Tokens" : {
+
+    },
+    "Creative" : {
+
+    },
+    "Creativity" : {
+
+    },
+    "Current Model" : {
+
+    },
+    "Current model: %@" : {
+
+    },
     "Custom Effects" : {
 
     },
     "Custom Glass" : {
+
+    },
+    "Custom Prompt" : {
+
+    },
+    "Custom Themes" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete API Key" : {
+
+    },
+    "Delete API Key?" : {
+
+    },
+    "Documentation" : {
+
+    },
+    "Done" : {
 
     },
     "Double tap to expand" : {
@@ -190,13 +322,37 @@
     "Dynamic Header" : {
 
     },
+    "Editor" : {
+
+    },
     "Enter text" : {
+
+    },
+    "Enter your Gemini API key to continue" : {
 
     },
     "Events you like will appear here" : {
 
     },
     "Expanded Content" : {
+
+    },
+    "Export Chat" : {
+
+    },
+    "Export Chat History" : {
+
+    },
+    "Export Configuration" : {
+
+    },
+    "Export Data" : {
+
+    },
+    "Export Settings" : {
+
+    },
+    "Export Usage Stats" : {
 
     },
     "Favorites" : {
@@ -217,6 +373,18 @@
     "Full Screen Header" : {
 
     },
+    "Generate Response" : {
+
+    },
+    "Generating..." : {
+
+    },
+    "Get API Key from Google AI Studio" : {
+
+    },
+    "Get New API Key" : {
+
+    },
     "getKeyByLink" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -234,6 +402,9 @@
         }
       }
     },
+    "GitHub Repository" : {
+
+    },
     "Glass Card" : {
 
     },
@@ -250,6 +421,9 @@
 
     },
     "Height: %@pt" : {
+
+    },
+    "How to get your API key:" : {
 
     },
     "Ignore Safe Area Example" : {
@@ -324,6 +498,9 @@
     "Kit: %@" : {
 
     },
+    "Last Error" : {
+
+    },
     "Liquid Glass Card" : {
 
     },
@@ -336,6 +513,30 @@
     "Main Content" : {
 
     },
+    "Manage API Key" : {
+
+    },
+    "Max Output Tokens" : {
+
+    },
+    "Maximum number of tokens in the response." : {
+
+    },
+    "Maximum time to wait for a response." : {
+
+    },
+    "Message AI..." : {
+
+    },
+    "Model" : {
+
+    },
+    "More Creative" : {
+
+    },
+    "More Precise" : {
+
+    },
     "Morphing Glass" : {
 
     },
@@ -343,6 +544,12 @@
 
     },
     "Navigation" : {
+
+    },
+    "Network" : {
+
+    },
+    "Next Response" : {
 
     },
     "No Effects (Clean)" : {
@@ -380,6 +587,15 @@
     "Notifications you Saved will appear here" : {
 
     },
+    "Output Length" : {
+
+    },
+    "Photo Library" : {
+
+    },
+    "Playground" : {
+
+    },
     "Please return in a few minutes" : {
 
     },
@@ -389,16 +605,28 @@
     "Points: %@" : {
 
     },
+    "Precise" : {
+
+    },
     "Preset Styles" : {
 
     },
+    "Preview" : {
+
+    },
     "Primary" : {
+
+    },
+    "Processing..." : {
 
     },
     "Progress: %@" : {
 
     },
     "Progress: %lld%%" : {
+
+    },
+    "Prompt" : {
 
     },
     "promptEvent2vs2Analysis" : {
@@ -418,6 +646,9 @@
         }
       }
     },
+    "Quick Prompts" : {
+
+    },
     "Remove" : {
 
     },
@@ -427,7 +658,25 @@
     "Remove from notification saved" : {
 
     },
+    "Remove Image" : {
+
+    },
+    "Request Timeout" : {
+
+    },
+    "Reset to Defaults" : {
+
+    },
     "Resizable Header Demo" : {
+
+    },
+    "Resources" : {
+
+    },
+    "Response" : {
+
+    },
+    "Response will appear here..." : {
 
     },
     "Round" : {
@@ -454,7 +703,13 @@
     "Secondary" : {
 
     },
+    "Select an image to analyze" : {
+
+    },
     "Select season to see more about table rank and round events." : {
+
+    },
+    "Settings" : {
 
     },
     "Share" : {
@@ -472,6 +727,9 @@
     "Short content %lld" : {
 
     },
+    "Show me a streaming example" : {
+
+    },
     "Show More" : {
 
     },
@@ -487,19 +745,64 @@
     "Special Effects" : {
 
     },
+    "Speed" : {
+
+    },
+    "Speed:" : {
+
+    },
     "Standard" : {
+
+    },
+    "Start Stream" : {
+
+    },
+    "Statistics" : {
+
+    },
+    "Status" : {
 
     },
     "Sticky Header" : {
 
     },
+    "Stream Response" : {
+
+    },
+    "Streaming" : {
+
+    },
+    "Streaming Demo" : {
+
+    },
+    "Streaming..." : {
+
+    },
     "Subtle" : {
+
+    },
+    "System Status" : {
 
     },
     "Tap anywhere on this card for lens effect" : {
 
     },
+    "Tap to change model" : {
+
+    },
+    "Temperature" : {
+
+    },
+    "Test Connection" : {
+
+    },
     "Test Notify" : {
+
+    },
+    "Theme" : {
+
+    },
+    "Themes" : {
 
     },
     "This card demonstrates the liquid glass material with subtle animations, transparency effects, and responsive interactions." : {
@@ -509,6 +812,12 @@
 
     },
     "This is my content" : {
+
+    },
+    "This Week" : {
+
+    },
+    "This will remove your API key from the device. You'll need to add it again to use AI features." : {
 
     },
     "Title_Enter_Key" : {
@@ -527,6 +836,9 @@
           }
         }
       }
+    },
+    "Today" : {
+
     },
     "Toggle" : {
 
@@ -557,7 +869,22 @@
     "Universal Header" : {
 
     },
+    "Usage Statistics" : {
+
+    },
+    "Validating..." : {
+
+    },
     "Venue:" : {
+
+    },
+    "Version 1.0.0" : {
+
+    },
+    "Vision" : {
+
+    },
+    "Vision Analysis" : {
 
     },
     "VPN is active" : {
@@ -595,6 +922,9 @@
 
     },
     "With Shimmer Only" : {
+
+    },
+    "You" : {
 
     }
   },

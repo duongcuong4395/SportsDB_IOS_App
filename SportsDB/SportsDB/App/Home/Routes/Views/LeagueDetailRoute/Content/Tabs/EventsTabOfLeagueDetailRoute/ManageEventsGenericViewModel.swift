@@ -140,6 +140,7 @@ extension ManageEventsGenericViewModel {
 }
 
 import Kingfisher
+import MarkdownTypingKit
 struct EventAIAnalysisView: View {
     @EnvironmentObject var aiManage: AIManageViewModel
     var event: Event
@@ -167,8 +168,12 @@ struct EventAIAnalysisView: View {
                          .frame(width: UIScreen.main.bounds.width/3, height: 10)
                 }
             } else {
-                MarkdownTypewriterView(streamText: $eventAnalysisDetail, typingSpeed: .veryFast)
-                    .padding(0)
+                MarkdownTypewriterView(text: $eventAnalysisDetail)
+                    .typingSpeed(.fast)
+                    .autoScroll(true)
+                
+                //MarkdownTypewriterView(streamText: $eventAnalysisDetail, typingSpeed: .veryFast)
+                    //.padding(0)
             }
         }
         .padding(0)

@@ -8,6 +8,7 @@
 import SwiftUI
 import GoogleGenerativeAI
 
+/*
 // MARK: - AI Configuration Protocol
 protocol AIConfigurationProtocol {
     var modelName: String { get }
@@ -20,7 +21,6 @@ protocol AIConfigurationProtocol {
     var maxKeyLength: Int { get }
     var testPrompt: String { get }
 }
-
 
 // MARK: - Default Configuration
 struct AIConfiguration: AIConfigurationProtocol {
@@ -171,7 +171,7 @@ class AIConfigurationBuilder {
         case custom([SafetySetting])
     }
 }
-
+*/
 
 // MARK: - Usage Example
 /*

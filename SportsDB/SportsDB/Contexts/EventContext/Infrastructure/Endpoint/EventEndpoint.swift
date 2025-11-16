@@ -41,7 +41,9 @@ enum EventEndpoint<T: Decodable> {
 
 
 extension EventEndpoint: HttpRouter {
-    typealias responseDataType = T
+    typealias ResponseType = T
+    
+    //typealias responseDataType = T
     
     var baseURL: String {
         AppUtility.SportBaseURL

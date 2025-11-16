@@ -19,7 +19,9 @@ enum LeagueEndpoint<T: Decodable> {
 
 
 extension LeagueEndpoint: HttpRouter {
-    typealias responseDataType = T
+    typealias ResponseType = T
+    
+    //typealias responseDataType = T
     
     var path: String {
         switch self {
