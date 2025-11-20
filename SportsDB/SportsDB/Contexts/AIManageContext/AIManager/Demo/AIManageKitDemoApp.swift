@@ -10,22 +10,10 @@
 import SwiftUI
 import AIManageKit
 
+// MARK: - Root View
 struct AIManageKitDemoApp: View {
     @State private var aiManager = AIManager(useKeychain: true)
-    
-    init() {
-        //aiManager.switchModel(.gemini25Flash)
-    }
-    
-    var body: some View {
-        RootView()
-            .environment(aiManager)
-    }
-}
-
-// MARK: - Root View
-struct RootView: View {
-    @Environment(AIManager.self) private var aiManager
+    //@Environment(AIManager.self) private var aiManager
     
     var body: some View {
         Group {
@@ -36,6 +24,7 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut, value: aiManager.keyStatus)
+        .environment(aiManager)
     }
 }
 

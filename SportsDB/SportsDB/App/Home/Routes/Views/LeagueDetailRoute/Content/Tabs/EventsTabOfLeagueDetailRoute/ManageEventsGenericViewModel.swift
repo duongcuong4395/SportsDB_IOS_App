@@ -148,6 +148,7 @@ struct EventAIAnalysisView: View {
     
     @State var loading: Bool = false
     @State var eventAnalysisDetail: String = ""
+    @State private var isTypingComplete: Bool = true
     
     var body: some View {
         VStack {
@@ -168,12 +169,9 @@ struct EventAIAnalysisView: View {
                          .frame(width: UIScreen.main.bounds.width/3, height: 10)
                 }
             } else {
-                MarkdownTypewriterView(text: $eventAnalysisDetail)
+                MarkdownTypewriterView(text: $eventAnalysisDetail, isTypingComplete: $isTypingComplete)
                     .typingSpeed(.fast)
                     .autoScroll(true)
-                
-                //MarkdownTypewriterView(streamText: $eventAnalysisDetail, typingSpeed: .veryFast)
-                    //.padding(0)
             }
         }
         .padding(0)

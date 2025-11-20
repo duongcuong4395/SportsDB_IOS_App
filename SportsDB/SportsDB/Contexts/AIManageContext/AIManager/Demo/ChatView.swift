@@ -5,10 +5,16 @@
 //  Created by Macbook on 15/11/25.
 //
 
-// ChatView.swift - Advanced Chat Interface
+//
+//  ChatView.swift
+//  SportsDB
+//
+//  Created by Macbook on 15/11/25.
+//
 
 import SwiftUI
 import AIManageKit
+import MarkdownTypingKit
 
 struct ChatView: View {
     @Environment(AIManager.self) private var aiManager
@@ -17,53 +23,113 @@ struct ChatView: View {
     @State private var isStreaming = false
     @State private var currentStreamingMessage: String = ""
     @State private var showModelPicker = false
+    @State private var showScrollToBottomButton = false
+    @State private var isUserScrolling = false
+    @State private var isTypingComplete: Bool = true
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Model Selector Header
                 modelSelectorHeader
-                
                 Divider()
-                
-                // Messages List
+                if showScrollToBottomButton {
+                    Text("move to bottom")
+                }
                 ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVStack(spacing: 16) {
-                            ForEach(messages) { message in
-                                MessageBubble(message: message)
-                                    .id(message.id)
-                            }
-                            
-                            // Streaming message
-                            if isStreaming && !currentStreamingMessage.isEmpty {
-                                MessageBubble(
-                                    message: ChatMessage(
-                                        role: .assistant,
-                                        content: currentStreamingMessage,
-                                        model: aiManager.configuration.model
+                    ZStack(alignment: .bottomTrailing) {
+                        ScrollView {
+                            LazyVStack(spacing: 16) {
+                                ForEach(messages) { message in
+                                    MessageBubble(
+                                        message: message,
+                                        isStreaming: false
+                                        , isTypingComplete: $isTypingComplete
                                     )
+                                    .id(message.id)
+                                }
+                                
+                                if !isTypingComplete {
+                                    if isStreaming && !currentStreamingMessage.isEmpty {
+                                        MessageBubble(
+                                            message: ChatMessage(
+                                                role: .assistant,
+                                                content: currentStreamingMessage,
+                                                model: aiManager.configuration.model
+                                            ),
+                                            isStreaming: true
+                                            , isTypingComplete: $isTypingComplete
+                                        )
+                                        .id("streaming")
+                                    }
+                                    
+                                }
+                                
+                                /*
+                                if isStreaming && !currentStreamingMessage.isEmpty {
+                                    MessageBubble(
+                                        message: ChatMessage(
+                                            role: .assistant,
+                                            content: currentStreamingMessage,
+                                            model: aiManager.configuration.model
+                                        ),
+                                        isStreaming: true
+                                    )
+                                    .id("streaming")
+                                }
+                                */
+                                
+                                Color.clear
+                                    .frame(height: 1)
+                                    .id("bottom")
+                            }
+                            .padding()
+                        }
+                        .background(
+                            GeometryReader { geo in
+                                Color.clear.preference(
+                                    key: ScrollPositionPreferenceKey.self,
+                                    value: geo.frame(in: .named("scrollView")).minY
                                 )
-                                .id("streaming")
+                            }
+                        )
+                        .coordinateSpace(name: "scrollView")
+                        .onPreferenceChange(ScrollPositionPreferenceKey.self) { value in
+                            handleScrollPosition(value)
+                        }
+                        .defaultScrollAnchor(.top)
+                        .onChange(of: messages.count) { _, _ in
+                            if !isUserScrolling {
+                                scrollToBottom(proxy: proxy, animated: true)
                             }
                         }
-                        .padding()
-                    }
-                    .onChange(of: messages.count) { _, _ in
-                        withAnimation {
-                            proxy.scrollTo(messages.last?.id.uuidString ?? "streaming", anchor: .bottom)
+                        .onChange(of: currentStreamingMessage) { _, _ in
+                            if isStreaming && !isUserScrolling {
+                                scrollToBottom(proxy: proxy, animated: false)
+                            }
                         }
-                    }
-                    .onChange(of: currentStreamingMessage) { _, _ in
-                        withAnimation {
-                            proxy.scrollTo("streaming", anchor: .bottom)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                scrollToBottom(proxy: proxy, animated: false)
+                            }
+                        }
+                        
+                        if showScrollToBottomButton {
+                            ScrollToBottomButton {
+                                isUserScrolling = false
+                                scrollToBottom(proxy: proxy, animated: true)
+                            }
+                            .padding(.trailing, 20)
+                            .padding(.bottom, 20)
+                            .transition(.asymmetric(
+                                insertion: .scale(scale: 0.8).combined(with: .opacity),
+                                removal: .scale(scale: 0.8).combined(with: .opacity)
+                            ))
+                            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: showScrollToBottomButton)
                         }
                     }
                 }
                 
                 Divider()
-                
-                // Input Bar
                 inputBar
             }
             .navigationTitle("AI Chat")
@@ -74,7 +140,6 @@ struct ChatView: View {
                         Button(action: clearChat) {
                             Label("Clear Chat", systemImage: "trash")
                         }
-                        
                         Button(action: exportChat) {
                             Label("Export Chat", systemImage: "square.and.arrow.up")
                         }
@@ -144,7 +209,50 @@ struct ChatView: View {
         .padding()
     }
     
+    private func handleScrollPosition(_ offset: CGFloat) {
+        let threshold: CGFloat = -150
+        let shouldShow = offset < threshold
+        
+        if shouldShow != showScrollToBottomButton {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                showScrollToBottomButton = shouldShow
+                isUserScrolling = shouldShow
+            }
+        }
+    }
+    
+    private func scrollToBottom(proxy: ScrollViewProxy, animated: Bool = true) {
+        let targetId = isStreaming && !currentStreamingMessage.isEmpty ? "streaming" : "bottom"
+        
+        if animated {
+            withAnimation(.easeOut(duration: 0.3)) {
+                proxy.scrollTo(targetId, anchor: .bottom)
+            }
+        } else {
+            proxy.scrollTo(targetId, anchor: .bottom)
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+            isUserScrolling = false
+        }
+    }
+    
     private func sendMessage() {
+        guard !isStreaming else {
+            isStreaming = false
+            
+            if !currentStreamingMessage.isEmpty {
+                let assistantMessage = ChatMessage(
+                    role: .assistant,
+                    content: currentStreamingMessage,
+                    model: aiManager.configuration.model
+                )
+                messages.append(assistantMessage)
+                currentStreamingMessage = ""
+            }
+            return
+        }
+        
         guard !inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         
         let userMessage = ChatMessage(role: .user, content: inputText)
@@ -160,18 +268,31 @@ struct ChatView: View {
                 let stream = try await aiManager.quickStream(prompt)
                 
                 for try await chunk in stream {
+                    guard isStreaming else { break }
                     currentStreamingMessage += chunk
                 }
                 
-                // Save completed message
-                let assistantMessage = ChatMessage(
-                    role: .assistant,
-                    content: currentStreamingMessage,
-                    model: aiManager.configuration.model
-                )
-                messages.append(assistantMessage)
-                currentStreamingMessage = ""
+                if isStreaming {
+                    let assistantMessage = ChatMessage(
+                        role: .assistant,
+                        content: currentStreamingMessage,
+                        model: aiManager.configuration.model
+                    )
+                    messages.append(assistantMessage)
+                    currentStreamingMessage = ""
+                }
                 
+                /*
+                if isTypingComplete {
+                    let assistantMessage = ChatMessage(
+                        role: .assistant,
+                        content: currentStreamingMessage,
+                        model: aiManager.configuration.model
+                    )
+                    messages.append(assistantMessage)
+                    currentStreamingMessage = ""
+                }
+                */
             } catch {
                 let errorMessage = ChatMessage(
                     role: .system,
@@ -185,7 +306,13 @@ struct ChatView: View {
     }
     
     private func clearChat() {
-        messages.removeAll()
+        withAnimation {
+            messages.removeAll()
+            currentStreamingMessage = ""
+            isStreaming = false
+            showScrollToBottomButton = false
+            isUserScrolling = false
+        }
     }
     
     private func exportChat() {
@@ -206,7 +333,7 @@ struct ChatView: View {
     }
 }
 
-// MARK: - Chat Message Model
+// MARK: - Models
 struct ChatMessage: Identifiable {
     let id = UUID()
     let role: Role
@@ -225,94 +352,77 @@ struct ChatMessage: Identifiable {
         self.content = content
         self.model = model
     }
+    
+    static let sampleMessages: [ChatMessage] = [
+        .init(role: .user, content: "Hey! How are you?"),
+        .init(role: .system, content: "I'm doing great! How about you?"),
+        .init(role: .user, content: "Pretty good! Working on a new SwiftUI project."),
+        .init(role: .user, content: "Hey! How are you?"),
+        .init(role: .system, content: "I'm doing great! How about you?"),
+        .init(role: .user, content: "Hey! How are you?"),
+        .init(role: .system, content: "I'm doing great! How about you?"),
+        .init(role: .user, content: "Hey! How are you?"),
+        .init(role: .system, content: "I'm doing great! How about you?")
+    ]
 }
 
-// MARK: - Message Bubble
-struct MessageBubble: View {
-    let message: ChatMessage
+
+
+// MARK: - Scroll To Bottom Button
+struct ScrollToBottomButton: View {
+    let action: () -> Void
+    @State private var isPressed = false
     
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            if message.role == .user {
-                Spacer(minLength: 50)
+        Button(action: {
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+            action()
+        }) {
+            ZStack {
+                Circle()
+                    .fill(.ultraThinMaterial)
+                    .frame(width: 48, height: 48)
+                    .shadow(color: .black.opacity(0.15), radius: 12, x: 0, y: 4)
+                    .overlay(
+                        Circle()
+                            .stroke(.blue.opacity(0.3), lineWidth: 1.5)
+                    )
+                
+                Image(systemName: "arrow.down")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.blue, .blue.opacity(0.8)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
             }
-            
-            VStack(alignment: message.role == .user ? .trailing : .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    if message.role == .assistant {
-                        Image(systemName: "brain.head.profile")
-                            .font(.caption2)
-                            .foregroundStyle(.blue)
-                    }
-                    
-                    Text(message.role == .user ? "You" : "AI")
-                        .font(.caption.bold())
-                        .foregroundStyle(.secondary)
-                    
-                    if let model = message.model {
-                        Text("•")
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
-                        Text(model.displayName)
-                            .font(.caption2)
-                            .foregroundStyle(.tertiary)
+            .scaleEffect(isPressed ? 0.9 : 1.0)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
+                .onChanged { _ in
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        isPressed = true
                     }
                 }
-                
-                Text(message.content)
-                    .font(.body)
-                    .padding(12)
-                    .background(
-                        backgroundColor,
-                        in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    )
-                    .foregroundStyle(textColor)
-                
-                Text(message.timestamp.formatted(date: .omitted, time: .shortened))
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-            }
-            
-            if message.role != .user {
-                Spacer(minLength: 50)
-            }
-        }
-        .contextMenu {
-            Button(action: { copyToClipboard(message.content) }) {
-                Label("Copy", systemImage: "doc.on.doc")
-            }
-        }
-    }
-    
-    private var backgroundColor: Color {
-        switch message.role {
-        case .user:
-            return .blue
-        case .assistant:
-            return Color(.systemGray6)
-        case .system:
-            return Color(.systemRed).opacity(0.1)
-        }
-    }
-    
-    private var textColor: Color {
-        message.role == .user ? .white : .primary
-    }
-    
-    private func copyToClipboard(_ text: String) {
-        UIPasteboard.general.string = text
+                .onEnded { _ in
+                    withAnimation(.easeInOut(duration: 0.1)) {
+                        isPressed = false
+                    }
+                }
+        )
     }
 }
 
-/*
-// MARK: - Preview
-#Preview {
-    NavigationStack {
-        ChatView()
-            .environment(AIManager(
-                storage: MockAIStorage(initialKey: "test"),
-                service: GeminiAIService()
-            ))
+// MARK: - Preference Key
+struct ScrollPositionPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
-*/

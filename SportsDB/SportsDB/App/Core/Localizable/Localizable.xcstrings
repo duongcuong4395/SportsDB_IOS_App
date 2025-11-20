@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "\n❌ DON'T:" : {
 
     },
@@ -68,6 +71,15 @@
     "%lld selected" : {
 
     },
+    "%lld subsections" : {
+
+    },
+    "%lld%%" : {
+
+    },
+    "%lld%% read" : {
+
+    },
     "%llds" : {
 
     },
@@ -128,6 +140,15 @@
     "👤" : {
 
     },
+    "$%@" : {
+
+    },
+    "$0 - $500" : {
+
+    },
+    "4+ stars" : {
+
+    },
     "A modern, production-ready Swift package for managing Google Gemini AI integration with clean architecture, type safety, and secure storage." : {
 
     },
@@ -143,7 +164,16 @@
     "Advanced Sticky Header" : {
 
     },
-    "AI" : {
+    "AI Analyze Documents" : {
+
+    },
+    "AI Analyze Images" : {
+
+    },
+    "AI Analyze Video" : {
+
+    },
+    "AI Assistant" : {
 
     },
     "AI Chat" : {
@@ -158,10 +188,16 @@
     "AI Setup" : {
 
     },
+    "AI With Text" : {
+
+    },
     "AIManageKit" : {
 
     },
     "All" : {
+
+    },
+    "All Photos" : {
 
     },
     "Analysis" : {
@@ -188,16 +224,13 @@
     "Ask anything about the image..." : {
 
     },
-    "Auto-scroll" : {
-
-    },
-    "Basic" : {
-
-    },
-    "Basic Demo" : {
+    "Availability" : {
 
     },
     "Blur Effect" : {
+
+    },
+    "Bookmark Page" : {
 
     },
     "Button" : {
@@ -227,6 +260,9 @@
     "Chat" : {
 
     },
+    "Chat Room" : {
+
+    },
     "Check" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -243,9 +279,6 @@
           }
         }
       }
-    },
-    "Clear" : {
-
     },
     "Clear Cache" : {
 
@@ -295,7 +328,7 @@
     "Custom Prompt" : {
 
     },
-    "Custom Themes" : {
+    "Debug Info" : {
 
     },
     "Delete" : {
@@ -307,6 +340,12 @@
     "Delete API Key?" : {
 
     },
+    "Direction: %@" : {
+
+    },
+    "Distance from Bottom: %@" : {
+
+    },
     "Documentation" : {
 
     },
@@ -316,13 +355,13 @@
     "Double tap to expand" : {
 
     },
+    "Dropped Frames: %lld" : {
+
+    },
     "Dynamic flowing background" : {
 
     },
     "Dynamic Header" : {
-
-    },
-    "Editor" : {
 
     },
     "Enter text" : {
@@ -361,7 +400,19 @@
     "Favotire" : {
 
     },
+    "Featured" : {
+
+    },
+    "Feed" : {
+
+    },
+    "Filters" : {
+
+    },
     "Form Controls" : {
+
+    },
+    "FPS: %@" : {
 
     },
     "FPS: %lld" : {
@@ -371,6 +422,9 @@
 
     },
     "Full Screen Header" : {
+
+    },
+    "Gallery" : {
 
     },
     "Generate Response" : {
@@ -414,6 +468,9 @@
     "Go Back" : {
 
     },
+    "Go to Bottom" : {
+
+    },
     "Green Content" : {
 
     },
@@ -430,6 +487,12 @@
 
     },
     "Ignores safe area" : {
+
+    },
+    "In Stock" : {
+
+    },
+    "In Stock Only" : {
 
     },
     "info" : {
@@ -501,7 +564,16 @@
     "Last Error" : {
 
     },
+    "Last updated: %@" : {
+
+    },
     "Liquid Glass Card" : {
+
+    },
+    "Loading more posts..." : {
+
+    },
+    "Loading more products..." : {
 
     },
     "Loading Teams..." : {
@@ -525,6 +597,9 @@
     "Maximum time to wait for a response." : {
 
     },
+    "Message" : {
+
+    },
     "Message AI..." : {
 
     },
@@ -540,6 +615,9 @@
     "Morphing Glass" : {
 
     },
+    "move to bottom" : {
+
+    },
     "Multiple elements resize" : {
 
     },
@@ -547,9 +625,6 @@
 
     },
     "Network" : {
-
-    },
-    "Next Response" : {
 
     },
     "No Effects (Clean)" : {
@@ -587,7 +662,16 @@
     "Notifications you Saved will appear here" : {
 
     },
+    "Offset: %@" : {
+
+    },
+    "Out of Stock" : {
+
+    },
     "Output Length" : {
+
+    },
+    "Performance Test" : {
 
     },
     "Photo Library" : {
@@ -611,13 +695,19 @@
     "Preset Styles" : {
 
     },
-    "Preview" : {
+    "Price Range" : {
 
     },
     "Primary" : {
 
     },
+    "Print" : {
+
+    },
     "Processing..." : {
+
+    },
+    "Products" : {
 
     },
     "Progress: %@" : {
@@ -649,6 +739,9 @@
     "Quick Prompts" : {
 
     },
+    "Rating" : {
+
+    },
     "Remove" : {
 
     },
@@ -665,6 +758,9 @@
 
     },
     "Reset to Defaults" : {
+
+    },
+    "Reset Vertical Position" : {
 
     },
     "Resizable Header Demo" : {
@@ -688,6 +784,12 @@
     "Row %lld" : {
 
     },
+    "Scroll Effects" : {
+
+    },
+    "Scroll Events: %lld" : {
+
+    },
     "Scroll to see header resize" : {
 
     },
@@ -695,6 +797,9 @@
 
     },
     "Search notify..." : {
+
+    },
+    "Search products" : {
 
     },
     "Seasons:" : {
@@ -724,10 +829,10 @@
     "Shimmer Glass" : {
 
     },
-    "Short content %lld" : {
+    "Shop" : {
 
     },
-    "Show me a streaming example" : {
+    "Short content %lld" : {
 
     },
     "Show More" : {
@@ -745,16 +850,7 @@
     "Special Effects" : {
 
     },
-    "Speed" : {
-
-    },
-    "Speed:" : {
-
-    },
     "Standard" : {
-
-    },
-    "Start Stream" : {
 
     },
     "Statistics" : {
@@ -769,19 +865,13 @@
     "Stream Response" : {
 
     },
-    "Streaming" : {
-
-    },
-    "Streaming Demo" : {
-
-    },
-    "Streaming..." : {
-
-    },
     "Subtle" : {
 
     },
     "System Status" : {
+
+    },
+    "Table of Contents" : {
 
     },
     "Tap anywhere on this card for lens effect" : {
@@ -797,12 +887,6 @@
 
     },
     "Test Notify" : {
-
-    },
-    "Theme" : {
-
-    },
-    "Themes" : {
 
     },
     "This card demonstrates the liquid glass material with subtle animations, transparency effects, and responsive interactions." : {
@@ -863,6 +947,9 @@
         }
       }
     },
+    "Typing" : {
+
+    },
     "Universal Example" : {
 
     },
@@ -872,7 +959,13 @@
     "Usage Statistics" : {
 
     },
+    "User Guide" : {
+
+    },
     "Validating..." : {
+
+    },
+    "Velocity: %@" : {
 
     },
     "Venue:" : {

@@ -7,22 +7,35 @@
 
 import SwiftUI
 import Networking
+import MarkdownTypingKit
+
+import Firebase
 
 @main
 struct SportsDBApp: App {
     @StateObject private var monitor = NetworkMonitor()
     
+    //@StateObject var scrollViewModel = ScrollViewModel()
+    @StateObject private var scrollVM = ScrollViewModel()
+    
+    init() {
+        FirebaseApp.configure()
+    }
+    
     var body: some Scene {
         WindowGroup {
             //LiquidGlassDemoApp()
             
-            //AIManageKitDemoApp()
-            MarkdownTypewriterDemoView()
+            //MainDemoView()
+                //.environmentObject(scrollVM)
             
-            /*
+            //AIManageKitDemoApp()
+            //MarkdownTypewriterDemoView()
+            
+            
             SportDBView()
                 .environmentObject(monitor)
-             */
+            
         }
         .modelContainer(MainDB.shared)
     }
