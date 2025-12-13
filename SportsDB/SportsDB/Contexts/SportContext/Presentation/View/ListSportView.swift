@@ -28,7 +28,8 @@ struct SelectSportView : View {
                             .font(.caption)
                             .fontWeight(.semibold)
                     }
-                    .backgroundOfItemTouched()
+                    //.backgroundOfItemTouched()
+                    .backgroundByTheme(for: .Button)
                 } content: {
                     VStack {
                         SmartContainer(hasScroll: true, maxWidth: .grid) {
@@ -45,11 +46,15 @@ struct SelectSportView : View {
                         }
                     }
                     .frame(height: UIScreen.main.bounds.height / 2)
+                    /*
                     .background{
                         Color.clear
                             .liquidGlass(cornerRadius: 25, intensity: 0.1, tintColor: .white, hasShimmer: false, hasGlow: false)
                     }
                     .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                    */
+                    .padding([.top, .bottom], 10)
+                    .backgroundByTheme(for: .Card(material: .ultraThin))
                     .padding(.top, 15)
                     .overlay(alignment: .topTrailing) {
                         Image(systemName: "xmark")

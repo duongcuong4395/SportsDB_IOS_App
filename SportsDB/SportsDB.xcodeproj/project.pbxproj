@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FA0E52192DE4750F0070599B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = FA0E52182DE4750F0070599B /* Alamofire */; };
+		FA16BA952EED220600D9EFC1 /* GlassEffect in Frameworks */ = {isa = PBXBuildFile; productRef = FA16BA942EED220600D9EFC1 /* GlassEffect */; };
 		FA481B992EC8A74600CA5DD0 /* AIManageKit in Frameworks */ = {isa = PBXBuildFile; productRef = FA481B982EC8A74600CA5DD0 /* AIManageKit */; };
 		FA491CD92ECB34E300BD3979 /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = FA491CD82ECB34E300BD3979 /* FirebaseAILogic */; };
 		FA5583952EB05D5D006C5E1C /* NavigationRouter in Frameworks */ = {isa = PBXBuildFile; productRef = FA5583942EB05D5D006C5E1C /* NavigationRouter */; };
@@ -52,6 +53,7 @@
 			files = (
 				FA60674A2DF432DF002FC07B /* Shimmer in Frameworks */,
 				FA5583952EB05D5D006C5E1C /* NavigationRouter in Frameworks */,
+				FA16BA952EED220600D9EFC1 /* GlassEffect in Frameworks */,
 				FAC8A8892DEEA70D00905B7C /* GeminiAI in Frameworks */,
 				FA491CD92ECB34E300BD3979 /* FirebaseAILogic in Frameworks */,
 				FAB118692DE8692C00496521 /* Kingfisher in Frameworks */,
@@ -114,6 +116,7 @@
 				FA481B982EC8A74600CA5DD0 /* AIManageKit */,
 				FA55EE4E2ECA051C00AC8C0C /* MarkdownTypingKit */,
 				FA491CD82ECB34E300BD3979 /* FirebaseAILogic */,
+				FA16BA942EED220600D9EFC1 /* GlassEffect */,
 			);
 			productName = SportsDB;
 			productReference = FA0E51CF2DE472970070599B /* SportsDB.app */;
@@ -469,6 +472,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FA0E52172DE4750F0070599B /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		FA16BA942EED220600D9EFC1 /* GlassEffect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FAC8A8872DEEA70D00905B7C /* XCRemoteSwiftPackageReference "MyPackage" */;
+			productName = GlassEffect;
 		};
 		FA481B982EC8A74600CA5DD0 /* AIManageKit */ = {
 			isa = XCSwiftPackageProductDependency;

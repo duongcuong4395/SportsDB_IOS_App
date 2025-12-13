@@ -13,7 +13,7 @@ import Firebase
 
 @main
 struct SportsDBApp: App {
-    @StateObject private var monitor = NetworkMonitor()
+    @StateObject private var networkMonitor = NetworkMonitor()
     
     //@StateObject var scrollViewModel = ScrollViewModel()
     @StateObject private var scrollVM = ScrollViewModel()
@@ -24,7 +24,7 @@ struct SportsDBApp: App {
     
     var body: some Scene {
         WindowGroup {
-            //LiquidGlassDemoApp()
+            // LiquidGlassDemoApp()
             
             //MainDemoView()
                 //.environmentObject(scrollVM)
@@ -34,7 +34,7 @@ struct SportsDBApp: App {
             
             
             SportDBView()
-                .environmentObject(monitor)
+                .environmentObject(networkMonitor)
             
         }
         .modelContainer(MainDB.shared)

@@ -66,6 +66,7 @@ struct LikeRouteHeaderView: View {
             }
         }
         .padding(.horizontal, 16)
-        .backgroundOfRouteHeaderView(with: 70)
+        //.backgroundOfRouteHeaderView(with: 70)
+        .backgroundByTheme(for: .Header(height: 70))
     }
 }

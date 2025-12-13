@@ -72,7 +72,8 @@ struct LeagueDetailRouteHeaderView: View {
             }
             
         }
-        .backgroundOfRouteHeaderView(with: 70)
+        //.backgroundOfRouteHeaderView(with: 70)
+        .backgroundByTheme(for: .Header(height: 70))
     }
     
     func backRoute() {

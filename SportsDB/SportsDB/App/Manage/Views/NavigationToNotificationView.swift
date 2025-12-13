@@ -20,7 +20,7 @@ struct NavigationToNotificationView: View {
                 .font(.caption)
                 .fontWeight(.semibold)
         }
-        .backgroundOfItemTouched()
+        .backgroundByTheme(for: .Button)
         .onTapGesture {
             if !sportRouter.isAtNotification {
                 sportRouter.navigateToNotification()

@@ -117,7 +117,7 @@ struct SeasonOfLeagueContentView: View {
         }
         .padding(.vertical, 5)
         .padding(.horizontal, 10)
-        .backgroundOfCardView()
+        .backgroundByTheme(for: .Card(material: .none))
     }
 }
 

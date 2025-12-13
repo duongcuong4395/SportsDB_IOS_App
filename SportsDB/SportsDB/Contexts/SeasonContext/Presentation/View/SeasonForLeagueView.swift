@@ -34,6 +34,7 @@ struct SeasonForLeagueView: View {
         
         .padding(.vertical, 5)
         .padding(.horizontal, 5)
-        .backgroundOfCardView()
+        //.backgroundOfCardView()
+        .backgroundByTheme(for: .Card(material: .none))
     }
 }
