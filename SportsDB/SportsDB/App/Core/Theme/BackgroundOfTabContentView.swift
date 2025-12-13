@@ -21,7 +21,7 @@ struct BackgroundByThemeViewModifier: ViewModifier {
                         .modifier(self.theme.glassEffect)
                         .ignoresSafeArea(.all)
                 }
-        case .Card(material: let material):
+        case .Card(tintColor: _, material: let material, cornerRadius: let cornerRadius):
             switch material {
             case .none:
                 content
@@ -29,12 +29,30 @@ struct BackgroundByThemeViewModifier: ViewModifier {
             case .ultraThin:
                 content
                     .modifier(self.theme.glassEffect)
-                    .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                    .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: cornerRadius.rawValue, style: .continuous))
             }
-        case .Button:
+        case .Button(material: let material, cornerRadius: let cornerRadius):
+            switch material {
+            case .none:
+                content
+                    .modifier(self.theme.glassEffect)
+            case .ultraThin:
+                content
+                    .modifier(self.theme.glassEffect)
+                    .background(.ultraThinMaterial.opacity(0.6), in: RoundedRectangle(cornerRadius: cornerRadius.rawValue, style: .continuous))
+            }
+            
+        
+        case .ItemSelected(isSelected: let isSelected, cornerRadius: _, animation: let animation):
             content
-                .modifier(self.theme.glassEffect)
-                .background(.ultraThinMaterial.opacity(0.6), in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .background{
+                    if isSelected {
+                        Color.clear
+                            .modifier(self.theme.glassEffect)
+                            .matchedGeometryEffect(id: "season", in: animation)
+                    }
+                }
+                .animation(.easeInOut(duration: 0.3), value: isSelected)
         }
     }
 }

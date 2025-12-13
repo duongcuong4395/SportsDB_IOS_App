@@ -38,8 +38,9 @@ struct TextFieldSearchView: View {
             }
         }
         //.avoidKeyboard()
+        .padding(5)
         .padding(.vertical, 3)
-        .backgroundOfItemTouched(color: .blue, hasShimmer: false)
-        //.liquidGlassBlur()
+        .backgroundByTheme(for: .Card(tintColor: .blue))
+        
     }
 }

@@ -18,20 +18,16 @@ struct LeagueDetailRouteContentView: View {
             
             TabView(selection: $selectedTab) {
                 GeneralTabOfLeagueDetailRouteView(league: league)
-                    //.backgroundOfCardView()
-                    .backgroundByTheme(for: .Card(material: .none))
+                    .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
                     .tag(0)
                     
                     
                 TeamsTabOfLeagueDetailRouteView(league: league)
-                    //.backgroundOfCardView()
-                    .backgroundByTheme(for: .Card(material: .none))
+                    .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
                     .tag(1)
                     
-                    
                 EventsTabOfLeagueDetailRouteView(league: league)
-                    //.backgroundOfCardView()
-                    .backgroundByTheme(for: .Card(material: .none))
+                    .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
                     .tag(2)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))

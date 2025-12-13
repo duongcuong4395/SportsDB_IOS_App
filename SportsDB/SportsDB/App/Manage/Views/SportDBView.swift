@@ -115,7 +115,8 @@ struct ButtonTestNotificationView: View {
                     .font(.caption)
                     .fontWeight(.semibold)
             }
-            .backgroundOfItemTouched()
+            //.backgroundOfItemTouched()
+            .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
             .onTapGesture {
                 addScheduleNotification()
             }

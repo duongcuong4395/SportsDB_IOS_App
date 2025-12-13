@@ -21,7 +21,8 @@ struct PreviousAndNextRounrEventView: View {
                 Image(systemName: "chevron.left")
                     //.font(.callout.bold())
                     .font(.title3)
-                    .backgroundOfItemTouched()
+                    .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
+                    //.backgroundOfItemTouched()
                     .onTapGesture {
                         previousRoundTapped()
                         
@@ -36,7 +37,8 @@ struct PreviousAndNextRounrEventView: View {
                 Image(systemName: "chevron.right")
                     //.font(.callout.bold())
                     .font(.title3)
-                    .backgroundOfItemTouched()
+                    //.backgroundOfItemTouched()
+                    .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
                     .onTapGesture {
                         nextRoundTapped()
                     }

@@ -25,7 +25,8 @@ struct NavigationToLikedView: View {
                     .font(.caption)
                     .fontWeight(.semibold)
             }
-            .backgroundByTheme(for: .Button)
+            .padding(5)
+            .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
             .onTapGesture {
                 if !sportRouter.isAtLike {
                     

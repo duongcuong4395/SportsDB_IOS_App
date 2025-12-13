@@ -75,6 +75,7 @@ struct SeasonOfLeagueContentView: View {
     @EnvironmentObject var seasonListVM: SeasonListViewModel
     @State var menuOfEventActive: SeasonOfLeagueMenu = .TableRanking
     
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Namespace var animation
     
     var body: some View {
@@ -99,24 +100,22 @@ struct SeasonOfLeagueContentView: View {
                                 Text(menu.rawValue)
                                     .font(.callout.bold())
                             }
-                            
                         }
-                        .backgroundOfItemSelected(padding: 5, hasShimmer: false, isSelected: menuOfEventActive == menu, animation: animation)
+                        .font(.callout.bold())
+                        .padding(5)
+                        .foregroundColor(menuOfEventActive == menu ? .black : (colorScheme == .light ? .gray : .white))
+                        .backgroundByTheme(for: .ItemSelected(isSelected: menuOfEventActive == menu, animation: animation))
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 menuOfEventActive = menu
                             }
                         }
-                        
-                            
-                        
                     }
                 }
                 
             }
         }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 10)
+        .padding(5)
         .backgroundByTheme(for: .Card(material: .none))
     }
 }
@@ -155,10 +154,8 @@ struct EventsPerRoundView: View {
     var body: some View {
         VStack {
             EventsForEachRoundInControlView(leagueID: league.idLeague ?? "")
-            
             EventsGenericView(eventsViewModel: eventsPerRoundInSeasonVM, onRetry: { })
         }
-        
     }
 }
 

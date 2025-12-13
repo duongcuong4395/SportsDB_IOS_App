@@ -11,7 +11,7 @@ struct SeasonForLeagueView: View {
     @EnvironmentObject var seasonListVM: SeasonListViewModel
     
     var tappedSeason: (Season) -> Void
-    
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Namespace var animation
     
     var body: some View {
@@ -20,7 +20,10 @@ struct SeasonForLeagueView: View {
                 HStack(spacing: 10) {
                     ForEach(seasonListVM.seasons, id: \.season) { season in
                         Text("\(season.season)")
-                            .backgroundOfItemSelected(padding: 5, hasShimmer: false, isSelected: season == seasonListVM.seasonSelected, animation: animation)
+                            .font(.callout.bold())
+                            .padding(5)
+                            .foregroundColor(season == seasonListVM.seasonSelected ? .black : (colorScheme == .light ? .gray : .white))
+                            .backgroundByTheme(for: .ItemSelected(isSelected: season == seasonListVM.seasonSelected, cornerRadius: .moderateAngle, animation: animation))
                             .onTapGesture {
                                 withAnimation {
                                     tappedSeason(season)
@@ -30,11 +33,9 @@ struct SeasonForLeagueView: View {
                 }
             }
         }
-        
-        
-        .padding(.vertical, 5)
-        .padding(.horizontal, 5)
-        //.backgroundOfCardView()
-        .backgroundByTheme(for: .Card(material: .none))
+        .padding(5)
+        //.padding(.vertical, 5)
+        //.padding(.horizontal, 5)
+        .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
     }
 }

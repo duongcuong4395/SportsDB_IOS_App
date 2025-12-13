@@ -37,10 +37,11 @@ struct MenuOfLeagueDetailRouteView: View {
         }
         .padding(.vertical, 5)
         .padding(.horizontal, 10)
-        .background{
-            Color.clear
-                .liquidGlass(intensity: 0.8, cornerRadius: 20)
-        }
+        .backgroundByTheme(for: .Card(material: .none))
+        //.background{
+            //Color.clear
+                //.liquidGlass(intensity: 0.8, cornerRadius: 20)
+        //}
         .padding(.horizontal, 5)
     }
 }

@@ -81,7 +81,8 @@ struct EventsGenericView<ViewModel: GeneralEventManagement>: View {
                     , itemBuilder: ItemBuilderForEvent()
                     , onEvent: { ev in })
                     .redacted(reason: .placeholder)
-                    .backgroundOfItemTouched(color: .clear)
+                    .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
+                    //.backgroundOfItemTouched(color: .clear)
             }
         }
     }

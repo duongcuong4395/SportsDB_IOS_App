@@ -28,8 +28,8 @@ struct SelectSportView : View {
                             .font(.caption)
                             .fontWeight(.semibold)
                     }
-                    //.backgroundOfItemTouched()
-                    .backgroundByTheme(for: .Button)
+                    .padding(5)
+                    .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
                 } content: {
                     VStack {
                         SmartContainer(hasScroll: true, maxWidth: .grid) {
@@ -46,25 +46,14 @@ struct SelectSportView : View {
                         }
                     }
                     .frame(height: UIScreen.main.bounds.height / 2)
-                    /*
-                    .background{
-                        Color.clear
-                            .liquidGlass(cornerRadius: 25, intensity: 0.1, tintColor: .white, hasShimmer: false, hasGlow: false)
-                    }
-                    .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
-                    */
                     .padding([.top, .bottom], 10)
-                    .backgroundByTheme(for: .Card(material: .ultraThin))
+                    .backgroundByTheme(for: .Card(material: .ultraThin, cornerRadius: .moderateAngle))
                     .padding(.top, 15)
                     .overlay(alignment: .topTrailing) {
                         Image(systemName: "xmark")
                             .font(.title3)
                             .padding(5)
-                            .background{
-                                Color.clear
-                                    .liquidGlass(cornerRadius: 25, intensity: 0.5, tintColor: .white, hasShimmer: false, hasGlow: false)
-                            }
-                            .background(.ultraThinMaterial.opacity(0.5), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                            .backgroundByTheme(for: .Card(material: .none, cornerRadius: .roundedCorners))
                             .onTapGesture {
                                 withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
                                     showFullScreenCover = false

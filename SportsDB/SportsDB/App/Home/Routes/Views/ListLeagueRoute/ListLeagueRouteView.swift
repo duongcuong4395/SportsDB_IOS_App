@@ -118,7 +118,8 @@ struct ListLeaguesView: View {
                 LeagueItemView(league: league, badgeImageSize: badgeImageSizePerLeague)
             }
             .redacted(reason: .placeholder)
-            .backgroundOfItemTouched(color: .clear)
+            .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
+            //.backgroundOfItemTouched(color: .clear)
             
         }
     }
