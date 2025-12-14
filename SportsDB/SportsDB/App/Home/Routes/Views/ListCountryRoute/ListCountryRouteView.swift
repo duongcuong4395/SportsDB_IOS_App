@@ -30,7 +30,6 @@ struct ListCountryRouteView: View {
                     Image(systemName: "xmark")
                         .font(.title3)
                         .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
-                        //.backgroundOfItemTouched(hasShimmer: false)
                         .onTapGesture {
                             withAnimation {
                                 textSearch = ""
@@ -52,8 +51,7 @@ struct ListCountryRouteView: View {
             if !showTextSearch {
                 Image(systemName: "magnifyingglass")
                     .font(.title3)
-                    //.backgroundOfItemTouched(hasShimmer: false)
-                    .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
+                    .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
                     .onTapGesture {
                         withAnimation {
                             showTextSearch.toggle()

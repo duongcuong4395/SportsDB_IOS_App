@@ -19,28 +19,39 @@ enum CornerRadius: CGFloat {
     case roundedCorners = 50
 }
 
+struct ItemModel {
+    var isSelected: Bool
+    var tintColor: Color
+    var cornerRadius: CornerRadius = .moderateAngle
+    var animationID: Namespace.ID
+    var animationName: String
+}
+
 enum Theme {
-    case Header(height: CGFloat)
-    case Card(tintColor: Color = .white, material: ThemeMaterial = .ultraThin, cornerRadius: CornerRadius = .moderateAngle)
-    case Button(material: ThemeMaterial = .ultraThin, cornerRadius: CornerRadius = .moderateAngle)
-    case ItemSelected(isSelected: Bool, cornerRadius: CornerRadius = .moderateAngle, animation: Namespace.ID)
-    
+    case Header(tintColor: Color = Color(red: 0.839216, green: 0.839216, blue: 0.839216, opacity: 1.000000), height: CGFloat)
+    case Card(tintColor: Color = Color(red: 0.839216, green: 0.839216, blue: 0.839216, opacity: 1.000000)
+              , material: ThemeMaterial = .ultraThin, cornerRadius: CornerRadius = .moderateAngle)
+    case Button(tintColor: Color = .orange
+                , material: ThemeMaterial = .ultraThin, cornerRadius: CornerRadius = .moderateAngle)
+    case ItemSelected(item: ItemModel)
 }
 
 extension Theme {
     var glassEffect: GlassEffect {
         switch self {
-        case .Header(height: _):
+        case .Header(tintColor: let tintColor, height: _):
                 .init(
                     cornerRadius: 20,
                     intensity: 6.15,
-                    tintColor: .white,
+                    tintColor: tintColor,
                     isInteractive: false,
                     hasShimmer: false,
                     hasGlow: false,
+                    
                     gradientType: .linear,
                     gradientStart: UnitPoint(x: 0.00, y: 0.00),
                     gradientEnd: UnitPoint(x: 0.53, y: 0.00),
+                    
                     borderType: .gradient,
                     borderColor: .white,
                     borderOpacity: 0.39,
@@ -53,12 +64,11 @@ extension Theme {
                     glowDelay: 0.0,
                     hoverAnimationSpeed: 0.2
                 )
-            
         case .Card(tintColor: let tintColor, material: _, cornerRadius: let cornerRadius):
                 .init(
                     cornerRadius: cornerRadius.rawValue,
-                    intensity: 4.5, // 6.15,
-                    tintColor:  tintColor,// .white,
+                    intensity: 4.5,
+                    tintColor:  tintColor,
                     isInteractive: false,
                     hasShimmer: false,
                     hasGlow: false,
@@ -77,11 +87,11 @@ extension Theme {
                     glowDelay: 0.0,
                     hoverAnimationSpeed: 0.2
                 )
-        case .Button(material: _, cornerRadius: let cornerRadius):
+        case .Button(tintColor: let tintColor, material: _, cornerRadius: let cornerRadius):
                 .init(
-                    cornerRadius: cornerRadius.rawValue, // 50,
+                    cornerRadius: cornerRadius.rawValue,
                     intensity: 0.8,
-                    tintColor: .orange,
+                    tintColor: tintColor,
                     isInteractive: false,
                     hasShimmer: true,
                     hasGlow: true,
@@ -102,11 +112,11 @@ extension Theme {
                     glowDelay: 0.0,
                     hoverAnimationSpeed: 0.2
                 )
-        case .ItemSelected(isSelected: _, cornerRadius: let cornerRadius, animation: _):
+        case .ItemSelected(item: let model):
                 .init(
-                    cornerRadius: cornerRadius.rawValue, // 50,
+                    cornerRadius: model.cornerRadius.rawValue,
                     intensity: 1.8,
-                    tintColor: .blue,
+                    tintColor: model.tintColor,
                     isInteractive: false,
                     hasShimmer: true,
                     hasGlow: true,

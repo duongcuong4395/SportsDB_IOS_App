@@ -23,7 +23,12 @@ struct SeasonForLeagueView: View {
                             .font(.callout.bold())
                             .padding(5)
                             .foregroundColor(season == seasonListVM.seasonSelected ? .black : (colorScheme == .light ? .gray : .white))
-                            .backgroundByTheme(for: .ItemSelected(isSelected: season == seasonListVM.seasonSelected, cornerRadius: .moderateAngle, animation: animation))
+                            //.backgroundByTheme(for: .ItemSelected(isSelected: season == seasonListVM.seasonSelected, cornerRadius: .moderateAngle, animation: animation))
+                            .backgroundByTheme(for: .ItemSelected(item: .init(
+                                isSelected: season == seasonListVM.seasonSelected
+                                , tintColor: .blue
+                                , animationID: animation
+                                , animationName: "season")))
                             .onTapGesture {
                                 withAnimation {
                                     tappedSeason(season)

@@ -104,7 +104,10 @@ struct SeasonOfLeagueContentView: View {
                         .font(.callout.bold())
                         .padding(5)
                         .foregroundColor(menuOfEventActive == menu ? .black : (colorScheme == .light ? .gray : .white))
-                        .backgroundByTheme(for: .ItemSelected(isSelected: menuOfEventActive == menu, animation: animation))
+                        .backgroundByTheme(for: .ItemSelected(item: .init(
+                            isSelected: menuOfEventActive == menu
+                            , tintColor: .blue
+                            , animationID: animation, animationName: "SeasonOfLeagueMenu")))
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 menuOfEventActive = menu
