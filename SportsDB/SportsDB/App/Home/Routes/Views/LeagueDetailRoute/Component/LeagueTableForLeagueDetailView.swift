@@ -57,7 +57,7 @@ struct LeagueTableForLeagueDetailView: View  {
             ForEach(0 ..< 3) {_ in
                 LeagueTableItemView(rank: rank, tappedTeam: { ranks in })
                     .redacted(reason: .placeholder)
-                    .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
+                    .themedBackground(.button(cornerRadius: 50))
             }
         }
     }

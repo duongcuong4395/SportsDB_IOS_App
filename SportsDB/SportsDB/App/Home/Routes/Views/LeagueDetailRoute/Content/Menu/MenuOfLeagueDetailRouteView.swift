@@ -17,16 +17,10 @@ struct MenuOfLeagueDetailRouteView: View {
                     menu: LeagueDetailRouteMenu.allCases[index],
                     isSelected: selectedTab == index
                 )
-                .background {
-                    if selectedTab == index {
-                        ZStack {
-                            LiquidGlassLibrary.GlassBackground(intensity: 0.9)
-                            LiquidGlassLibrary.ShimmeringGlass()
-                        }
-                        .animation(.easeInOut(duration: 0.3), value: selectedTab == index)
-                        .matchedGeometryEffect(id: "LeagueDetailRouteMenu", in: animation)
-                    }
-                }
+                .themedBackground(.itemSelected(
+                    tintColor: .white
+                    , isSelected: selectedTab == index
+                    , animationID: animation, animationName: "LeagueDetailRouteMenu"))
                 .onTapGesture {
                     withAnimation {
                         selectedTab = index
@@ -35,13 +29,9 @@ struct MenuOfLeagueDetailRouteView: View {
                 .id(index)
             }
         }
-        .padding(.vertical, 5)
-        .padding(.horizontal, 10)
-        .backgroundByTheme(for: .Card(material: .none))
-        //.background{
-            //Color.clear
-                //.liquidGlass(intensity: 0.8, cornerRadius: 20)
-        //}
+        .padding(5)
+        .padding(.horizontal, 5)
+        .themedBackground(.card(material: .none))
         .padding(.horizontal, 5)
     }
 }

@@ -60,8 +60,7 @@ struct ListLeagueRouteHeaderView: View {
             }
             Spacer()
         }
-        //.backgroundOfRouteHeaderView(with: 70)
-        .backgroundByTheme(for: .Header(height: 70))
+        .themedBackground(.header(height: 70))
     }
 }
 
@@ -118,7 +117,7 @@ struct ListLeaguesView: View {
                 LeagueItemView(league: league, badgeImageSize: badgeImageSizePerLeague)
             }
             .redacted(reason: .placeholder)
-            .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
+            .themedBackground(.button(cornerRadius: 50))
         }
     }
     

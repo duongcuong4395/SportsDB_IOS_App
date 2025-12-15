@@ -8,6 +8,23 @@
 import SwiftUI
 import GlassEffect
 
+
+
+enum ColorTheme {
+    static func backgroundCard(for scheme: ColorScheme) -> Color {
+        scheme == .dark
+        ? Color(red: 0.839, green: 0.839, blue: 0.839)
+        : .white
+    }
+}
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
 // MARK: - 1. Separate Concerns: Configuration Models
 
 /// Glass effect configuration - reusable across themes
@@ -107,7 +124,7 @@ struct ThemePresets {
     )
     
     // Preset configurations
-    static func header(tintColor: Color = Color(red: 0.839, green: 0.839, blue: 0.839)) -> GlassConfiguration {
+    static func header(tintColor: Color) -> GlassConfiguration {
         GlassConfiguration(
             cornerRadius: 20,
             intensity: 6.15,
@@ -119,7 +136,7 @@ struct ThemePresets {
         )
     }
     
-    static func card(tintColor: Color = Color(red: 0.839, green: 0.839, blue: 0.839), cornerRadius: CGFloat = 20) -> GlassConfiguration {
+    static func card(tintColor: Color, cornerRadius: CGFloat = 20) -> GlassConfiguration {
         GlassConfiguration(
             cornerRadius: cornerRadius,
             intensity: 4.5,
@@ -234,7 +251,7 @@ struct ThemeContext {
 
 struct ThemeResolver {
     static func glassConfiguration(for context: ThemeContext) -> GlassConfiguration {
-        let tintColor = context.tintColor ?? Color(red: 0.839, green: 0.839, blue: 0.839)
+        let tintColor = context.tintColor ?? .white
         let cornerRadius = context.cornerRadius ?? 20
         
         switch context.style {

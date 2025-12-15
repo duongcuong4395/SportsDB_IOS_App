@@ -19,7 +19,7 @@ struct PreviousAndNextRounrEventView: View {
             if currentRound > 1 {
                 Image(systemName: "chevron.left")
                     .font(.title3)
-                    .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
+                    .themedBackground(.button(cornerRadius: 50))
                     .onTapGesture {
                         previousRoundTapped()
                         
@@ -32,7 +32,7 @@ struct PreviousAndNextRounrEventView: View {
             if hasNextRound == true {
                 Image(systemName: "chevron.right")
                     .font(.title3)
-                    .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
+                    .themedBackground(.button(cornerRadius: 50))
                     .onTapGesture {
                         nextRoundTapped()
                     }

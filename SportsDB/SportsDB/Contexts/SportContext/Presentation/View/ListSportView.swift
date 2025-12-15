@@ -29,7 +29,7 @@ struct SelectSportView : View {
                             .fontWeight(.semibold)
                     }
                     .padding(5)
-                    .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
+                    .themedBackground(.button(cornerRadius: 50, material: .ultraThinMaterial))
                 } content: {
                     VStack {
                         SmartContainer(hasScroll: true, maxWidth: .grid) {
@@ -47,13 +47,13 @@ struct SelectSportView : View {
                     }
                     .frame(height: UIScreen.main.bounds.height / 2)
                     .padding([.top, .bottom], 10)
-                    .backgroundByTheme(for: .Card(material: .ultraThin, cornerRadius: .moderateAngle))
+                    .themedBackground(.card(cornerRadius: 20, material: .ultraThinMaterial))
                     .padding(.top, 15)
                     .overlay(alignment: .topTrailing) {
                         Image(systemName: "xmark")
                             .font(.title3)
                             .padding(5)
-                            .backgroundByTheme(for: .Card(material: .none, cornerRadius: .roundedCorners))
+                            .themedBackground(.card(cornerRadius: 50, material: .none))
                             .onTapGesture {
                                 withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
                                     showFullScreenCover = false

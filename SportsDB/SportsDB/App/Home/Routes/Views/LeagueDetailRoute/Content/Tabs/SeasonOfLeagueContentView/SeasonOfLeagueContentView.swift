@@ -82,7 +82,6 @@ struct SeasonOfLeagueContentView: View {
         VStack(spacing: 5) {
             MenuOfEventsView
             menuOfEventActive.getView(by: league, and: seasonListVM.seasonSelected ?? Season(season: ""))
-            
                 .frame(maxHeight: DeviceSize.current.isPad ? UIScreen.main.bounds.height / 1.5 : UIScreen.main.bounds.height / 2.5)
         }
     }
@@ -104,10 +103,10 @@ struct SeasonOfLeagueContentView: View {
                         .font(.callout.bold())
                         .padding(5)
                         .foregroundColor(menuOfEventActive == menu ? .black : (colorScheme == .light ? .gray : .white))
-                        .backgroundByTheme(for: .ItemSelected(item: .init(
-                            isSelected: menuOfEventActive == menu
-                            , tintColor: .blue
-                            , animationID: animation, animationName: "SeasonOfLeagueMenu")))
+                        .themedBackground(.itemSelected(
+                            tintColor: .blue
+                            , isSelected: menuOfEventActive == menu
+                            , animationID: animation, animationName: "SeasonOfLeagueMenu"))
                         .onTapGesture {
                             withAnimation(.spring()) {
                                 menuOfEventActive = menu
@@ -119,7 +118,7 @@ struct SeasonOfLeagueContentView: View {
             }
         }
         .padding(5)
-        .backgroundByTheme(for: .Card(material: .none))
+        themedBackground(.card(material: .none))
     }
 }
 
@@ -128,8 +127,8 @@ struct TableRankingView: View {
     @EnvironmentObject private var leagueListVM: LeagueListViewModel
     var league: League
     
-    init(league: League) {
-        self.league = league
+    init(league: League?) {
+        self.league = league ?? League()
     }
     
     var body: some View {
@@ -170,6 +169,5 @@ struct AllEventsForASeasonView: View {
         VStack {
             EventsGenericView(eventsViewModel: eventsInSpecificInSeasonVM, onRetry: { })
         }
-        
     }
 }

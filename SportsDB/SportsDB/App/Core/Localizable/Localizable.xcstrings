@@ -4,9 +4,6 @@
     "" : {
 
     },
-    "\n❌ DON'T:" : {
-
-    },
     "- %@." : {
 
     },
@@ -86,40 +83,7 @@
     "•" : {
 
     },
-    "• Animate on every pixel of scroll" : {
-
-    },
-    "• Cleanup timers in .onDisappear" : {
-
-    },
-    "• Create timers without cleanup" : {
-
-    },
     "• Key is never shared with third parties" : {
-
-    },
-    "• Reduce particle count on lower-end devices" : {
-
-    },
-    "• Stack multiple .animation() modifiers" : {
-
-    },
-    "• Throttle scroll offset updates" : {
-
-    },
-    "• Use .task instead of .onAppear for async work" : {
-
-    },
-    "• Use Canvas for many similar views" : {
-
-    },
-    "• Use drawingGroup() for complex animations" : {
-
-    },
-    "• Use ForEach for 20+ animated views" : {
-
-    },
-    "• Use GeometryReader in ScrollView without throttling" : {
 
     },
     "• You can delete it anytime" : {
@@ -129,12 +93,6 @@
 
     },
     "+" : {
-
-    },
-    "⚡ Performance Best Practices" : {
-
-    },
-    "✅ DO:" : {
 
     },
     "👤" : {
@@ -413,9 +371,6 @@
 
     },
     "FPS: %@" : {
-
-    },
-    "FPS: %lld" : {
 
     },
     "Frosted Glass" : {

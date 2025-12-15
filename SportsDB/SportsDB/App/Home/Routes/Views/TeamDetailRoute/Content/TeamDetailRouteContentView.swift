@@ -24,25 +24,25 @@ struct TeamDetailRouteContentView: View {
             
             TabView(selection: $selectedTab) {
                 GeneralTabOfTeamDetailRouteView()
-                    .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
+                    .themedBackground(.card(tintColor: .white, cornerRadius: 20, material: .none))
                     .tag(0)
                     
                 if playerListVM.playersByLookUpAllForaTeam.count > 0 {
                     ListPlayerTabOfTeamDetailRouteView()
-                        .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
+                        .themedBackground(.card(tintColor: .white, cornerRadius: 20, material: .none))
                         .tag(1)
                 }
                 
                 ListEventOfTeamDetailRouteView(isVisibleViews: $isVisibleViews)
-                    .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
+                    .themedBackground(.card(tintColor: .white, cornerRadius: 20, material: .none))
                     .tag(2)
                 
                 TrophiesTabOfTeamDetailRouteView()
-                    .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
+                    .themedBackground(.card(tintColor: .white, cornerRadius: 20, material: .none))
                     .tag(3)
                 
                 EquipmentsTabOfTeamDetailRouteView(isVisibleViews: $isVisibleViews)
-                    .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
+                    .themedBackground(.card(tintColor: .white, cornerRadius: 20, material: .none))
                     .tag(4)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))

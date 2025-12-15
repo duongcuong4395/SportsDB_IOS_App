@@ -42,8 +42,7 @@ struct TeamDetailRouteHeaderView: View {
             }
             Spacer()
         }
-        //.backgroundOfRouteHeaderView(with: 70)
-        .backgroundByTheme(for: .Header(height: 70))
+        .themedBackground(.header(height: 70))
     }
     
     func backRoute() {

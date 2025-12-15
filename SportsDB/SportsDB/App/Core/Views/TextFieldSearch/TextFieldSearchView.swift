@@ -17,10 +17,8 @@ struct TextFieldSearchView: View {
         
         HStack{
             Image(systemName: "magnifyingglass")
-                //.foregroundStyleItemView(by: appVM.appMode)
                 .padding(.leading, 5)
             TextField("Enter text", text: $textSearch)
-                //.foregroundStyleItemView(by: appVM.appMode)
                 
             if showClear {
                 if !textSearch.isEmpty {
@@ -40,7 +38,7 @@ struct TextFieldSearchView: View {
         //.avoidKeyboard()
         .padding(5)
         .padding(.vertical, 3)
-        .backgroundByTheme(for: .Card(tintColor: .blue))
+        .themedBackground(.card(tintColor: .blue))
         
     }
 }

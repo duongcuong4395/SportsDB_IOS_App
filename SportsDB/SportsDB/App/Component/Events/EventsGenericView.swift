@@ -81,7 +81,7 @@ struct EventsGenericView<ViewModel: GeneralEventManagement>: View {
                     , itemBuilder: ItemBuilderForEvent()
                     , onEvent: { ev in })
                     .redacted(reason: .placeholder)
-                    .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
+                    .themedBackground(.button(cornerRadius: 50))
             }
         }
     }

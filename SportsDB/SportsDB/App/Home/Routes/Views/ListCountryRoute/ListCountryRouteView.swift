@@ -29,7 +29,7 @@ struct ListCountryRouteView: View {
                     TextFieldSearchView(listModels: [countryFilter], textSearch: $textSearch)
                     Image(systemName: "xmark")
                         .font(.title3)
-                        .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
+                        .themedBackground(.button(cornerRadius: 50, material: .ultraThinMaterial))
                         .onTapGesture {
                             withAnimation {
                                 textSearch = ""
@@ -51,7 +51,7 @@ struct ListCountryRouteView: View {
             if !showTextSearch {
                 Image(systemName: "magnifyingglass")
                     .font(.title3)
-                    .backgroundByTheme(for: .Button(cornerRadius: .roundedCorners))
+                    .themedBackground(.button(cornerRadius: 50))
                     .onTapGesture {
                         withAnimation {
                             showTextSearch.toggle()

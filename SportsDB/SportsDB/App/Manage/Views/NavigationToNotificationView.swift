@@ -21,7 +21,7 @@ struct NavigationToNotificationView: View {
                 .fontWeight(.semibold)
         }
         .padding(5)
-        .backgroundByTheme(for: .Button(material: .ultraThin, cornerRadius: .roundedCorners))
+        .themedBackground(.button(cornerRadius: 50, material: .ultraThinMaterial))
         .onTapGesture {
             if !sportRouter.isAtNotification {
                 sportRouter.navigateToNotification()

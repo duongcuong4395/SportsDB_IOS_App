@@ -23,12 +23,10 @@ struct SeasonForLeagueView: View {
                             .font(.callout.bold())
                             .padding(5)
                             .foregroundColor(season == seasonListVM.seasonSelected ? .black : (colorScheme == .light ? .gray : .white))
-                            //.backgroundByTheme(for: .ItemSelected(isSelected: season == seasonListVM.seasonSelected, cornerRadius: .moderateAngle, animation: animation))
-                            .backgroundByTheme(for: .ItemSelected(item: .init(
-                                isSelected: season == seasonListVM.seasonSelected
-                                , tintColor: .blue
-                                , animationID: animation
-                                , animationName: "season")))
+                            .themedBackground(.itemSelected(
+                                tintColor: .blue
+                                , isSelected: season == seasonListVM.seasonSelected
+                                , animationID: animation, animationName: "season"))
                             .onTapGesture {
                                 withAnimation {
                                     tappedSeason(season)
@@ -39,8 +37,6 @@ struct SeasonForLeagueView: View {
             }
         }
         .padding(5)
-        //.padding(.vertical, 5)
-        //.padding(.horizontal, 5)
-        .backgroundByTheme(for: .Card(material: .none, cornerRadius: .moderateAngle))
+        .themedBackground(.card(cornerRadius: 20, material: .none))
     }
 }

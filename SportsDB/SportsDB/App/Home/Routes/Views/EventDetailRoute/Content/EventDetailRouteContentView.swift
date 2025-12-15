@@ -44,7 +44,7 @@ struct EventDetailRouteContentView: View {
         .padding(.vertical)
         .padding(.horizontal, 5)
         //.backgroundOfCardView()
-        .backgroundByTheme(for: .Card(material: .none))
+        .themedBackground(.card(material: .none))
         .environmentObject(venueListVM)
         .onAppear{
             

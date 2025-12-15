@@ -156,23 +156,11 @@ struct EventAIAnalysisView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 100)
-            if loading {
-                VStack(alignment: .leading) {
-                    ShimmerView()
-                         .cornerRadius(5)
-                         .frame(height: 10)
-                    ShimmerView()
-                         .cornerRadius(5)
-                         .frame(height: 10)
-                    ShimmerView()
-                         .cornerRadius(5)
-                         .frame(width: UIScreen.main.bounds.width/3, height: 10)
-                }
-            } else {
-                MarkdownTypewriterView(text: $eventAnalysisDetail, isTypingComplete: $isTypingComplete)
-                    .typingSpeed(.fast)
-                    .autoScroll(true)
-            }
+            
+            MarkdownTypewriterView(text: $eventAnalysisDetail, isTypingComplete: $isTypingComplete)
+                .typingSpeed(.fast)
+                .autoScroll(true)
+            
         }
         .padding(0)
         .frame(maxHeight: UIScreen.main.bounds.height / 2)
