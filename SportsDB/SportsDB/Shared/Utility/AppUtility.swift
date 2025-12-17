@@ -33,60 +33,35 @@ enum TexType: String {
     }
 }
 
-
-
 class AppUtility {
     static let envDict = Bundle.main.infoDictionary?["LSEnvironment"] as! Dictionary<String, String>
-    
-    //static let SportScoreBaseURL = envDict["BaseURL_SportScore"]! as String
-    //static let FootballBaseURL = envDict["BaseURL_Football"]! as String
-    //static let MapsBaseURL = envDict["BaseURL_MapsData"]! as String
-    
     static let SportBaseURL = envDict["BaseURL_Sport"]! as String
-    
     static let KeySystem = envDict["Key_System"]! as String
     static let KeyUser = envDict["Key_User"]! as String
-    
-    
-    
-    static let headers: HTTPHeaders = ["x-rapidapi-host": "sportscore1.p.rapidapi.com"
-                                      , "x-rapidapi-key": "648d829bdbmshf8961c0edaf9408p15a3fcjsn9ec521f88da8"]
-    static let headersMaps: HTTPHeaders = ["x-rapidapi-host": "maps-data.p.rapidapi.com"
-                                      , "x-rapidapi-key": "648d829bdbmshf8961c0edaf9408p15a3fcjsn9ec521f88da8"]
-    
-    static let headersFootball: HTTPHeaders = ["x-rapidapi-host": "football-highlights-api.p.rapidapi.com"
-                                      , "x-rapidapi-key": "648d829bdbmshf8961c0edaf9408p15a3fcjsn9ec521f88da8"]
-    
     
     static var columns: [GridItem] = [GridItem(), GridItem(), GridItem()]
     
     static func formatDate(from input: String?, to outputFormat: String) -> String? {
         let inputFormatter = DateFormatter()
-        //inputFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
         inputFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         inputFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         
         var date: Date?
         
-        // Nếu có chuỗi đầu vào, chuyển đổi nó thành Date
         if let input = input {
             date = inputFormatter.date(from: input)
         } else {
-            // Nếu không có chuỗi đầu vào, sử dụng ngày hiện tại
             date = Date()
         }
         
-        // Đảm bảo rằng date không phải là nil
         guard let validDate = date else {
             print("Invalid date format")
             return nil
         }
         
-        // Tạo đối tượng DateFormatter cho đầu ra
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = outputFormat
         
-        // Chuyển đổi đối tượng Date thành chuỗi theo định dạng mong muốn
         let formattedDateString = outputFormatter.string(from: validDate)
         
         return formattedDateString
@@ -94,7 +69,7 @@ class AppUtility {
     
     static func getCurrentLanguage() -> (full: String, tet: String) {
        guard let languageCode = Locale.preferredLanguages.first else {
-           return ("Không xác định", "ko")
+           return ("Undetermined", "ko")
        }
 
         let te = languageCode.split(separator: "-")
@@ -126,8 +101,8 @@ class DateUtility {
     static func convertToDate(from dateString: String) -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0) // Điều chỉnh timeZone nếu cần
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX") // Sử dụng locale tiêu chuẩn
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
 
         if let date = dateFormatter.date(from: dateString) {
             return date

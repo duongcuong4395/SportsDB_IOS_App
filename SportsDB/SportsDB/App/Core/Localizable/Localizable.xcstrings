@@ -59,9 +59,6 @@
         }
       }
     },
-    "%@%%" : {
-
-    },
     "%lld" : {
 
     },
@@ -95,9 +92,6 @@
     "+" : {
 
     },
-    "👤" : {
-
-    },
     "$%@" : {
 
     },
@@ -117,9 +111,6 @@
 
     },
     "Advanced" : {
-
-    },
-    "Advanced Sticky Header" : {
 
     },
     "AI Analyze Documents" : {
@@ -161,9 +152,6 @@
     "Analysis" : {
 
     },
-    "Animated Liquid Glass" : {
-
-    },
     "API Documentation" : {
 
     },
@@ -185,16 +173,10 @@
     "Availability" : {
 
     },
-    "Blur Effect" : {
-
-    },
     "Bookmark Page" : {
 
     },
     "Button" : {
-
-    },
-    "Buttons" : {
 
     },
     "Camera" : {
@@ -206,13 +188,7 @@
     "Card" : {
 
     },
-    "Cards" : {
-
-    },
     "Change API Key" : {
-
-    },
-    "change color" : {
 
     },
     "Chat" : {
@@ -242,12 +218,6 @@
 
     },
     "Clear Chat" : {
-
-    },
-    "Complex Header" : {
-
-    },
-    "Complex Header Example" : {
 
     },
     "Configuration" : {
@@ -280,9 +250,6 @@
     "Custom Effects" : {
 
     },
-    "Custom Glass" : {
-
-    },
     "Custom Prompt" : {
 
     },
@@ -310,16 +277,7 @@
     "Done" : {
 
     },
-    "Double tap to expand" : {
-
-    },
     "Dropped Frames: %lld" : {
-
-    },
-    "Dynamic flowing background" : {
-
-    },
-    "Dynamic Header" : {
 
     },
     "Enter text" : {
@@ -329,9 +287,6 @@
 
     },
     "Events you like will appear here" : {
-
-    },
-    "Expanded Content" : {
 
     },
     "Export Chat" : {
@@ -367,16 +322,7 @@
     "Filters" : {
 
     },
-    "Form Controls" : {
-
-    },
     "FPS: %@" : {
-
-    },
-    "Frosted Glass" : {
-
-    },
-    "Full Screen Header" : {
 
     },
     "Gallery" : {
@@ -414,37 +360,13 @@
     "GitHub Repository" : {
 
     },
-    "Glass Card" : {
-
-    },
-    "Glow" : {
-
-    },
-    "Go Back" : {
-
-    },
     "Go to Bottom" : {
-
-    },
-    "Green Content" : {
-
-    },
-    "Green Expanded" : {
 
     },
     "Header" : {
 
     },
-    "Height: %@pt" : {
-
-    },
     "How to get your API key:" : {
-
-    },
-    "Ignore Safe Area Example" : {
-
-    },
-    "Ignores safe area" : {
 
     },
     "In Stock" : {
@@ -454,12 +376,6 @@
 
     },
     "info" : {
-
-    },
-    "Interactive glass material with depth" : {
-
-    },
-    "Item" : {
 
     },
     "Item %lld" : {
@@ -525,9 +441,6 @@
     "Last updated: %@" : {
 
     },
-    "Liquid Glass Card" : {
-
-    },
     "Loading more posts..." : {
 
     },
@@ -535,12 +448,6 @@
 
     },
     "Loading Teams..." : {
-
-    },
-    "Long content %lld" : {
-
-    },
-    "Main Content" : {
 
     },
     "Manage API Key" : {
@@ -570,22 +477,10 @@
     "More Precise" : {
 
     },
-    "Morphing Glass" : {
-
-    },
     "move to bottom" : {
 
     },
-    "Multiple elements resize" : {
-
-    },
-    "Navigation" : {
-
-    },
     "Network" : {
-
-    },
-    "No Effects (Clean)" : {
 
     },
     "No Favorite Events" : {
@@ -650,13 +545,7 @@
     "Precise" : {
 
     },
-    "Preset Styles" : {
-
-    },
     "Price Range" : {
-
-    },
-    "Primary" : {
 
     },
     "Print" : {
@@ -666,9 +555,6 @@
 
     },
     "Products" : {
-
-    },
-    "Progress: %@" : {
 
     },
     "Progress: %lld%%" : {
@@ -721,9 +607,6 @@
     "Reset Vertical Position" : {
 
     },
-    "Resizable Header Demo" : {
-
-    },
     "Resources" : {
 
     },
@@ -739,16 +622,10 @@
     "Round: %lld" : {
 
     },
-    "Row %lld" : {
-
-    },
     "Scroll Effects" : {
 
     },
     "Scroll Events: %lld" : {
-
-    },
-    "Scroll to see header resize" : {
 
     },
     "Search events..." : {
@@ -763,9 +640,6 @@
     "Seasons:" : {
 
     },
-    "Secondary" : {
-
-    },
     "Select an image to analyze" : {
 
     },
@@ -778,37 +652,10 @@
     "Share" : {
 
     },
-    "Shimmer" : {
-
-    },
-    "Shimmer + Glow" : {
-
-    },
-    "Shimmer Glass" : {
-
-    },
     "Shop" : {
 
     },
-    "Short content %lld" : {
-
-    },
-    "Show More" : {
-
-    },
-    "shrunk" : {
-
-    },
     "Signing: %@" : {
-
-    },
-    "Slider Value: %lld%%" : {
-
-    },
-    "Special Effects" : {
-
-    },
-    "Standard" : {
 
     },
     "Statistics" : {
@@ -817,22 +664,13 @@
     "Status" : {
 
     },
-    "Sticky Header" : {
-
-    },
     "Stream Response" : {
-
-    },
-    "Subtle" : {
 
     },
     "System Status" : {
 
     },
     "Table of Contents" : {
-
-    },
-    "Tap anywhere on this card for lens effect" : {
 
     },
     "Tap to change model" : {
@@ -845,12 +683,6 @@
 
     },
     "Test Notify" : {
-
-    },
-    "This card demonstrates the liquid glass material with subtle animations, transparency effects, and responsive interactions." : {
-
-    },
-    "This is a basic glass card with liquid effect" : {
 
     },
     "This is my content" : {
@@ -882,9 +714,6 @@
     "Today" : {
 
     },
-    "Toggle" : {
-
-    },
     "Try searching with different keywords" : {
 
     },
@@ -906,12 +735,6 @@
       }
     },
     "Typing" : {
-
-    },
-    "Universal Example" : {
-
-    },
-    "Universal Header" : {
 
     },
     "Usage Statistics" : {
@@ -947,9 +770,6 @@
     "Wage: %@" : {
 
     },
-    "Watch the subtle shape morphing animation" : {
-
-    },
     "Win: %@   Loss: %@   Draw: %@" : {
       "localizations" : {
         "en" : {
@@ -965,15 +785,6 @@
           }
         }
       }
-    },
-    "With animated shimmer effect" : {
-
-    },
-    "With Glow Only" : {
-
-    },
-    "With Shimmer Only" : {
-
     },
     "You" : {
 

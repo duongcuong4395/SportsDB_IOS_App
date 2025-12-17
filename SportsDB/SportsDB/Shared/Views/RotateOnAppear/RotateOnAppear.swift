@@ -34,6 +34,9 @@ struct RotateOnAppearModifier: ViewModifier {
     }
 }
 
+enum AnimationDirection1 {
+    case leftToRight, rightToLeft, topToBottom, bottomToTop
+}
 
 struct RotateOnAppearModifier_New: ViewModifier {
     @State private var isRotated = false

@@ -254,11 +254,7 @@ struct EventRowView: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
-        .background{
-            Color.clear
-                .liquidGlass(cornerRadius: 15, intensity: 0.3, tintColor: .orange, hasShimmer: true, hasGlow: true)
-        }
-        .background(.ultraThinMaterial.opacity(0.7), in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        .themedBackground(.card(cornerRadius: 15, material: .ultraThinMaterial))
         .overlay(alignment: .topLeading) {
             SportType(rawValue: event.sportName ?? "")?.getIcon()
                 .frame(width: 25, height: 25)

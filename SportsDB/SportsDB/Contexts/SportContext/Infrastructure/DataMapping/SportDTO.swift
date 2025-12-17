@@ -7,6 +7,26 @@
 
 import Foundation
 
+
+// MARK: - Protocol để định nghĩa yêu cầu cho tab items
+protocol TabItem: CaseIterable, Hashable, RawRepresentable where RawValue == String {
+    func getIcon() -> AnyView
+    var displayName: String { get }
+    var isHidden: Bool { get }
+}
+
+ // MARK: - Extension mặc định cho TabItem
+ extension TabItem {
+     var displayName: String {
+         return self.rawValue
+     }
+     
+     var isHidden: Bool {
+         return false
+     }
+ }
+
+
 enum CompetitionFormat: String, Codable {
     case oneVsOne = "Personal antagonism"
     case oneVsMany = "1 vs many"
@@ -17,6 +37,8 @@ enum CompetitionFormat: String, Codable {
     case doubles = "Doubles"
     case multiFormat = ""
 }
+
+
 
 import Kingfisher
 

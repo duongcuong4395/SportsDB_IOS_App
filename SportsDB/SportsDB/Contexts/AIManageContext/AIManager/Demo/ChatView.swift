@@ -5,13 +5,7 @@
 //  Created by Macbook on 15/11/25.
 //
 
-//
-//  ChatView.swift
-//  SportsDB
-//
-//  Created by Macbook on 15/11/25.
-//
-
+/*
 import SwiftUI
 import AIManageKit
 import MarkdownTypingKit
@@ -426,3 +420,4 @@ struct ScrollPositionPreferenceKey: PreferenceKey {
         value = nextValue()
     }
 }
+*/

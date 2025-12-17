@@ -33,7 +33,7 @@ struct CustomDialogView: View {
     var body: some View {
         ZStack {
             Color.white.opacity(0.1)
-                .liquidGlass(intensity: 0.7)
+                .themedBackground(.card(intensity: 0.3, tintColor: .white, material: .none))
                 .onTapGesture {
                     withAnimation(.spring()) {
                         appVM.showDialog.toggle()
@@ -53,21 +53,13 @@ struct CustomDialogView: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .padding()
                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                // MARK: New background
-                .background{
-                    Color.clear
-                        .liquidGlass(cornerRadius: 25, intensity: 0.1, tintColor: .white, hasShimmer: false, hasGlow: false)
-                }
-                .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                .themedBackground(.card(tintColor: .white, material: .none))
                 .padding(.top, 15)
                 .overlay(alignment: .topTrailing) {
                     Image(systemName: "xmark")
                         .font(.title3)
                         .padding(5)
-                        .background{
-                            Color.clear
-                                .liquidGlass(cornerRadius: 25, intensity: 0.5, tintColor: .white, hasShimmer: false, hasGlow: false)
-                        }
+                        .themedBackground(.button(tintColor: .white, material: .none))
                         .onTapGesture {
                             withAnimation(.interpolatingSpring(duration: 0.2, bounce: 0)) {
                                 action()
@@ -75,7 +67,6 @@ struct CustomDialogView: View {
                         }
                         .padding(.top, 5)
                 }
-                
                 .shadow(radius: 20)
                 .padding(30)
                 .padding(.bottom, 50)

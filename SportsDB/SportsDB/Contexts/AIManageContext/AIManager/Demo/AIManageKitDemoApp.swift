@@ -44,15 +44,15 @@ struct OnboardingView: View {
 struct MainTabView: View {
     var body: some View {
         TabView {
-            ChatView()
-                .tabItem {
-                    Label("Chat", systemImage: "message.fill")
-                }
+            //ChatView()
+              //  .tabItem {
+                    //Label("Chat", systemImage: "message.fill")
+                //}
             
-            PlaygroundView()
-                .tabItem {
-                    Label("Playground", systemImage: "play.circle.fill")
-                }
+            //PlaygroundView()
+                //.tabItem {
+                    //Label("Playground", systemImage: "play.circle.fill")
+                //}
             
             ImageAnalysisView()
                 .tabItem {

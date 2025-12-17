@@ -184,6 +184,7 @@ enum ThemeStyle {
 
 struct ThemeContext {
     let style: ThemeStyle
+    let intensity: Double
     let tintColor: Color?
     let cornerRadius: CGFloat?
     let material: Material?
@@ -192,9 +193,10 @@ struct ThemeContext {
     let isSelected: Bool? // For selection
     
     // Convenience initializers
-    static func header(tintColor: Color? = nil, height: CGFloat) -> ThemeContext {
+    static func header(intensity: Double = 0.8, tintColor: Color? = nil, height: CGFloat) -> ThemeContext {
         ThemeContext(
             style: .header,
+            intensity: intensity,
             tintColor: tintColor,
             cornerRadius: nil,
             material: nil,
@@ -204,9 +206,10 @@ struct ThemeContext {
         )
     }
     
-    static func card(tintColor: Color? = nil, cornerRadius: CGFloat? = nil, material: Material? = .ultraThinMaterial) -> ThemeContext {
+    static func card(intensity: Double = 0.8, tintColor: Color? = nil, cornerRadius: CGFloat? = nil, material: Material? = .ultraThinMaterial) -> ThemeContext {
         ThemeContext(
             style: .card,
+            intensity: intensity,
             tintColor: tintColor,
             cornerRadius: cornerRadius,
             material: material,
@@ -216,9 +219,10 @@ struct ThemeContext {
         )
     }
     
-    static func button(tintColor: Color? = nil, cornerRadius: CGFloat? = nil, material: Material? = .ultraThinMaterial) -> ThemeContext {
+    static func button(intensity: Double = 0.8, tintColor: Color? = nil, cornerRadius: CGFloat? = nil, material: Material? = .ultraThinMaterial) -> ThemeContext {
         ThemeContext(
             style: .button,
+            intensity: intensity,
             tintColor: tintColor,
             cornerRadius: cornerRadius,
             material: material,
@@ -230,6 +234,7 @@ struct ThemeContext {
     
     static func itemSelected(
         tintColor: Color,
+        intensity: Double = 0.8,
         cornerRadius: CGFloat? = nil,
         isSelected: Bool,
         animationID: Namespace.ID,
@@ -237,6 +242,7 @@ struct ThemeContext {
     ) -> ThemeContext {
         ThemeContext(
             style: .itemSelected,
+            intensity: intensity,
             tintColor: tintColor,
             cornerRadius: cornerRadius,
             material: nil,

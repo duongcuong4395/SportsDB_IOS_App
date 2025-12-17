@@ -195,9 +195,8 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
             if showOptionsView {
                 itemBuilder.buildOptions(for: event, send: onEvent)
                     .padding(.horizontal, 5)
-                    .liquidGlass(intensity: 0.8)
+                    .themedBackground(.card(tintColor: .white))
             }
-            
         }
         .padding(.horizontal, 50)
         .padding(.trailing, 20)
@@ -239,13 +238,12 @@ struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T =
                 Text("VS")
                     .font(.system(size: 16, weight: .bold, design: .monospaced))
                     .padding(5)
-                    .liquidGlass(intensity: 0.5)
-                    
+                    .themedBackground(.card(tintColor: .white))
             } else {
                 Text("\(event.homeScore ?? "") - \(event.awayScore ?? "")")
                     .font(.system(size: 16, weight: .bold, design: .monospaced))
                     .padding(5)
-                    .liquidGlass(intensity: 0.5)
+                    .themedBackground(.card(tintColor: .white))
             }
         }
         .frame(width: 70)

@@ -10,6 +10,7 @@
 import SwiftUI
 import AIManageKit
 
+/*
 struct PlaygroundView: View {
     @Environment(AIManager.self) private var aiManager
     
@@ -336,6 +337,7 @@ struct StatCard: View {
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
     }
 }
+*/
 
 /*
 // MARK: - Preview

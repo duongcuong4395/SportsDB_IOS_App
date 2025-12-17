@@ -102,23 +102,14 @@ struct PlayerDetailView: View {
     var body: some View {
         VStack {
             PlayerItemView(player: player, hasDetail: true, animation: animation)
-                .padding(.horizontal, 5)
-                .padding(.vertical, 5)
-                .background{
-                    Color.clear
-                        .liquidGlass(cornerRadius: 25, intensity: 0.1, tintColor: .white, hasShimmer: false, hasGlow: false)
-                }
-                .background(.ultraThinMaterial.opacity(0.9), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                .padding(5)
+                .themedBackground(.card(intensity: 0.1, cornerRadius: 25, material: .ultraThinMaterial))
                 .padding(.top, 15)
                 .overlay(alignment: .topTrailing) {
                     Image(systemName: "xmark")
                         .font(.title3)
                         .padding(5)
-                        .background{
-                            Color.clear
-                                .liquidGlass(cornerRadius: 25, intensity: 0.5, tintColor: .white, hasShimmer: false, hasGlow: false)
-                        }
-                        .background(.ultraThinMaterial.opacity(0.5), in: RoundedRectangle(cornerRadius: 25, style: .continuous))
+                        .themedBackground(.button(cornerRadius: 25, material: .ultraThinMaterial))
                         .onTapGesture {
                             resetPlayer()
                         }
@@ -136,7 +127,6 @@ struct PlayerDetailView: View {
                 .frame(width: UIScreen.main.bounds.width / 2)
                 .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
                 .padding(.top, 5)
-                //.matchedGeometryEffect(id: "player_\(player.player ?? "")", in: animation)
                 .onTapGesture {
                     resetPlayer()
                 }
