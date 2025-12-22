@@ -7,26 +7,23 @@
 
 import SwiftUI
 
-// MARK: BuildSeasonForLeagueView
-struct ListSeasonForLeagueView: View {
+class ListSeasonForLeagueViewModel: ObservableObject {
+    private var eventListVM: EventListViewModel
+    private var leagueListVM: LeagueListViewModel
+    private var seasonListVM: SeasonListViewModel
     
-    @EnvironmentObject var eventListVM: EventListViewModel
-    @EnvironmentObject var leagueListVM: LeagueListViewModel
-    @EnvironmentObject var seasonListVM: SeasonListViewModel
+    private var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
+    private var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
     
-    @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
-    @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
-    
-    let leagueID: String
-    
-    var body: some View {
-        SeasonForLeagueView(
-            tappedSeason: { season in
-                selectSeason(season)
-            })
+    init(eventListVM: EventListViewModel, leagueListVM: LeagueListViewModel, seasonListVM: SeasonListViewModel, eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel, eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel) {
+        self.eventListVM = eventListVM
+        self.leagueListVM = leagueListVM
+        self.seasonListVM = seasonListVM
+        self.eventsInSpecificInSeasonVM = eventsInSpecificInSeasonVM
+        self.eventsPerRoundInSeasonVM = eventsPerRoundInSeasonVM
     }
     
-    func selectSeason(_ season: Season) {
+    @MainActor func selectSeason(_ season: Season, in league: String) {
         guard seasonListVM.seasonSelected != season else { return }
         
         Task {
@@ -35,44 +32,18 @@ struct ListSeasonForLeagueView: View {
             
             let round = await eventListVM.setCurrentRound(by: 1)
             
+            leagueListVM.resetLeaguesTable()
+            
             await leagueListVM.lookupLeagueTable(
-                leagueID: leagueID,
+                leagueID: league,
                 season: season.season)
             
             await eventsInSpecificInSeasonVM.getEvents(
-                leagueID: leagueID,
+                leagueID: league,
                 season: seasonListVM.seasonSelected?.season ?? "")
             
-            eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
+            eventsPerRoundInSeasonVM.getEvents(of: league, per: "\(round)", in: season.season)
         }
-        
-        //withAnimation(.spring()) {}
-        
-        /*
-        guard seasonListVM.seasonSelected != season else { return }
-        
-        
-         seasonListVM.setSeason(by: season) { season in
-             guard let season = season else { return }
-             
-             eventListVM.setCurrentRound(by: 1) { round in
-                 eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
-             }
-         }
-        
-        
-        
-        
-        leagueListVM.resetLeaguesTable()
-        
-        await leagueListVM.lookupLeagueTable(
-            leagueID: leagueID,
-            season: seasonListVM.seasonSelected?.season ?? "")
-        
-        
-        await eventsInSpecificInSeasonVM.getEvents(
-            leagueID: leagueID,
-            season: seasonListVM.seasonSelected?.season ?? "")
-        */
     }
+    
 }

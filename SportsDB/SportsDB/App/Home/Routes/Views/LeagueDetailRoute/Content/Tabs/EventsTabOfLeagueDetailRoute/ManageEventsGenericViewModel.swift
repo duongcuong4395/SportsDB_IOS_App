@@ -36,6 +36,8 @@ class ManageEventsGenericViewModel: ObservableObject {
     private var eventToggleLikeManager: EventToggleLikeManager
     private var eventToggleNotificationManager: EventToggleNotificationManager
     
+    
+    
     @Environment(\.openURL) var openURL
     
     init(trophyListVM: TrophyListViewModel, playerListVM: PlayerListViewModel, teamDetailVM: TeamDetailViewModel, teamListVM: TeamListViewModel, notificationListVM: NotificationListViewModel, eventSwiftDataVM: EventSwiftDataViewModel, sportRouter: SportRouter, aiManageVM: AIManageViewModel, appVM: AppViewModel, teamSelectionManager: TeamSelectionManager, eventToggleLikeManager: EventToggleLikeManager, eventToggleNotificationManager: EventToggleNotificationManager) {

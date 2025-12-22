@@ -35,5 +35,4 @@ class EventsPerRoundInSeasonViewModel: GeneralEventManagement {
             }
         }
     }
-    
 }

@@ -18,6 +18,8 @@ struct EventsTabOfLeagueDetailRouteView: View {
     @EnvironmentObject var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel
     @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
     
+    @EnvironmentObject var listSeasonForLeagueVM: ListSeasonForLeagueViewModel
+    
     @State var menuOfEventActive: SeasonOfLeagueMenu = .TableRanking
     
     var body: some View {
@@ -32,7 +34,10 @@ struct EventsTabOfLeagueDetailRouteView: View {
                     HStack {
                         Text("Seasons:")
                             .font(.callout.bold())
-                        ListSeasonForLeagueView(leagueID: league.idLeague ?? "")
+                        SeasonForLeagueView(
+                            tappedSeason: { season in
+                                listSeasonForLeagueVM.selectSeason(season, in: league.idLeague ?? "")
+                            })
                     }
 
                     if seasonListVM.seasonSelected != nil {
@@ -58,7 +63,6 @@ struct EventsTabOfLeagueDetailRouteView: View {
 
 struct MenuOfEventsView: View {
     
-    //@State var menuOfEventActive: SeasonOfLeagueMenu = .TableRanking
     @Binding var menuOfEventActive: SeasonOfLeagueMenu
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme

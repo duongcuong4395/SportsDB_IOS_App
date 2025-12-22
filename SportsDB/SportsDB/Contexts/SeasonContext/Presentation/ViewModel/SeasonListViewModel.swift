@@ -30,21 +30,12 @@ extension SeasonListViewModel {
         self.seasonSelected = nil
         self.errorMessage = ""
     }
-    
-    func setSeason(by season: Season?, completion: @escaping (Season?) -> Void) {
-        DispatchQueueManager.share.runOnMain {
-            self.seasonSelected = season
-            completion(season)
-        }
-    }
-    
+
     func setSeason(by season: Season?) async -> Season? {
-        DispatchQueueManager.share.runOnMain {
-            withAnimation(.spring()) {
-                self.seasonSelected = season
-            }
+        //DispatchQueueManager.share.runOnMain {}
+        withAnimation(.spring()) {
+            self.seasonSelected = season
         }
-        
         return season
     }
     

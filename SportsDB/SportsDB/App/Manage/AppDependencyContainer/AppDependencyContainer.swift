@@ -157,6 +157,13 @@ class AppDependencyContainer: ObservableObject {
         , teamSelectionManager: teamSelectionManager
         , eventToggleLikeManager: eventToggleLikeManager
         , eventToggleNotificationManager: eventToggleNotificationManager)
+    
+    lazy var listSeasonForLeagueViewModel = ListSeasonForLeagueViewModel(
+        eventListVM: eventListVM
+        , leagueListVM: leagueListVM
+        , seasonListVM: seasonListVM
+        , eventsInSpecificInSeasonVM: eventsInSpecificInSeasonVM
+        , eventsPerRoundInSeasonVM: eventsPerRoundInSeasonVM)
 }
 
 // MARK: List events

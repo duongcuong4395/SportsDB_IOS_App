@@ -73,6 +73,7 @@ extension View {
             .environmentObject(container.manageLikeRouteVM)
             .environmentObject(container.manageNotificationRouteVM)
             .environmentObject(container.manageEventsGenericVM)
+            .environmentObject(container.listSeasonForLeagueViewModel)
         
         
     }
