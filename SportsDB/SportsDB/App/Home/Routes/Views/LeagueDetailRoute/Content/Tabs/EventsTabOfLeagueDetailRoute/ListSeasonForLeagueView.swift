@@ -27,28 +27,52 @@ struct ListSeasonForLeagueView: View {
     }
     
     func selectSeason(_ season: Season) {
-        withAnimation(.spring()) {
-            guard seasonListVM.seasonSelected != season else { return }
-            seasonListVM.setSeason(by: season) { season in
-                guard let season = season else { return }
-                
-                eventListVM.setCurrentRound(by: 1) { round in
-                    eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
-                }
-            }
+        guard seasonListVM.seasonSelected != season else { return }
+        
+        Task {
+            let season = await seasonListVM.setSeason(by: season)
+            guard let season = season else { return }
             
-            leagueListVM.resetLeaguesTable()
+            let round = await eventListVM.setCurrentRound(by: 1)
             
-            Task {
-                await leagueListVM.lookupLeagueTable(
-                    leagueID: leagueID,
-                    season: seasonListVM.seasonSelected?.season ?? "")
-                
-                
-                await eventsInSpecificInSeasonVM.getEvents(
-                    leagueID: leagueID,
-                    season: seasonListVM.seasonSelected?.season ?? "")
-            }
+            await leagueListVM.lookupLeagueTable(
+                leagueID: leagueID,
+                season: season.season)
+            
+            await eventsInSpecificInSeasonVM.getEvents(
+                leagueID: leagueID,
+                season: seasonListVM.seasonSelected?.season ?? "")
+            
+            eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
         }
+        
+        //withAnimation(.spring()) {}
+        
+        /*
+        guard seasonListVM.seasonSelected != season else { return }
+        
+        
+         seasonListVM.setSeason(by: season) { season in
+             guard let season = season else { return }
+             
+             eventListVM.setCurrentRound(by: 1) { round in
+                 eventsPerRoundInSeasonVM.getEvents(of: leagueID, per: "\(round)", in: season.season)
+             }
+         }
+        
+        
+        
+        
+        leagueListVM.resetLeaguesTable()
+        
+        await leagueListVM.lookupLeagueTable(
+            leagueID: leagueID,
+            season: seasonListVM.seasonSelected?.season ?? "")
+        
+        
+        await eventsInSpecificInSeasonVM.getEvents(
+            leagueID: leagueID,
+            season: seasonListVM.seasonSelected?.season ?? "")
+        */
     }
 }

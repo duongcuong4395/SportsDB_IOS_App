@@ -70,58 +70,6 @@ extension SeasonOfLeagueMenu: RouteMenu {
     }
 }
 
-struct SeasonOfLeagueContentView: View {
-    var league: League
-    @EnvironmentObject var seasonListVM: SeasonListViewModel
-    @State var menuOfEventActive: SeasonOfLeagueMenu = .TableRanking
-    
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    @Namespace var animation
-    
-    var body: some View {
-        VStack(spacing: 5) {
-            MenuOfEventsView
-            menuOfEventActive.getView(by: league, and: seasonListVM.seasonSelected ?? Season(season: ""))
-                .frame(maxHeight: DeviceSize.current.isPad ? UIScreen.main.bounds.height / 1.5 : UIScreen.main.bounds.height / 2.5)
-        }
-    }
-    
-    @ViewBuilder
-    var MenuOfEventsView: some View {
-        HStack(spacing: 10) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(SeasonOfLeagueMenu.allCases, id: \.self) { menu in
-                        HStack {
-                            menu.getIconView()
-                                .fontWeight(menuOfEventActive == menu ? .bold : nil)
-                            if menuOfEventActive == menu {
-                                Text(menu.rawValue)
-                                    .font(.callout.bold())
-                            }
-                        }
-                        .font(.callout.bold())
-                        .padding(5)
-                        .foregroundColor(menuOfEventActive == menu ? .black : (colorScheme == .light ? .gray : .white))
-                        .themedBackground(.itemSelected(
-                            tintColor: .blue
-                            , isSelected: menuOfEventActive == menu
-                            , animationID: animation, animationName: "SeasonOfLeagueMenu"))
-                        .onTapGesture {
-                            withAnimation(.spring()) {
-                                menuOfEventActive = menu
-                            }
-                        }
-                    }
-                }
-                
-            }
-        }
-        .padding(5)
-        themedBackground(.card(material: .none))
-    }
-}
-
 struct TableRankingView: View {
     @EnvironmentObject private var seasonListVM: SeasonListViewModel
     @EnvironmentObject private var leagueListVM: LeagueListViewModel

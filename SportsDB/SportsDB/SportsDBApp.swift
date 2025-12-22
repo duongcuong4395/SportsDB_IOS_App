@@ -15,9 +15,6 @@ import Firebase
 struct SportsDBApp: App {
     @StateObject private var networkMonitor = NetworkMonitor()
     
-    //@StateObject var scrollViewModel = ScrollViewModel()
-    @StateObject private var scrollVM = ScrollViewModel()
-    
     init() {
         FirebaseApp.configure()
     }
@@ -35,7 +32,6 @@ struct SportsDBApp: App {
             
             SportDBView()
                 .environmentObject(networkMonitor)
-            
         }
         .modelContainer(MainDB.shared)
     }

@@ -98,11 +98,13 @@ extension LeagueListViewModel {
                 self.leaguesTableStatus = .loading
             }
             let res = try await lookupLeagueTableUseCase.execute(league_ID: leagueID, season: season)
+            print("lookupLeagueTable: \(leagueID) - \(season)", res.count)
             DispatchQueueManager.share.runOnMain {
                 self.showRanks = [Bool](repeating: false, count: res.count)
                 self.leaguesTableStatus = .success(data: res)
             }
         } catch {
+            print("lookupLeagueTable.error: ", error.localizedDescription)
             DispatchQueueManager.share.runOnMain {
                 self.leaguesTableStatus = .failure(error: error.localizedDescription)
             }

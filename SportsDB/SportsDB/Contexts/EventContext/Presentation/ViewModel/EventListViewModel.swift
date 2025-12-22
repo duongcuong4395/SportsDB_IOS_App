@@ -66,6 +66,13 @@ extension EventListViewModel {
         competion(self.currentRound)
     }
     
+    func setCurrentRound(by round: Int) async -> Int {
+        DispatchQueueManager.share.runOnMain {
+            self.currentRound = round
+        }
+        return currentRound
+    }
+    
     func setNextCurrentRound() {
         self.currentRound += 1
     }

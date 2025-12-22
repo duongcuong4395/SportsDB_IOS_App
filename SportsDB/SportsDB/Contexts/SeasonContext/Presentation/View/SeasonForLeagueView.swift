@@ -14,6 +14,10 @@ struct SeasonForLeagueView: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     @Namespace var animation
     
+    init(tappedSeason: @escaping (Season) -> Void) {
+        self.tappedSeason = tappedSeason
+    }
+    
     var body: some View {
         HStack {
             ScrollView(.horizontal, showsIndicators: false) {
@@ -23,13 +27,14 @@ struct SeasonForLeagueView: View {
                             .font(.callout.bold())
                             .padding(5)
                             .foregroundColor(season == seasonListVM.seasonSelected ? .black : (colorScheme == .light ? .gray : .white))
-                            .themedBackground(.itemSelected(
-                                tintColor: .blue
+                            .themedBackground(.itemSelected(tintColor: .blue
                                 , isSelected: season == seasonListVM.seasonSelected
                                 , animationID: animation, animationName: "season"))
                             .onTapGesture {
-                                withAnimation {
-                                    tappedSeason(season)
+                                tappedSeason(season)
+                                Task {
+                                    //let _ = await seasonListVM.setSeason(by: season)
+                                    //
                                 }
                             }
                     }

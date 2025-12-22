@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "- %@." : {
 
     },
@@ -65,19 +62,7 @@
     "%lld selected" : {
 
     },
-    "%lld subsections" : {
-
-    },
-    "%lld%%" : {
-
-    },
-    "%lld%% read" : {
-
-    },
     "%llds" : {
-
-    },
-    "•" : {
 
     },
     "• Key is never shared with third parties" : {
@@ -90,15 +75,6 @@
 
     },
     "+" : {
-
-    },
-    "$%@" : {
-
-    },
-    "$0 - $500" : {
-
-    },
-    "4+ stars" : {
 
     },
     "A modern, production-ready Swift package for managing Google Gemini AI integration with clean architecture, type safety, and secure storage." : {
@@ -122,9 +98,6 @@
     "AI Analyze Video" : {
 
     },
-    "AI Assistant" : {
-
-    },
     "AI Chat" : {
 
     },
@@ -144,9 +117,6 @@
 
     },
     "All" : {
-
-    },
-    "All Photos" : {
 
     },
     "Analysis" : {
@@ -170,12 +140,6 @@
     "Ask anything about the image..." : {
 
     },
-    "Availability" : {
-
-    },
-    "Bookmark Page" : {
-
-    },
     "Button" : {
 
     },
@@ -189,12 +153,6 @@
 
     },
     "Change API Key" : {
-
-    },
-    "Chat" : {
-
-    },
-    "Chat Room" : {
 
     },
     "Check" : {
@@ -217,9 +175,6 @@
     "Clear Cache" : {
 
     },
-    "Clear Chat" : {
-
-    },
     "Configuration" : {
 
     },
@@ -232,12 +187,6 @@
     "Copy" : {
 
     },
-    "Count Tokens" : {
-
-    },
-    "Creative" : {
-
-    },
     "Creativity" : {
 
     },
@@ -247,13 +196,7 @@
     "Current model: %@" : {
 
     },
-    "Custom Effects" : {
-
-    },
     "Custom Prompt" : {
-
-    },
-    "Debug Info" : {
 
     },
     "Delete" : {
@@ -265,19 +208,10 @@
     "Delete API Key?" : {
 
     },
-    "Direction: %@" : {
-
-    },
-    "Distance from Bottom: %@" : {
-
-    },
     "Documentation" : {
 
     },
     "Done" : {
-
-    },
-    "Dropped Frames: %lld" : {
 
     },
     "Enter text" : {
@@ -287,9 +221,6 @@
 
     },
     "Events you like will appear here" : {
-
-    },
-    "Export Chat" : {
 
     },
     "Export Chat History" : {
@@ -311,27 +242,6 @@
 
     },
     "Favotire" : {
-
-    },
-    "Featured" : {
-
-    },
-    "Feed" : {
-
-    },
-    "Filters" : {
-
-    },
-    "FPS: %@" : {
-
-    },
-    "Gallery" : {
-
-    },
-    "Generate Response" : {
-
-    },
-    "Generating..." : {
 
     },
     "Get API Key from Google AI Studio" : {
@@ -360,19 +270,10 @@
     "GitHub Repository" : {
 
     },
-    "Go to Bottom" : {
-
-    },
     "Header" : {
 
     },
     "How to get your API key:" : {
-
-    },
-    "In Stock" : {
-
-    },
-    "In Stock Only" : {
 
     },
     "info" : {
@@ -438,15 +339,6 @@
     "Last Error" : {
 
     },
-    "Last updated: %@" : {
-
-    },
-    "Loading more posts..." : {
-
-    },
-    "Loading more products..." : {
-
-    },
     "Loading Teams..." : {
 
     },
@@ -462,22 +354,10 @@
     "Maximum time to wait for a response." : {
 
     },
-    "Message" : {
-
-    },
-    "Message AI..." : {
-
-    },
-    "Model" : {
-
-    },
     "More Creative" : {
 
     },
     "More Precise" : {
-
-    },
-    "move to bottom" : {
 
     },
     "Network" : {
@@ -515,22 +395,10 @@
     "Notifications you Saved will appear here" : {
 
     },
-    "Offset: %@" : {
-
-    },
-    "Out of Stock" : {
-
-    },
     "Output Length" : {
 
     },
-    "Performance Test" : {
-
-    },
     "Photo Library" : {
-
-    },
-    "Playground" : {
 
     },
     "Please return in a few minutes" : {
@@ -542,25 +410,7 @@
     "Points: %@" : {
 
     },
-    "Precise" : {
-
-    },
-    "Price Range" : {
-
-    },
-    "Print" : {
-
-    },
     "Processing..." : {
-
-    },
-    "Products" : {
-
-    },
-    "Progress: %lld%%" : {
-
-    },
-    "Prompt" : {
 
     },
     "promptEvent2vs2Analysis" : {
@@ -583,9 +433,6 @@
     "Quick Prompts" : {
 
     },
-    "Rating" : {
-
-    },
     "Remove" : {
 
     },
@@ -604,16 +451,7 @@
     "Reset to Defaults" : {
 
     },
-    "Reset Vertical Position" : {
-
-    },
     "Resources" : {
-
-    },
-    "Response" : {
-
-    },
-    "Response will appear here..." : {
 
     },
     "Round" : {
@@ -622,19 +460,10 @@
     "Round: %lld" : {
 
     },
-    "Scroll Effects" : {
-
-    },
-    "Scroll Events: %lld" : {
-
-    },
     "Search events..." : {
 
     },
     "Search notify..." : {
-
-    },
-    "Search products" : {
 
     },
     "Seasons:" : {
@@ -652,28 +481,13 @@
     "Share" : {
 
     },
-    "Shop" : {
-
-    },
     "Signing: %@" : {
-
-    },
-    "Statistics" : {
 
     },
     "Status" : {
 
     },
-    "Stream Response" : {
-
-    },
     "System Status" : {
-
-    },
-    "Table of Contents" : {
-
-    },
-    "Tap to change model" : {
 
     },
     "Temperature" : {
@@ -734,19 +548,10 @@
         }
       }
     },
-    "Typing" : {
-
-    },
     "Usage Statistics" : {
 
     },
-    "User Guide" : {
-
-    },
     "Validating..." : {
-
-    },
-    "Velocity: %@" : {
 
     },
     "Venue:" : {
@@ -785,9 +590,6 @@
           }
         }
       }
-    },
-    "You" : {
-
     }
   },
   "version" : "1.0"

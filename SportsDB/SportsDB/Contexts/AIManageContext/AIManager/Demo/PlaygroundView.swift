@@ -338,16 +338,3 @@ struct StatCard: View {
     }
 }
 */
-
-/*
-// MARK: - Preview
-#Preview {
-    NavigationStack {
-        PlaygroundView()
-            .environment(AIManager(
-                storage: MockAIStorage(initialKey: "test"),
-                service: GeminiAIService()
-            ))
-    }
-}
-*/
