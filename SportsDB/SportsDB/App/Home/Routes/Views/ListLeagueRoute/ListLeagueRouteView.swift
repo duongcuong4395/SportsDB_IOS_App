@@ -16,21 +16,7 @@ struct ListLeagueRouteView: View {
     }
 }
 
-struct ListLeagueRouteContentView: View {
-    @EnvironmentObject var countryListVM: CountryListViewModel
-    @EnvironmentObject var sportVM: SportViewModel
-    
-    var body: some View {
-        if let countrySelected = countryListVM.countrySelected {
-            
-            ScrollView(showsIndicators: false) {
-                ListLeaguesView(country: countrySelected.name, sport: sportVM.sportSelected.rawValue, onRetry: {
-                    print("=== onRetry ListLeaguesView", countrySelected)
-                })
-            }
-        }
-    }
-}
+
 
 struct ListLeagueRouteHeaderView: View {
     @EnvironmentObject var countryListVM: CountryListViewModel
@@ -60,7 +46,24 @@ struct ListLeagueRouteHeaderView: View {
             }
             Spacer()
         }
+        .padding(.horizontal, 16)
         .themedBackground(.header(height: 70))
+    }
+}
+
+struct ListLeagueRouteContentView: View {
+    @EnvironmentObject var countryListVM: CountryListViewModel
+    @EnvironmentObject var sportVM: SportViewModel
+    
+    var body: some View {
+        if let countrySelected = countryListVM.countrySelected {
+            
+            ScrollView(showsIndicators: false) {
+                ListLeaguesView(country: countrySelected.name, sport: sportVM.sportSelected.rawValue, onRetry: {
+                    print("=== onRetry ListLeaguesView", countrySelected)
+                })
+            }
+        }
     }
 }
 

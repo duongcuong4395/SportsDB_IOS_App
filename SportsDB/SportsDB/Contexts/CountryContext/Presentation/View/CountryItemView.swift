@@ -14,33 +14,27 @@ struct CountryItemView: View {
     var body: some View {
         if isHStack {
             HStack(spacing: 10) {
-                KFImage(URL(string: country.getFlag(by: .Medium)))
-                    .placeholder {
-                        //LoadingIndicator(animation: .circleBars, size: .small, speed: .normal)
-                        ProgressView()
-                    }
-                    .font(.caption)
-                
-                    .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
-                    .frame(width: 50, height: 50)
-                Text(country.name)
-                    .font(.caption)
+                countryView
             }
-            
         } else {
             VStack {
-                KFImage(URL(string: country.getFlag(by: .Medium)))
-                    .placeholder {
-                        //LoadingIndicator(animation: .circleBars, size: .small, speed: .normal)
-                        ProgressView()
-                    }
-                    .font(.caption)
-                
-                    .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
-                    .frame(width: 50, height: 50)
-                Text(country.name)
-                    .font(.caption)
+                countryView
             }
         }
+    }
+    
+    @ViewBuilder
+    var countryView: some View {
+        KFImage(URL(string: country.getFlag(by: .Medium)))
+            .placeholder {
+                //LoadingIndicator(animation: .circleBars, size: .small, speed: .normal)
+                ProgressView()
+            }
+            .font(.caption)
+        
+            .shadow(color: Color.blue, radius: 5, x: 0, y: 0)
+            .frame(width: 50, height: 50)
+        Text(country.name)
+            .font(.caption)
     }
 }

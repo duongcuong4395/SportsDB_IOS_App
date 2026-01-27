@@ -57,6 +57,7 @@ struct EventDetailRouteHeaderView: View {
             }
             Spacer()
         }
+        .padding(.horizontal, 16)
         .themedBackground(.header(height: 70))
     }
     

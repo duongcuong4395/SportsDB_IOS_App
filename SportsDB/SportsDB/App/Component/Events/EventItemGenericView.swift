@@ -108,8 +108,10 @@ struct EventItemGenericForSingleView<Builder: ItemBuilder>: View where Builder.T
 struct EventItemGenericFor2vs2View<Builder: ItemBuilder>: View where Builder.T == Event {
     
     var event: Event
+    
     @Binding var isVisible: Bool
     var delay: Double
+    
     var itemBuilder: Builder
     var onEvent: (ItemEvent<Event>) -> Void
     

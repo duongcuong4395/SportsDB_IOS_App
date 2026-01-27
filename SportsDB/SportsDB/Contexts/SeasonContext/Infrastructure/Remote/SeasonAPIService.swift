@@ -9,9 +9,9 @@ import Networking
 
 class SeasonAPIService: APIExecution, SeasonRepository {
     func getListSeasons(leagueID: String) async throws -> [Season] {
-        let respone: GetListSeasonsAPIResponse = try await sendRequest(for: SeasonEndpoint<GetListSeasonsAPIResponse>.GetListSeasons(leagueID: leagueID))
+        let response: GetListSeasonsAPIResponse = try await sendRequest(for: SeasonEndpoint<GetListSeasonsAPIResponse>.GetListSeasons(leagueID: leagueID))
         
-        return respone.seasons.map { $0.toDomain() }
+        return response.seasons.map { $0.toDomain() }
     }
     
     

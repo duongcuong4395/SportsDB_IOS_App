@@ -29,11 +29,9 @@ enum EventEndpoint<T: Decodable> {
     case LookupEventTVBroadcasts(eventID: String)
     
     case LookupListEvents(leagueID: String, round: String, season: String)
-    //https://www.thesportsdb.com/api/v1/json/3/eventsround.php?id=4569&r=1&s=2025
     
     case LookupEventsInSpecific(leagueID: String, season: String)
     
-    //https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id=4328
     case LookupEventsPastLeague(leagueID: String)
         
     case GetEvents(of: String, by: NextAndPrevious)
@@ -81,7 +79,7 @@ extension EventEndpoint: HttpRouter {
         case .GetEvents(of: _, by: let nextAndPrevious):
             switch nextAndPrevious {
             case .Next:
-                return "api/v1/json/123/eventsnext.php"
+                return "api/v1/json/3/eventsnext.php"
             case .Previous:
                 return "api/v1/json/3/eventslast.php"
             }

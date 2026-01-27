@@ -59,7 +59,6 @@ struct EventsGenericView<ViewModel: GeneralEventManagement>: View {
             case .success:
                 eventsList
             case .loading:
-                //loadingView
                 getExampleView()
             case .idle:
                 EmptyView()

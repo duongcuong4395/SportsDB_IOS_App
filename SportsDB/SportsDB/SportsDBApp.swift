@@ -21,14 +21,7 @@ struct SportsDBApp: App {
     
     var body: some Scene {
         WindowGroup {
-            // LiquidGlassDemoApp()
-            
-            //MainDemoView()
-                //.environmentObject(scrollVM)
-            
             //AIManageKitDemoApp()
-            //MarkdownTypewriterDemoView()
-            
             
             SportDBView()
                 .environmentObject(networkMonitor)

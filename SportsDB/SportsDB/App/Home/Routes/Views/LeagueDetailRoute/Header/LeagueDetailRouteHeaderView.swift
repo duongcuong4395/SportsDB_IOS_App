@@ -18,8 +18,6 @@ struct LeagueDetailRouteHeaderView: View {
     @EnvironmentObject var leagueListVM: LeagueListViewModel
     @EnvironmentObject var teamListVM: TeamListViewModel
     @EnvironmentObject var eventListVM: EventListViewModel
-    @EnvironmentObject var countryListVM: CountryListViewModel
-    @EnvironmentObject var sportVM: SportViewModel
     
     @EnvironmentObject var eventsRecentOfLeagueVM: EventsRecentOfLeagueViewModel
     @EnvironmentObject var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
@@ -45,7 +43,6 @@ struct LeagueDetailRouteHeaderView: View {
                 }
             }
             
-            //Spacer()
             VStack {
                 Text(league.leagueName ?? "")
                     .font(.caption.bold())
@@ -66,12 +63,12 @@ struct LeagueDetailRouteHeaderView: View {
                 .padding(.horizontal, 5)
             }
             
-            //Spacer()
             if let league = leagueDetailVM.league {
                 TrophyView(league: league, size: 60)
             }
             
         }
+        .padding(.horizontal, 16)
         .themedBackground(.header(height: 70))
     }
     

@@ -95,20 +95,41 @@ struct TableRankingView: View {
 struct EventsPerRoundView: View {
     
     @EnvironmentObject private var eventsPerRoundInSeasonVM: EventsPerRoundInSeasonViewModel
-    
+    @EnvironmentObject var eventListVM: EventListViewModel
+    @EnvironmentObject var seasonListVM: SeasonListViewModel
     var league: League
-    init(league: League) {
-        self.league = league
-    }
-    
+
     var body: some View {
         VStack {
-            EventsForEachRoundInControlView(leagueID: league.idLeague ?? "")
+            EventsForEachRoundView
             EventsGenericView(eventsViewModel: eventsPerRoundInSeasonVM, onRetry: { })
         }
     }
+    
+    var EventsForEachRoundView: some View {
+        PreviousAndNextRounrEventView(
+            currentRound: eventListVM.currentRound,
+            hasNextRound: eventListVM.hasNextRound,
+            nextRoundTapped: nextRound,
+            previousRoundTapped: previousRound)
+    }
+    
+    func previousRound() {
+        withAnimation(.spring()) {
+            eventListVM.setCurrentRound(by: eventListVM.currentRound - 1) { round in
+                eventsPerRoundInSeasonVM.getEvents(of: league.idLeague ?? "", per: "\(round)", in: seasonListVM.seasonSelected?.season ?? "")
+            }
+        }
+    }
+    
+    func nextRound() {
+        withAnimation(.spring()) {
+            eventListVM.setCurrentRound(by: eventListVM.currentRound + 1) { round in
+                eventsPerRoundInSeasonVM.getEvents(of: league.idLeague ?? "", per: "\(round)", in: seasonListVM.seasonSelected?.season ?? "")
+            }
+        }
+    }
 }
-
 
 struct AllEventsForASeasonView: View {
     @EnvironmentObject private var eventsInSpecificInSeasonVM: EventsInSpecificInSeasonViewModel

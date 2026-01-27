@@ -8,15 +8,6 @@
 import SwiftUI
 
 @MainActor
-class ManageTeamGenericViewModel: ObservableObject {
-    private var teamSelectionManager: TeamSelectionManager
-    
-    init(teamSelectionManager: TeamSelectionManager) {
-        self.teamSelectionManager = teamSelectionManager
-    }
-}
-
-@MainActor
 class ManageEventsGenericViewModel: ObservableObject {
     // MARK: - Environment Objects
     private var trophyListVM: TrophyListViewModel
